@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+    <xi:include href="header.html" />
+    <xi:include href="sidebars.html" />
+    <xi:include href="footer.html" />
+<head py:match="head" py:attrs="select('@*')">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"
+          py:attrs="dict(content='%s; charset=%s' % (response.content_type, response.charset))" />
+    <title py:if="False">Adamed Compounds</title>
+    <meta py:replace="select('*')"/>
+    <link rel="shortcut icon" href="${tg.url('/favicon.ico')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/admin.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/cssmenu.css')}" />
+<script language="javascript"> 
+function togglemenu() {
+	var ele = document.getElementById("left_content");
+	var text = document.getElementById("togglemenuText");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "&gt;&gt;";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "&lt;&lt;";
+	}
+} 
+</script>
+</head>
+
+<body py:match="body" py:attrs="select('@*')">
+  ${header()}
+  <div style="width:96%;margin:0 auto;">
+  <div id="mainmenu_left"></div>
+  <div id="mainmenu_right"></div>
+  <div id="mainmenu_midle">
+  <ul id="mainmenu">
+    <py:if test="tg.auth_stack_enabled">
+        <li py:if="not request.identity" class="first"><a href="${tg.url('/login')}" class="${('', 'active')[defined('page') and page=='index']}">Start</a></li>
+        <li py:if="request.identity" class="first"><a id="togglemenuText" href="javascript:togglemenu();">&lt;&lt;</a></li>
+        <li py:if="request.identity" class="first"><a href="${tg.url('/start')}" class="${('', 'active')[defined('page') and page=='start']}">Projects</a></li>
+        <li py:if="request.identity" class="first"><a href="${tg.url('/pains')}" class="${('', 'active')[defined('page') and page=='pains']}">PAINS</a></li>
+        <li py:if="not request.identity" id="login" class="loginlogout"><a href="${tg.url('/login')}">Sign in</a></li>
+        <li py:if="request.identity" id="login" class="loginlogout"><a href="${tg.url('/logout_handler')}">Logout</a></li>
+
+        <li py:if="request.identity" id="admin" class="loginlogout"><a href="${tg.url('/admin')}">Admin</a></li>
+        <li py:if="request.identity" id="admin" class="loginlogout"><a href="${tg.url('/myaccount')}">My account</a></li>
+        <li py:if="request.identity" id="admin" class="loginlogout"><a href="${tg.url('/myaccount/mylists')}">My Lists</a></li>
+        <!--!<li py:if="request.identity" id="admin" class="loginlogout"><a href="${tg.url('/admin')}">Admin</a></li>-->
+        <!--!<li py:if="request.identity"><a href="${tg.url('/3cla/library')}" class="${('', 'active')[defined('page') and page=='library']}">3. Bibiloteka</a> </li>-->
+        
+    </py:if>
+    
+  </ul>
+  </div>
+  </div>
+  <div id="content">
+    <py:if test="defined('page')">
+    <!--!<div class="currentpage">
+     Now Viewing: <span py:replace="page"/>
+     </div>-->
+    </py:if>
+    <py:with vars="flash=tg.flash_obj.render('flash', use_js=False)">
+        <div py:if="flash" py:replace="Markup(flash)" />
+    </py:with>
+    <div py:replace="select('*|text()')"/>
+    <!--! End of main_content -->
+    ${footer()}
+  </div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>JME Molecular Editor</title>
+<style type="text/css">
+table, td, th
+{
+border:1px solid green;
+}
+th
+{
+background-color:green;
+color:white;
+}
+</style>
+<script language="JavaScript">
+
+function submitSmiles() {
+  var smiles = document.JME.smiles();
+  var jme = document.JME.jmeFile();
+  if (smiles == "") {
+    alert("Structure error.");
+  }
+  else {
+    opener.fromEditor(smiles,jme);
+    window.close();
+  }
+}
+
+function openHelpWindow() {
+  window.open("http://www.molinspiration.com/jme/help/jme2008hints.html","jmehelp","toolbar=no,menubar=no,scrollbars=yes,resizable=yes,width=510,height=675,left=400,top=20");
+}
+
+function useMol() {
+  document.JME.readMolFile(document.form.mol_output.value);
+}
+
+function substituent(r) {
+  document.JME.setSubstituent(r);
+}
+</script>
+</head>
+
+<body bgcolor="#ffffff" onload="useMol();">
+<center>
+<table cellpadding="0" cellspacing="0" border="0" width="370" style="border:0px none">
+<tr style="border: 0px none">
+    <td align="left" style="border:0px none">&nbsp;</td>
+    <td align="right" style="border:0px none">
+        <select onChange="substituent(options[selectedIndex].text)">
+        <option>Select a substituent</option>
+        <option>-C(=O)OH </option>
+        <option>-C(=O)OMe</option>
+        <option>-OC(=O)Me</option>
+        <option>-CMe3</option>
+        <option>-CF3</option>
+        <option>-CCl3</option>
+        <option>-NO2</option>
+        <option>-SO2-NH2</option>
+        <option>-NH-SO2-Me</option>
+        <option>-NMe2</option>
+        <option>-C#N</option>
+        <option>-C#C-Me</option>
+        <option>-C#CH</option>
+        </select>
+</td></tr></table>
+<!--! applet resizing works with IE, doesn't work with NS-->
+<applet code="JME.class" name="JME" archive="${tg.url('/JME.jar')}" width="560" height="535">
+You have to enable Java and JavaScritpt on your machine ! 
+</applet>
+
+<form name="form_editor">
+<input type="button" value="Save" onClick="submitSmiles()" />
+&nbsp;&nbsp;
+<input type="button" value="Close" onClick="window.close()" />
+&nbsp;&nbsp;
+<input type="button" value="help" onClick="openHelpWindow()" />
+</form>
+<form METHOD="POST" NAME="form" ONSUBMIT="return false;" >
+<textarea name="mol_output" ROWS="1" COLS="40" style="visibility:hidden;">${smiles}${mol}
+</textarea>
+</form>
+
+<br />
+<table style="border: 1px solid black;">
+<CAPTION><B>Keyboard Shortcuts</B></CAPTION>
+<tr style="border: 1px solid black;">
+<td><FONT SIZE="2">bonds: -,=,#</FONT></td>
+<td><FONT SIZE="2">rings: 3..8, Ph is 1, furyl 0</FONT></td>
+<td><FONT SIZE="2">atoms: C,N,O,P,S,F,L,B,I,H</FONT></td>
+<td><FONT SIZE="2">groups: t - tert.butyl, ft - CF3, y - nitro, a - COOH, z - SO3H</FONT></td>
+</tr>
+<tr >
+    <td><FONT SIZE="2">d - delete</FONT></td>
+    <td COLSPAN="3"><FONT SIZE="2">Esc - return to standard mode (C, single bond)</FONT></td>
+</tr>
+<tr>
+    <td COLSPAN="4"><FONT SIZE="2">To move click in the epty field and move mouse coursor. To rotate use "shift".</FONT></td>
+</tr>
+</table>
+</center>
+</body>
+</html>

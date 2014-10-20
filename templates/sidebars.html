@@ -1,0 +1,30 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      py:strip="">
+
+<py:def function="sidebar">
+    <div id="cssmenu">
+    <h3 py:if="defined('pname')" style="text-align:center;color:#286571;margin:0;padding:5px;">${pname.upper()}</h3>
+        <ul>
+            <li class="${('main', 'mainactive')[defined('page') and page=='molecules']}"><a href="${tg.url('/'+pname+'/molecules')}" class="${('', 'active')[defined('page') and page=='molecules']}"><span>Compounds<py:if test="defined('page') and page=='molecules' and defined('currentPage')">&nbsp;(${currentPage.item_count})</py:if></span></a></li>
+            <li class="${('main', 'mainactive')[defined('page') and page=='samples']}"><a href="${tg.url('/'+pname+'/samples')}" class="${('', 'active')[defined('page') and page=='samples']}"><span>Samples<py:if test="defined('page') and page=='samples' and defined('currentPage')">&nbsp;(${currentPage.item_count})</py:if></span></a></li>
+            <li class="${('', 'active')[defined('page') and page=='select']}"><a href="${tg.url('/'+pname+'/select')}"><span>Requests<py:if test="defined('page') and page=='select' and defined('currentPage')">&nbsp;(${currentPage.item_count})</py:if></span></a></li>
+            <li class="${('', 'active')[defined('page') and page=='synthesis']}"><a href="${tg.url('/'+pname+'/synthesis/get_all')}"><span>Synthesis<py:if test="defined('page') and page=='synthesis' and defined('currentPage')">&nbsp;(${currentPage.item_count})</py:if></span></a></li>
+            <li class="${('', 'active')[defined('page') and page=='library']}"><a href="${tg.url('/'+pname+'/library')}"><span>Library<py:if test="defined('page') and page=='library' and defined('currentPage')">&nbsp;(${currentPage.item_count})</py:if></span></a></li>
+            <li class="${('main', 'mainactive')[defined('page') and page=='results']}"><a href="${tg.url('/'+pname+'/results')}"><span>Activity<py:if test="defined('page') and page=='results' and defined('currentPage')">&nbsp;(${currentPage.item_count})</py:if></span></a></li>
+            <li class="${('', 'active')[defined('page') and (page=='ctoxicity')]}"><a href="${tg.url('/'+pname+'/results/ctoxicity')}"><span>Ctoxicity</span></a>
+                <ul py:if="defined('page') and (page=='ctoxicity' or page=='screening')">
+
+                <li class="${('', 'active')[defined('page') and page=='ctoxicity']}"><a href="${tg.url('/'+pname+'/results/ctoxicity')}"><span>ALL<py:if test="defined('page') and page=='ctoxicity' and defined('currentPage')">&nbsp;(${currentPage.item_count})</py:if></span></a>
+                    <py:if test="defined('celllines') and page=='ctoxicity'">
+                        <ul>
+                            <py:for each="cell in celllines"><li  class="${('', 'active')[defined('cell_line') and cell==cell_line]}"><a href="${tg.url('/'+pname+'/results/ctoxicity')}/${cell}" ><span>${cell}</span></a></li></py:for>
+                        </ul>
+                    </py:if>
+                </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</py:def>
+</html>

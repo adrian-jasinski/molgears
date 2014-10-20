@@ -1,0 +1,70 @@
+ 
+   
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/details.css')}" />
+  <script language="javascript"> 
+function toggle() {
+	var ele = document.getElementById("toggleText");
+	var text = document.getElementById("displayText");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "show";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "hide";
+	}
+} 
+
+function toggle2() {
+	var ele = document.getElementById("toggleText2");
+	var text = document.getElementById("displayText2");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "show";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "hide";
+	}
+} 
+</script>
+</head>
+
+<body class="tundra">
+  <div py:if="pname" id="sb_top" class="sidebar2">
+      <h2><a href="${tg.url('/'+pname)}">${pname.upper()}</a></h2>
+      <ul id="mainmenu_sidebar">
+        <li><a href="${tg.url('/'+pname+'/pains1')}" class="${('', 'active')[defined('page') and page=='pains1']}">Pains1</a></li>
+        <li><a href="${tg.url('/'+pname+'/pains2')}" class="${('', 'active')[defined('page') and page=='pains2']}">Pains2</a></li>
+        <li><a href="${tg.url('/'+pname+'/pains3')}" class="${('', 'active')[defined('page') and page=='pains3']}">Pains3</a></li>
+      </ul>
+        <hr style="border: 2px ridge #000;" />
+  </div>
+ 
+ <div class="accept">
+<div id="crud_content">
+    <div class="detail_compound">
+    <h2 style="text-align:center">Details PAINS3 o numberze <span style="color:blue;font-weight:bold; font-style:italic">${pains.id}</span> i nazwie <span style="color:blue;font-weight:bold; font-style:italic">${pains.name}</span>:</h2>
+    <p><b>SMARTS:</b><br /> ${pains.structure}</p>
+        <div class="details">
+            <img src="${tg.url('/img/pains3')}/legend${pains.id}.png" border="0" /><br />
+        </div>
+    </div>
+    
+    <hr style="clear:both; width:94%" />
+    <br /><hr style="clear:both; width:94%" />
+</div>
+</div>
+    <div style="clear:both;"/>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <title>Adamed molgears</title>
+  <style type="text/css">
+    table td
+    {
+    border: 1px solid #2e7682;
+    padding-left:20px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:20px;
+    margin:0;
+    -webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+<div id="left_content" style="display:block;float:left;">
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/myaccount')}"><b>My profile</b></a></li>
+            <li><a href="${tg.url('/myaccount/edit')}">Edit profile</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+
+</div>
+<div class="accept" style="float:None;width:None;border:1px solid white">
+<h2 style="text-align:center;">User Name: <span style="color:blue;padding-left:20px;">${user.user_name.replace('.', ' ').title()}</span></h2>
+
+    <table style="margin:0 auto;">
+        <tr>
+            <td style="float:right;padding-right:20px;border:None;">Name:</td>
+            <td>${user.user_name.replace('.', ' ').title()}</td>
+        </tr>
+        <tr>
+            <td style="float:right;padding-right:20px;border:None;">Email:</td>
+            <td>${user.email_address}</td>
+        </tr>
+        <tr>
+            <td style="float:right;padding-right:20px;border:None;">Compounds per page:</td>
+            <td>${user.items_per_page} </td>
+        </tr>
+        <tr>
+            <td style="float:right;padding-right:20px;border:None;">Max number of similar compounds:</td>
+            <td>${user.limit_sim}</td>
+        </tr>
+        <tr>
+            <td style="float:right;padding-right:20px;border:None;">Min similiarity [%]:</td>
+            <td>${user.threshold}</td>
+        </tr>
+        <tr>
+            <td style="float:right;padding-right:20px;border:None;">User Groups:</td>
+            <td>
+                <ul style="margin:0;padding: 0 0 0 15px">
+                    <li py:for="group in user.groups">${group.group_name}</li>
+                </ul>
+            </td>
+        </tr>
+    
+    </table>
+</div>
+<div style="clear:both;"/>
+</body>
+</html>

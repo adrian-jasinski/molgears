@@ -1,0 +1,126 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+<style type="text/css">
+@font-face {
+font-family: PDF, "PDF";
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana.ttf');
+}
+@font-face {
+font-family: PDF2, "PDF2";
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana_Bold.ttf');
+}
+
+
+body {
+font-family: PDF;
+}
+th.col{
+font-family: PDF2;
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana_Bold.ttf');
+}
+h1, th{
+font-family: PDF;
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana_Bold.ttf');
+}
+</style>
+    <title>Library</title>
+
+</head>
+<body class="tundra" style="background-color:white;">
+    <div id="crud_content">
+      <h1 style="text-align:center"><b>Cytotoxicity</b> (${len(lcompound)})</h1>
+      <div style="text-align:center">
+    <div class="crud_table">
+        <div id="crud_tab">
+        <table id="" class="grid" cellpadding="1" border="0.5px">
+            <thead>
+                <tr>
+                        <th class="col" py:if="'nr' in options"><br />No.</th>
+                        <th class="col" py:if="'gid' in options"><br />GID</th>
+                        <th class="col" py:if="'id' in options"><br />ID</th>
+                        <th class="col" py:if="'name' in options"><br />Name</th>
+                        <th class="col" py:if="'names' in options"><br />Names</th>
+                        <th class="col" py:if="'smiles' in options"><br />Smiles</th>
+                        <th class="col" py:if="'image' in options"><br />Image</th>
+                        <th class="col" py:if="'inchi' in options"><br />InChi</th>
+                        <th class="col" py:if="'lso' in options"><br />LSO</th>
+                        <th class="col" py:if="'num_atoms' in options"><br />Atoms</th>
+                        <th class="col" py:if="'mw' in options"><br />Molecular weight</th>
+                        <th class="col" py:if="'logp' in options"><br />logP</th>
+                        <th class="col" py:if="'hba' in options"><br />hba</th>
+                        <th class="col" py:if="'hbd' in options"><br />hbd</th>
+                        <th class="col" py:if="'tpsa' in options"><br />tpsa</th>
+                        <th class="col" py:if="'form' in options"><br />Form</th>
+                        <th class="col" py:if="'state' in options"><br />State [mg]</th>
+                        <th class="col" py:if="'purity' in options"><br />Purity</th>
+                        <th class="col" py:if="'create_date' in options"><br />Create date</th>
+                        <th class="col" py:if="'creator' in options"><br />Chemist</th>
+                        <th class="col" py:if="'box' in options"><br />Box</th>
+                        <th class="col" py:if="'entry' in options"><br />Entry</th>
+                        <th class="col" py:if="'source' in options"><br />Source</th>
+                        <th class="col" py:if="'content' in options"><br />Content</th>
+                        <th class="col" py:if="'tags' in options"><br />Tags</th>
+                        <th class="col" py:if="'notes' in options"><br />Notes</th>
+                        <py:for each="cell_line in celllines">
+                        <td class="col"  py:if="str('_CT_'+cell_line) in options">${cell_line}</td></py:for>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr py:for="row in lcompound" class="${lcompound.index(row)%2 and 'odd' or 'even'}" style="margin:1px;padding:1px;">
+                        <td class="col" py:if="'nr' in options">${lcompound.index(row)+1}</td>
+                        <td class="col" py:if="'gid' in options">${row.gid}</td>
+                        <td class="col" py:if="'id' in options">${row.id}</td>
+                        <td class="col" py:if="'name' in options">${row.mol.name}</td>
+                        <td class="col" py:if="'names' in options"><br />
+                        <py:for each="item in row.mol.names">
+                             ${item.name}<br />
+                        </py:for></td>
+                        <td class="col" py:if="'smiles' in options" style="margin:0px;padding:0px;width:300px;display: inline-block;word-wrap: break-word;white-space: pre-wrap;">${row.mol.structure}</td>
+                        <td class="col" py:if="'image' in options">
+                        <img src="./molgears/public/img/${row.gid}.png" width="${size[0]}px" height="${size[1]}px" border="0" />
+                        </td>
+                        <td class="col" py:if="'inchi' in options">${row.mol.inchi}</td>
+                        <td class="col" py:if="'lso' in options">${row.lso}</td>
+                        <td class="col" py:if="'num_atoms' in options">${row.mol.num_hvy_atoms}/${row.mol.num_atoms}</td>
+                        <td class="col" py:if="'mw' in options">${row.mol.mw}</td>
+                        <td class="col" py:if="'logp' in options">${row.mol.logp}</td>
+                        <td class="col" py:if="'hba' in options">${row.mol.hba}</td>
+                        <td class="col" py:if="'hbd' in options">${row.mol.hbd}</td>
+                        <td class="col" py:if="'tpsa' in options">${row.mol.tpsa}</td>
+                        <td class="col"  py:if="'form' in options">${row.form}</td>
+                        <td class="col"  py:if="'state' in options">${row.state}</td>
+                        <td class="col"  py:if="'purity' in options"><br />
+                            <span py:for="p in sorted(row.purity, key=lambda p: p.value, reverse=True)" id="after">${p.value}% |${p.type} <br /></span>
+                        </td>
+                        <td class="col"  py:if="'create_date' in options">${row.create_date}</td>
+                        <td class="col"  py:if="'creator' in options">${row.owner and row.owner.replace('.', ' ') or ''}</td>
+                        <th class="col" py:if="'box' in options">${row.box}</th>
+                        <th class="col" py:if="'entry' in options">${row.entry}</th>
+                        <th class="col" py:if="'source' in options">${row.source}</th>
+                        <th class="col" py:if="'content' in options"><br />
+                            <span py:if="row.content">${row.content.value} %</span>&nbsp;
+                        </th>
+                        <td class="col"  py:if="'tags' in options"><br />
+                            <span py:for="tag in row.mol.tags">${tag.name}, <br /></span>
+                        </td>
+                        <td class="col"  py:if="'notes' in options">${row.notes}</td>
+                        <py:for each="cell_line in celllines">
+                        <td class="col"  py:if="str('_CT_'+cell_line) in options">${len([ct.ic50 for ct in row.ctoxicity if ct.cell_line == cell_line])==0 and 'None' or (sum([ct.ic50 for ct in row.ctoxicity if ct.cell_line == cell_line])/len([ct.ic50 for ct in row.ctoxicity if ct.cell_line == cell_line]))}</td></py:for>
+                    </tr>
+            </tbody>
+        </table>
+                <py:if test="len(lcompound) == 0">
+                    No Records Found.
+                </py:if>
+            </div>
+
+    
+        </div>
+    </div>
+    </div>
+    <div style="clear:both;"/>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="${tg.url('/javascript/jquery.validate.js')}"></script>
+  <title>Compounds ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/new')}">Add new</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/read_from_file')}">Import from file</a></li><li><a href="${tg.url('/'+pname+'/molecules/showgroups')}">Groups</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/history')}">History of changes</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules/details')}/${compound.gid}">Details</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/edit')}/${compound.gid}">Edit</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/accept')}/${compound.gid}"><b>Create Request</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/library')}/${compound.gid}">Add to Library</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/remove')}/${compound.gid}" onclick="return(confirm('Confirm deleting!'))">Delete</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="accept">
+  <h2 class="accept">Create synthesis request.</h2>
+  <form action="${tg.url('/'+pname+'/molecules/add_to_select')}/${compound.gid}" method="post" id="myform">
+    <table style="width:700px;">
+        <tr>
+            <td><label for="id">ID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${compound.gid}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="structure">Smiles: </label></td>
+            <td><input id="structure" type="text" name="structure" value="${compound.structure}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label for="name">Name: </label></td>
+            <td><input id="accept" type="text" name="name" value="${compound.name}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label  for="principal"><b style="color:red;">*</b> Recipient: </label></td>
+            <td>
+            <select name="principal">
+            <py:for each="user in users">
+                <py:if test="user.display_name != default_user">
+                <option value="${user}">${user}</option>
+                </py:if>
+                <py:if test="user.display_name == default_user">
+                <option value="${user}" selected="yes">${user}</option>
+                </py:if>
+            </py:for>
+            </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label class="etap_max" for="priority"> Priority: </label></td>
+            <td>
+                <select name="priority">
+                <option value="0"  selected="yes">0</option>
+                <py:for each="item in range(1,6)">
+                            <option value="${item}">${item}</option>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows="2" value="notes" >${compound.notes}</textarea></td>
+        </tr>
+        <tr>
+            <td><label for="tags"><b style="color:red;">*</b> Tags: </label></td>
+            <td>
+    
+                <ul style="width:600px;list-style: none; line-height: normal;margin: 0;padding: 0; ">
+                <fieldset class="tags"><legend>Select Tag</legend>
+                    <li py:for="tag in alltags" style="float: left; width: 150px; border: 0px;">
+                        <py:if test="tag in ctags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}"  checked="yes" id="tags" title="&nbsp;" />${tag.name}
+                        </py:if>
+                        <py:if test="not tag in ctags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" id="tags" title="&nbsp;" />${tag.name}
+                        </py:if>
+                    </li>
+                </fieldset>
+                </ul>
+                <br /><br />
+             </td>
+        </tr>
+    <tr><td></td><td><input id="submit" type="submit" name="submit" value="Accept" /></td></tr>
+    <tr>
+        <td></td>
+        <td>
+            <br /><b style="color:red;  font-size: 80%;">*</b>  - required fields / select the correct values.
+        </td>
+    </tr>
+    </table>
+  </form>
+</div>
+<div style="clear:both;" />
+<script>
+// form validation
+jQuery.validator.setDefaults({
+debug: false,
+success: "valid"
+});
+$( "#myform" ).validate({
+    rules: {
+        tags: {
+            required: true,
+            minlength: 1
+        }
+    },
+   errorPlacement: function(error, element)
+    {
+        if( element.attr('name') == 'tags' ) {
+            error.appendTo( element.closest('.tags') );
+            element.closest('.tags').attr('id','error');
+        } else {
+            error.insertAfter(element);
+        }
+    },
+    success: function(label) {
+        if( label.attr('for') == 'tags' ) {
+            label.closest('.tags').attr('id','valid');
+            label.addClass('valid');
+        } else {
+            label.addClass('valid');
+        }
+    },  
+});
+</script>
+</body>
+</html>

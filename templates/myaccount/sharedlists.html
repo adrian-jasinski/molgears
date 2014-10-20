@@ -1,0 +1,116 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="master.html" />
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+    <link rel="stylesheet" type="text/css" href="${tg.url('/css/jqcontextmenu.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/filter.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+    
+    <script type="text/javascript" src="${tg.url('/javascript/cookie.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/akcje.js')}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/jqcontextmenu.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+
+    <title>My Lists</title>
+<script type="text/javascript">
+document.onkeypress = keyPress;
+function keyPress(e){
+var x = e || window.event;
+var key = (x.keyCode || x.which);
+if(key == 13 || key == 3){
+    document.getElementById("search").click();
+}
+}
+</script>
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-darkness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="${tg.url('/javascript/show.js')}"></script>
+</head>
+<body class="tundra" onload="recoverInputs(document.forms.selection,retrieveCookie('SharedLists'),true);ChangeAll(this);ChooseAll();" onunload="setCookie('SharedLists',getFormString(document.forms.selection,true),10);">
+<form name="selection" onsubmit="setCookie('SharedLists',getFormString(this,true),10);">
+<div id="left_content" style="display:block;float:left;">
+    <h4 style="text-align:center;">My Lists</h4>
+    <div style="clear:both;"/>
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/myaccount/mylists')}">Created</a></li>
+            <li><a href="${tg.url('/myaccount/sharedlists')}"><b>Shared</b></a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/myaccount/addlist')}">Create list</a></li>
+        </ul>
+    </div>
+</div>
+<div class="accept">
+    <div id="crud_content">
+        <div class="crud_table">
+            <div id="crud_tab">
+                <py:choose test="SharedLists != None">
+                    <py:when test="True">
+                        <table class="grid">
+                            <tr>
+                                <th class="col"><input type="checkbox" onClick="toggle(this)" id="maincheckbox" /></th>
+                                <th class="col">Name&nbsp;<br /><a class="sort_up" href="${tg.url('/myaccount/sharedlists?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=name')}&amp;desc=0">&nbsp; </a>
+                                    <a class="sort_down" href="${tg.url('/myaccount/sharedlists?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=name')}&amp;desc=1">&nbsp; </a></th>
+                                <th class="col">Table&nbsp;<br /><a class="sort_up" href="${tg.url('/myaccount/sharedlists?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=table')}&amp;desc=0">&nbsp; </a>
+                                    <a class="sort_down" href="${tg.url('/myaccount/sharedlists?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=table')}&amp;desc=1">&nbsp; </a></th>
+                                <th class="col">Items num.</th>
+                                <th class="col">Owner&nbsp;<br /><a class="sort_up" href="${tg.url('/myaccount/sharedlists?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=tg_user')}&amp;desc=0">&nbsp; </a>
+                                    <a class="sort_down" href="${tg.url('/myaccount/sharedlists?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=tg_user')}&amp;desc=1">&nbsp; </a></th>
+                                <th class="col">Notes&nbsp;<br /><a class="sort_up" href="${tg.url('/myaccount/sharedlists?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=notes')}&amp;desc=0">&nbsp; </a>
+                                    <a class="sort_down" href="${tg.url('/myaccount/sharedlists?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=notes')}&amp;desc=1">&nbsp; </a></th>
+                            </tr>
+                            <tr py:for="list in SharedLists" class="${SharedLists.index(list)%2 and 'odd' or 'even'}" id="${list.id}">
+                                <td class="col"><input type="checkbox" name="select" value="${list.id}" onchange="ChangeMe(this,'${list.id}');" /></td>
+                                <td py:with="dtab={'Compounds':'molecules', 'PCompounds':'select/get_all','SCompounds':'synthesis/get_all','LCompounds':'library','Results':'results','ResultsFP':'results/binding','CTResults':'results/ctoxcity'}" class="col"><a href="${tg.url('/'+str(list.pname)+'/'+str(dtab[list.table]))}/?mylist=${list.id}">${list.name}</a></td>
+                                <td class="col">
+                                    <py:choose test="list.table">
+                                        <py:when test="'Compounds'">Compounds</py:when>
+                                        <py:when test="'PCompounds'">Requests</py:when>
+                                        <py:when test="'SCompounds'">Synthesis</py:when>
+                                        <py:when test="'LCompounds'">Library</py:when>
+                                        <py:when test="'Results'">Activity</py:when>
+                                        <py:when test="'ResultsFP'">Binding</py:when>
+                                        <py:when test="'CTResults'">Ctoxicity</py:when>
+                                        <py:otherwise>ERROR!!!</py:otherwise>
+                                    </py:choose>
+                                </td>
+                                <td class="col"><span py:if="list.elements">${len(pcl.loads(list.elements)) or 0}</span></td>
+                                <td class="col">${list.tg_user.user_name.replace('.', ' ').title()  }</td>
+                                <td class="col">${list.notes}</td>
+                            </tr>
+                        </table>
+                    </py:when>
+                    <py:otherwise><p style="text-align:center;">Create new List!</p></py:otherwise>
+                </py:choose>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear:both;"/>
+
+<select id="crud_search_field" size="3" name="akcja" style="visibility:hidden;">
+    <option id="edit" value="edit">Edit</option>
+    <option id="delete" value="delete">Delete</option>
+</select>
+<ul id="contextmenu1" class="jqcontextmenu">
+    <li style="font-weight:bold;padding:5px;font-size:13px;text-align:center;"><span>Select option:</span></li>
+     <li>     
+            <a href="#" onclick="set_option('edit');">Edit</a>
+            <a href="#" onclick="set_confirm_option('delete');">Delete</a>
+    </li>
+</ul>
+<div style="display:none;position:fixed;bottom:0;right:3%;background-color:#e0e0e0;opacity:0.4;filter:alpha(opacity=40);" id="selection_box"><a href="javascript:uncheckselected();ChooseAll();"><img src="${tg.url('/images/x.png')}" />&nbsp;</a> selected <div id="myResultsBottom" style="display:inline">&nbsp;</div><br /></div>
+</form>
+</body>
+</html>

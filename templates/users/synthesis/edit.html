@@ -1,0 +1,240 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+  <title>Synthesis ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/synthesis/get_all')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis')}">Show my</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/synthesis/details')}/${scompound.gid}/${scompound.id}">Details</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/addreag')}/${scompound.id}">Add reagents</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/edit')}/${scompound.id}"><b>Edit</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/allefforts')}/${scompound.id}">Efforts</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/accept')}/${scompound.id}">Recive</a></li>
+        </ul>
+     </div>
+</div>
+<div class="accept">
+<div style="clear:both;"/>
+<div class="detail_notes" style="width: 800px;margin: 10px auto;color: #666;">
+<ul id="nav">
+	<li ><a href="${tg.url('/'+pname+'/synthesis/details')}/${scompound.gid}/${scompound.id}">Details</a></li>
+	<li class="current"><a href="#">Edit</a>
+		<ul>
+			<li ><a href="${tg.url('/'+pname+'/molecules/edit')}/${scompound.gid}" style="font-weight:normal;">Edit structure</a></li>
+			<li ><a href="${tg.url('/'+pname+'/synthesis/edit')}/${scompound.id}">Synthesis Edit</a></li>
+		</ul>
+	</li>
+        <li><a href="${tg.url('/'+pname+'/synthesis/allefforts')}/${scompound.id}">Efforts</a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis/addreag')}/${scompound.id}">Add reagents</a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis/accept')}/${scompound.id}">Recive</a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis/reject')}/${scompound.id}" onclick="return(confirm('Confirm to reject.'))">Reject</a></li>
+</ul>
+</div>
+<h2 class="text-align:center;">Edit Synthesis Compound.</h2>
+  <form action="${tg.url('/'+pname+'/synthesis/put')}/${scompound.id}" enctype="multipart/form-data" method="post" >
+    <table style="width:800px;">
+        <tr>
+            <td><label for="gid">GID: </label></td>
+            <td><input id="accept" type="text" name="gid" value="${scompound.gid}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="id">Synthesis ID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${scompound.id}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="structure">Smiles: </label></td>
+            <td><input id="structure" type="text" name="structure" value="${scompound.mol.structure}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label for="name">Name: </label></td>
+            <td><input id="accept" type="text" name="name" value="${scompound.mol.name}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label class="etap_max" for="priority"> Priority: </label></td>
+            <td>
+                <select name="priority">
+                <py:for each="item in range(0,6)">
+                        <py:choose test="item == scompound.priority">
+                        <py:when test="True">
+                            <option value="${item}" selected="yes">${item}</option>
+                        </py:when>
+                        <py:otherwise>
+                            <option value="${item}">${item}</option>
+                        </py:otherwise>
+                    </py:choose>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label  for="principal"> Recipient: </label></td>
+            <td>
+                <select name="principal">
+                <py:for each="user in users">
+                    <py:choose test="user.user_name == scompound.principal">
+                        <py:when test="True">
+                            <option value="${user.user_name}" selected="yes">${user}</option>
+                        </py:when>
+                        <py:otherwise>
+                            <option value="${user.user_name}">${user}</option>
+                        </py:otherwise>
+                    </py:choose>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="lso">LSO:  </label></td>
+            <td><textarea id="notes" name="lso" rows="2">${scompound.lso}</textarea></td>
+        </tr>
+        <tr>
+            <td><label for="form">Form: </label></td>
+            <td><textarea id="notes" name="form" rows="2">${scompound.form}</textarea></td>
+        </tr>
+        <tr>
+            <td><label for="lso">State [mg]: </label></td>
+            <td><input type="text" name="state" value="${scompound.state}" /></td>
+        </tr>
+        <tr py:if="scompound.purity">
+            <td><label for="purity"> Purity: </label></td>
+            <td>
+                <p py:for="p in scompound.purity"><input type="text" name="${p.type}" value="${p.value}"  size="1" />
+                    <input type="text" name="type_${p.type}" value="${p.type}"  disabled="yes" size="4" />
+                    <py:for each="f in p.filename">
+                        file: <a href=" ${tg.url('/files')}/${f.filename}">[ ${f.name} ]</a><br />
+                        <input type="file" name="file_${p.type}" size="20" value="test" /> ( change file )
+                    </py:for>
+                    <py:if test="not p.filename">
+                        <br /><input type="file" name="file_${p.type}" size="20" value="test" /> ( add file )
+                    </py:if>
+                </p>
+            </td>
+        </tr>
+        <tr py:for="purity in scompound.purity">
+            <td><label for="retention_kwas">Retention time (${purity.type}) [min]:</label></td>
+            <td><input id="accept" type="text" name="retention_${purity.type}" value="${purity.retention_time}" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows= "2" value="None" >${scompound.notes}</textarea></td>
+        </tr>
+        <tr>
+            <td>Add file:</td>
+            <td><input type="file" name="loadfile" /> </td>
+        </tr>
+        <tr>
+            <td><label for="opis">Description of file: </label></td>
+            <td><textarea id="notes" name="opis" rows="2" value="None" ></textarea></td>
+        </tr>
+                <tr><td><hr /></td><td><hr /></td></tr>
+        <tr>
+            <td style="width:150px"><label class="etap_max" for="etap_max"><b style="color:red;  font-size: 80%;">*</b> Number of phases: </label></td>
+            <td>
+                <select name="etap_max">
+                <py:for each="i in range(1,20)">
+                    <py:choose test="etap_max == i">
+                        <py:when test="True">
+                            <option value="${i}" selected="yes">${i}</option>
+                        </py:when>
+                        <py:otherwise>
+                            <option value="${i}">${i}</option>
+                        </py:otherwise>
+                    </py:choose>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label class="etap_max" for="etap"><b style="color:red;  font-size: 80%;">*</b> Finished phase: </label></td>
+            <td>
+                <select name="etap">
+                <py:for each="i in range(15)">
+                    <py:choose test="etap == i">
+                        <py:when test="True">
+                            <option value="${i}" selected="yes">${i}</option>
+                        </py:when>
+                        <py:otherwise>
+                            <option value="${i}">${i}</option>
+                        </py:otherwise>
+                    </py:choose>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="reason"><b style="color:red;font-size: 80%;">*</b> Reason for phase changing:  </label></td>
+            <td><textarea id="notes" name="reason" rows="2"></textarea></td>
+        </tr>            
+<!--!        <tr>
+            <td>Reaction path:</td>
+            <td><input type="file" name="reaction" accept="image/*" /> </td>
+        </tr>-->
+            <tr>
+            <td><label for="tags">Tags: </label></td>
+            <td>
+    
+                <ul id="form_tags">
+                    <li py:for="tag in alltags"  style="list-style: none; display: inline; text-indent: -1em; margin:0px;padding:0px;">
+                        <py:if test="tag in tags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}"  checked="yes" id="tags" title="&nbsp;" />${tag.name}
+                        </py:if>
+                        <py:if test="not tag in tags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                        </py:if>
+                    </li>
+                </ul>
+             </td>
+        </tr>
+            <py:if test="files">
+                <tr>
+                <td><label for="files">Files: </label></td>
+                <td>
+        
+                    <ol>
+                        <li py:for="file in files"  >
+                            ${file.name} <a href="${tg.url('/'+pname+'/synthesis/delfile')}/${file.files_id}/${scompound.id}">delete</a> <br />
+                            <i><u>Description of file:</u></i> ${file.description}<br /><br />
+                        </li>
+                    </ol>
+                 </td>
+                </tr>
+            </py:if>
+        
+    <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /><input id="submit" type="reset" value="Reset" /></td></tr>
+            <tr>
+        <td></td>
+        <td>
+        <hr />
+            <br /><b style="color:red; font-size: 80%;">*</b>  - required fields for custom changes in the number of stages or of current phase. <br />
+        </td>
+        </tr>
+    </table>
+<input type="hidden" name="come_from" value="${come_from}" />
+  </form>
+</div>
+
+<div style="clear:both;" />
+</body>
+</html>

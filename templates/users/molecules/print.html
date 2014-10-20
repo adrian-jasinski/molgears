@@ -1,0 +1,78 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+    <title>Struktury</title>
+<style type="text/css">
+@font-face {
+font-family: PDF, "PDF";
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana.ttf');
+}
+
+@font-face {
+font-family: PDF2, "PDF2";
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana.ttf');
+}
+
+
+body {
+font-family: PDF;
+}
+h1, th{src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana_Bold.ttf');
+font-family: PDF2;
+}
+</style>
+</head>
+<body class="tundra" style="background-color:white;">
+    <div id="crud_content">
+      <h1 style="text-align:center"><b>Compounds</b>( ${currentPage.item_count} )</h1>
+      <div style="text-align:center">
+    <div class="crud_table">
+        <div id="crud_tab">
+            <table id="" class="grid" cellpadding="1" border="0.5px">
+                <thead >
+                    <tr style="background-image:url('${tg.url('/images/menubg.png')}'); background-repeat:no-repeat;background-position: -20px top;">
+                        <th class="col">GID</th>
+                        <th class="col">Name</th>
+                        <th class="col">Smiles</th>
+                        <th class="col">Image<br />&nbsp;</th>
+                        <th class="col">Create date</th>
+                        <th class="col">Creator</th>
+                        <th class="col">Tags<br />&nbsp;</th>
+                        <th class="col">State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:for="row in compound" class="${compound.index(row)%2 and 'odd' or 'even'}" style="margin:1px;padding:1px;">
+                        <td class="col">${row.gid}</td>
+                        <td class="col">${row.name}</td>
+                        <td class="col" style="margin:0px;padding:0px;width:300px;display: inline-block;word-wrap: break-word;white-space: pre-wrap;">${row.structure}</td>
+                        <td class="col">
+                        <img src="./molgears/public/img/${row.gid}.png" width="${size[0]}px" height="${size[1]}px" border="0" />
+                        </td>
+                        <td class="col">${row.create_date}</td>
+                        <td class="col">${row.creator.replace('.', ' ')}</td>
+                        <td class="col">
+                        <span py:for="tag in row.tags">${tag.name}, <br /></span>
+                        </td>
+                        <td class="col">
+                            <span title="1.Do_syntezy" style="color:red">${row.pnum}</span><br />
+                            <span title="2.Synthesis" style="color:blue">${row.snum}</span><br />
+                            <span title="3.Library" style="color:green">${row.lnum}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+                <py:if test="currentPage.item_count == 0">
+                    No Records Found.
+                </py:if>
+            </div>
+
+    
+        </div>
+    </div>
+    </div>
+    <div style="clear:both;"/>
+</body>
+</html>

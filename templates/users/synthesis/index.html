@@ -1,0 +1,437 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="master.html" />
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+    <link rel="stylesheet" type="text/css" href="${tg.url('/css/jqcontextmenu.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/filter.css')}" />
+    
+    <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/cookie.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/akcje.js')}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/jqcontextmenu.js')}"></script>
+<script type="text/javascript">
+jQuery(document).ready(function($){
+	$('body.tundra').addcontextmenu('contextmenu1') //apply context menu to links with class="mylinks"
+})
+document.onkeypress = keyPress;
+function keyPress(e){
+var x = e || window.event;
+var key = (x.keyCode || x.which);
+if(key == 13 || key == 3){
+    document.getElementById("search").click();
+}
+}
+</script>
+ <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-darkness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  
+  <script>
+  $(document).ready(function() {
+    $("#date1").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg", gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+    $("#date2").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg" , gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+    $("#date_stat1").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg" , gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+    $("#date_stat2").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg" , gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+  });
+  </script>
+  <script type="text/javascript" src="${tg.url('/javascript/show.js')}"></script>
+    <title>Synthesis ${pname}</title>
+</head>
+<body class="tundra" onload="recoverInputs(document.forms.selection,retrieveCookie('sIndex'),true);ChangeAll(this);ChooseAll();ShowNotEmpty();" onunload="setCookie('sIndex',getFormString(document.forms.selection,true),10);">
+<?python 
+    import datetime
+    from datetime import timedelta
+?>
+<form name="selection" onsubmit="setCookie('sIndex',getFormString(this,true),10);">
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+    <div>
+        <p class="pagelist" style="font-size:12px;text-align:center;">
+            <a class="prevPage" href="${tg.url('/'+pname+'/synthesis/?page')}=${currentPage.previous_page}&amp;${tmpl}">&lt;</a>
+            ${currentPage.pager(format='~3~', page_param='page', show_if_single_page=True)}
+            <a class="nextPage" href="${tg.url('/'+pname+'/synthesis/?page')}=${currentPage.next_page}&amp;${tmpl}">&gt;</a>
+        </p>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+    <ul>
+        <li><a href="${tg.url('/'+pname+'/synthesis/get_all')}">Show all</a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis')}"><b>Show my</b></a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis/recieve')}" style="color:blue;">Recieve</a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis/history')}">History of changes</a></li>
+      </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+    <div id="filter">
+          <input type="checkbox" name="manager" onclick="showID(this,'download');" id="manager" />Download manager
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+    <div id="filter">
+      <b>Filter</b><br />
+        <input type="checkbox" name="choosen" value="" onclick="search_toggle(this)" id="all" style="color:red;" /><b>select all</b><br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_smiles" />Structure<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_GID" />GID<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_ID" />ID<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_name" />Name<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_lso" />LSO<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_owner" />Owner<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_principal" />Recipient<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_notes" />Notes<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_priority" />Priority<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_tags" />Tags<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_date" />Date<br />
+        <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_status" />Status<br />
+    </div>
+</div>
+
+<div class="accept">
+    <div class="download" id="download">
+        <div class="caption"><b>Download manager</b></div>
+        <table>
+        <tr><th>Structures</th><th>File type</th><th>Info</th><th>Attributes</th><th>Data</th></tr>
+            <tr>
+                <td>
+                    <input type="radio" name="sell_type" value="all" checked="checked" onclick="otherSelect()" />total<br />
+                    <input type="radio" name="sell_type" value="selected" onclick="otherSelect();CheckIfSelected();ShowLength();" id="selected" />selected <div id="myResults" style="display:inline"> &nbsp;</div><br />
+                    <input type="radio" name="sell_type" id="other" value="range" onclick="otherSelect()" />range<br />
+                    <div id="otherBox" style="display:none">
+                        from <input type="text" name="select_from" size="2" /> to <input type="text" name="select_to" size="2" />
+                    </div>
+                </td>
+                <td>
+                    <input type="radio" name="file_type" value="pdf" checked="yes" />pdf<br />
+                    <input type="radio" name="file_type" value="xls" />xls<br />
+                    <input type="radio" name="file_type" value="csv" />csv<br />
+                    <input type="radio" name="file_type" value="txt" />txt<br />
+                </td>
+                <td>
+                    <input type="checkbox" name="options" value="nr" />No.<br />
+                    <input type="checkbox" name="options" value="gid" />GID<br />
+                    <input type="checkbox" name="options" value="id" />ID<br />
+                    <input type="checkbox" name="options" value="name" />primary name<br />
+                    <input type="checkbox" name="options" value="names" />all of the names<br />
+                    <input type="checkbox" name="options" value="smiles" />SMILES<br />
+                    <input type="checkbox" name="options" value="inchi" />InChi<br />
+                    <input type="checkbox" name="options" value="lso" />LSO<br />
+                </td>
+                <td>
+                    <input type="checkbox" name="options" value="num_atoms" />atoms<br />
+                    <input type="checkbox" name="options" value="mw" />molecular weight<br />
+                    <input type="checkbox" name="options" value="hba" />hba<br />
+                    <input type="checkbox" name="options" value="hbd" />hbd<br />
+                    <input type="checkbox" name="options" value="tpsa" />TPSA<br />
+                    <input type="checkbox" name="options" value="logp" />logP<br />
+                    <input type="checkbox" name="options" value="form" />form<br />
+                    <input type="checkbox" name="options" value="state" />state<br />
+                    <input type="checkbox" name="options" value="purity" />purity<br />
+                </td>
+                <td>
+                    <input type="checkbox" name="options" value="image" onchange="showID(this,'resize');" />Image<br />                    <div id="resize" style="display:none;margin-left:10px;">
+                        <input type="radio" name="getsize" value="100" checked="checked" />100x100<br />
+                        <input type="radio" name="getsize" value="200" />200x200<br />
+                        <input type="radio" name="getsize" value="300" />300x300<br />
+                        <input type="radio" name="getsize" value="400" />400x400<br />
+                        <div style="clear:both;"/>
+                    </div>
+                    <input type="checkbox" name="options" value="create_date" />Create date<br />
+                    <input type="checkbox" name="options" value="owner" />Creator<br />
+                    <input type="checkbox" name="options" value="principal" />Recipient<br />
+                    <input type="checkbox" name="options" value="priority" />Priority<br />
+                    <input type="checkbox" name="options" value="etap" />Phase<br />
+                    <input type="checkbox" name="options" value="status" />Status<br />
+                    <input type="checkbox" name="options" value="tags" />Tags<br />
+                    <input type="checkbox" name="options" value="notes" />Notes<br />
+                </td>
+            </tr>
+            <tr style="text-align:center;"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr style="text-align:center;"><td>&nbsp;</td><td>&nbsp;</td><td><input type="submit" name="search" value="Download" style="background-color:#707070;color:white;border: 2px outset #707070;" /></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </table>
+    </div>
+    <div class="div-table">
+        <div class="div-table-caption" id="caption">Filtering search results</div>
+        <div class="div-table-row" id="text_smiles1">
+            <div class="div-table-col-right">
+                <input type="radio" name="method" value="smililarity" /> Smililarity  <br />
+                <input type="radio" name="method" value="substructure" checked="yes" /> Substructure <br />
+                <input type="radio" name="method" value="identity" /> Exact Structure <br />
+            </div>
+            <div class="div-table-col-left">
+                <b>SMILES</b><br />
+                <input type="text" size="40" value="" name="smiles" class="filternotempty" /><input type="button" value="Draw Structure" onClick="startEditor();" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_GID1">
+            <div class="div-table-col-right">
+                <b>GID:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_GID" size="4" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_ID1">
+            <div class="div-table-col-right">
+                <b>ID:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_ID" size="4" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_name1">
+            <div class="div-table-col-right">
+                <b>Name:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_name" size="20" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_lso1">
+            <div class="div-table-col-right">
+                <b>LSO:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_lso" size="20" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_owner1">
+            <div class="div-table-col-right">
+                <b>Owner:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_owner" size="20" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_principal1">
+            <div class="div-table-col-right">
+                <b>Recipient:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_principal" size="20" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_entry1">
+            <div class="div-table-col-right">
+                <b>Entry:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_entry" size="4" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_box1">
+            <div class="div-table-col-right">
+                <b>Box:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_box" size="4" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_notes1">
+            <div class="div-table-col-right">
+                <b>Notes:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_notes" size="20" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_priority1">
+            <div class="div-table-col-right">
+                <b>Priority:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_priority" size="4" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_tags1">
+            <div class="div-table-col-right">
+                <b>Tags:</b>
+            </div>
+            <div class="div-table-col-left">
+                <div class ="tags">
+                    <ul style="width:560px;list-style: none; line-height: normal;margin: 0;padding: 0; ">
+                            <li py:for="tag in alltags" style="float: left; width: 140px; border: 0px;">
+                                <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="div-table-row"  id="text_date1">
+            <div class="div-table-col-right">
+                <b>Date</b>
+            </div>
+            <div class="div-table-col-left">
+                <div class="demo">
+                    from: <input id="date1" name="date_from" class="filternotempty" /><br />
+                    to: <input id="date2" name="date_to" class="filternotempty" />
+                </div>
+            </div>
+        </div>
+        <div class="div-table-row"  id="text_status1">
+            <div class="div-table-col-right">
+                <b>Status:</b>
+            </div>
+            <div class="div-table-col-left">
+                <div>
+                    <b>Status name:</b><br />
+                    <select name="text_status" multiple="multiple" size="${len(allstatus)}" style="width:200px;" class="filternotempty">
+                        <option py:for="stat in allstatus" value="${stat.id}">${stat.name}</option>
+                    </select>
+                </div>
+                <div class="demo">
+                    <br /><b>Status create date:</b><br />
+                    from: <input id="date_stat1" name="date_stat_from" /><br />
+                    to: <input id="date_stat2" name="date_stat_to" />
+                </div>
+            </div>
+        </div>
+    
+        <div class="div-table-row" style="display:table-row" id="search_box">
+            <div class="div-table-col-right">
+                &nbsp;
+            </div>
+            <div class="div-table-col-left">
+                <input type="submit" name="search" id="search" value="Search" onclick="set_reset();" style="background-color:#707070;color:white;border:2px outset #707070;" />
+                <input type="button" name="clear" value="Reset" onclick="clearForm(this.form);deleteCookie('sIndex');ChangeAll();" style="background-color:silver;color:black;border:2px outset silver;" />
+            </div>
+        </div>        
+    </div>
+    <div id="crud_content">
+        <div class="crud_table">
+            <div id="crud_tab" >
+        <table id="" class="grid">
+            <thead>
+                <tr>
+                    <th class="col"><input type="checkbox" onClick="toggle(this);CheckIfSelected();ShowLength();" id="maincheckbox" /></th>
+                    <th class="col">GID<br /><a class="sort_up" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=gid')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=gid')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Name<br /><a class="sort_up" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=name')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=name')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Image<br />&nbsp;</th>
+                    <th class="col">Create date<br /><a class="sort_up" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=create_date')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=create_date')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Owner<br /><a class="sort_up" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=owner')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=owner')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Recipient<br /><a class="sort_up" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=principal')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=principal')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Status<br /><a class="sort_up" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=status_id')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=status_id')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Effort<br />&nbsp;</th>
+                    <th class="col">Phase<br /><a class="sort_up" href="${tg.url('/'+pname+'/synthesis/get_all?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=etap_diff')}&amp;desc=1">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/'+pname+'/synthesis/get_all?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=etap_diff')}&amp;desc=0">&nbsp; </a></th>
+                    <th class="col">Priority<br /><a class="sort_up" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=priority')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/'+pname+'/synthesis/index?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=priority')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Tags<br />&nbsp;</th>
+                    <th py:if="similarity" class="col">Similarity [%]</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr py:for="row in currentPage.items" class="${row.status.name}" id="${row.id}">
+                    <td class="col"><input type="checkbox" name="select" value="${row.id}" onchange="ShowLength();ChangeMe(this,'${row.id}')" /></td>
+                    <td class="col">${row.gid}</td>
+                    <td class="col"><a href="${tg.url('/'+pname+'/synthesis/details')}/${row.gid}/${row.id}">${row.mol.name}</a></td>
+                    <td class="col">
+                    <a class="thumbnail" href="${tg.url('/'+pname+'/synthesis/get_all?smiles=')}${unicode(row.mol.structure).replace('+', '%2B').replace('#','%23')}&#38;method&#61;smililarity&#38;text_GID=&#38;text_ID=&#38;text_name=&#38;text_lso=&#38;text_owner=&#38;text_principal=&#38;text_notes=&#38;text_priority=&#38;date_from=&#38;date_to=&#38;date_stat_from=&#38;date_stat_to=&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.mol.name}</span></a>
+                    </td>
+                    <td class="col">${row.create_date}</td>
+                    <td class="col">${row.owner.replace('.',' ')}</td>
+                    <td class="col">${row.principal.replace('.',' ')}</td>
+                    <td class="col">${row.status.name}<br />
+                    <py:if test="row.status_id == 2">${(datetime.datetime.now()-row.stat2_date).days/7}</py:if>
+                    <br />
+                    <py:for each="reag in row.reag">
+                       <py:if test="row.status_id == 2 and reag.status_id == 2">
+                        <a class="thumbnail" href="#thumb"><img src="${tg.url('/images/ball.png')}" /><span><img src="${tg.url('/reag_img')}/${reag.rid}.png" width="220px" height="220px" /><br />[<b>${reag.rid}</b>] ${reag.name}</span></a>
+                        </py:if>
+                    </py:for>
+                    </td>
+                    <td class="col">
+                        <br /><b><a href="${tg.url('/'+pname+'/synthesis/allefforts')}/${row.id}">${len(row.effort)}</a></b>
+                        <ul>
+                            <li style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><a href="${tg.url('/'+pname+'/synthesis/edit_effort')}/${row.id}/${row.effort_default}" class="edit_link" title="edit"></a></li>
+                            <li style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><a href="${tg.url('/'+pname+'/synthesis/effort_next')}/${row.id}" class="add_link" title="add"></a></li>
+                        </ul>
+                        <span py:if="next(obj.reaction for obj in row.effort if obj.id==row.effort_default)" style="text-align:center;"><a class="thumbnail" href="#thumb"><img src="${tg.url('/images/arrowcicle.jpg')}" width="50px" height="50px" border="0" title="ścieżka reakcji"/><span style="left: -200px;"><img src="${tg.url('/files')}/${next(obj.reaction[0].filename for obj in row.effort if obj.id==row.effort_default)}" title="Reaction path" /><br />Droga syntezy: [<b>${row.gid}</b>] ${row.mol.name}</span></a></span>
+                    </td>
+                    <td class="col">${next(obj.etap for obj in row.effort if obj.id==row.effort_default)}/${next(obj.etap_max for obj in row.effort if obj.id==row.effort_default)}</td>
+                    <td class="col">
+                    <div class="starRate">
+                        <div><b></b></div>
+                            <ul>
+                            <li py:for="i in range(5,0,-1)"><a href="#"><span></span><b py:if="i == row.priority"></b></a></li>
+                            </ul>
+                    </div>
+                    </td>
+                    <td class="col">
+                    <ul>
+                        <li py:for="tag in row.mol.tags"  style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><a href="${tg.url('/'+pname+'/synthesis/index')}?search=Szukaj&#38;text_tags=${tag.id}&#38;akcja=edit&#38;method=substructure">${tag.name}</a></li>
+                    </ul>
+                    </td>
+                    <td py:if="similarity" class="col">${round(similarity[currentPage.items.index(row)],4)*100}</td>
+                    <!--!<td class="col">
+                    <ul>
+                        <li style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><a href="${tg.url('/'+pname+'/synthesis/etap')}/${row.id}">+etap</a></li>
+                        <li style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><a href="${tg.url('/'+pname+'/synthesis/edit')}/${row.id}">edit</a></li>
+                        <li style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><a href="${tg.url('/'+pname+'/synthesis/reject')}/${row.id}" onclick="return confirm('Na pewno zamknąć?')" style="color:#B40404">zamknij</a></li>
+                        <li py:if="row.status == status" style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><a py:if="row.principal == user" href="${tg.url('/'+pname+'/synthesis/accept')}/${row.id}" style="color:blue">odbierz</a></li>
+                        <li style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><br /></li>
+                    </ul>
+                    </td>-->
+                </tr>
+            </tbody>
+        </table>
+            <py:if test="currentPage.item_count == 0">
+                No Records Found.
+            </py:if>
+        <div class="pagelist">
+            <p class="pagelist">
+            <a class="prevPage" href="${tg.url('/'+pname+'/synthesis/?page')}=${currentPage.previous_page}&amp;${tmpl}">&lt;&lt;&lt;</a>
+            ${currentPage.pager(format='~3~', page_param='page', show_if_single_page=True)}
+            <a class="nextPage" href="${tg.url('/'+pname+'/synthesis/?page')}=${currentPage.next_page}&amp;${tmpl}">&gt;&gt;&gt;</a>
+            </p>
+        </div>
+        </div>
+
+      </div>
+    </div>
+</div>
+<div style="clear:both;" />
+<select id="crud_search_field"   name="akcja" style="visibility:hidden;">
+    <option value="edit" selected="selected">Edit</option>
+    <option value="etap" onclick="return confirm('Uwaga zostanie zmieniony etap dla wielu związków. Kliknij &bdquo;wybierz&rdquo; aby potwierdzić.')">phase change</option>
+    <option value="addreag">Add reagents</option>
+    <option value="resign">Resign</option>
+    <option value="reject">Reject</option>
+    <option value="discontinue">Discontinue</option>
+    <option value="enable">Continue</option>
+</select>
+<ul id="contextmenu1" class="jqcontextmenu">
+    <li style="font-weight:bold;padding:5px;font-size:13px;text-align:center;"><span>Select option:</span></li>
+    <li>     
+        <a href="#" onclick="set_option('edit');">Edit</a>
+        <a href="#" onclick="set_option('etap');">Change of Phase</a>
+        <a href="#" onclick="set_option('addreag');">Add reagents</a>
+        <a href="#" onclick="set_option('reject');">Reject</a>
+        <a href="#" onclick="set_option('discontinue');">Discontinue</a>
+        <a href="#" onclick="set_option('enable');">Continue</a>
+        <a href="#" onclick="set_option('resign');">Resign</a>
+
+    </li>
+    <li><a href="#">Add to List:</a>
+        <ul>
+            <li><a href="#" onclick="create_list('SCompounds');" class="add_link">+ Create new</a></li>
+            <li py:for="ulist in ulists"><a href="#" onclick="add_to_list('${ulist.id}', '${ulist.table}');">${ulist.name}</a></li>
+        </ul>
+    </li>    
+</ul>
+<div style="display:none;position:fixed;bottom:0;right:3%;background-color:#e0e0e0;opacity:0.4;filter:alpha(opacity=40);" id="selection_box"><a href="javascript:uncheckselected();ChooseAll();"><img src="${tg.url('/images/x.png')}" />&nbsp;</a> selected <div id="myResultsBottom" style="display:inline">&nbsp;</div><br /></div>
+</form>
+</body>
+</html>

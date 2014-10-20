@@ -1,0 +1,102 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+  <title>Compounds ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/new')}">Add new</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/read_from_file')}">Import from file</a></li><li><a href="${tg.url('/'+pname+'/molecules/showgroups')}">Groups</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/history')}">History of changes</a></li>
+        </ul>
+    </div>
+</div>
+ 
+ 
+ 
+<div class="accept">
+<h2 class="text-align:center;">Add to Library: <br /></h2>
+  <form action="${tg.url('/'+pname+'/molecules/multilibrary')}/${args[0]}" enctype="multipart/form-data" method="post" name="form">
+  <input py:for="arg in args[1:]" type="checkbox" name="argv" value="${arg}" checked="yes">${arg}</input><br /><br />
+    <table style="width:700px;">
+        <tr>
+            <td><label for="form">Form: </label></td>
+            <td><textarea id="notes" name="form" rows="2" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="kwas"> Acid purity [%]: </label></td>
+            <td><input id="accept" type="text" name="kwas" value="0" size="1" /> </td>
+        </tr>
+        <tr>
+            <td><label for="zasada"> Basic purity [%]: </label></td>
+            <td><input id="accept" type="text" name="zasada" value="0" size="1" /> </td>
+        </tr>
+        <tr>
+            <td><label for="state">State [mg]: </label></td>
+            <td><input type="text" name="state" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="box">Box: </label></td>
+            <td><input type="text" name="box" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="entry">Entry: </label></td>
+            <td><input type="text" name="entry" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="source">Source: </label></td>
+            <td><input type="text" name="source" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="lso"> LSO:  </label></td>
+            <td><textarea id="notes" name="lso" rows="2"></textarea></td>
+        </tr>
+        <tr>
+            <td><label for="chemist"> Chemist: </label></td>
+            <td>
+                <select name="chemist">
+                  <option value="" selected="yes">None</option>
+                  <py:for each="user in users">
+                    <option value="${user}">${user}</option>
+                  </py:for>
+            </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows="2" value="None" /></td>
+        </tr>
+            <tr>
+            <td><label for="tags">Tags: </label></td>
+            <td>
+    
+                <ul id="form_tags">
+                    <li py:for="tag in alltags"  style="list-style: none; display: inline; text-indent: -1em; margin:0px;padding:0px;">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                    </li>
+                </ul>
+             </td>
+        </tr>
+    <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /><input id="submit" type="reset" value="Reset" /></td></tr>
+    </table>
+<input type="hidden" name="come_from" value="${come_from}" />
+  </form>
+</div>
+<div style="clear:both;" />
+</body>
+</html>

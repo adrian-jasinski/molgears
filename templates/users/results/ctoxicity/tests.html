@@ -1,0 +1,74 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/details.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+  
+    <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/cookie.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/akcje.js')}"></script>
+  <title>Ctoxicity ${pname}</title>
+
+</head>
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+         <ul>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/?showall=YES')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/tests')}"><b>CT Tests</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readresult')}">Add results</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readphotos')}">Add Photos</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/history')}">History of changes</a></li>
+          </ul>
+    </div>
+</div>
+
+<div class="accept">
+    <div id="crud_content">
+        <div class="detail_compound">
+            <div class="detail_notes" style="width: 800px;margin: 10px auto;color: #666;">
+                <ul id="nav">
+                    <li  class="current"><a href="${tg.url('/'+pname+'/results/ctoxicity/tests')}">Show CT Tests</a></li>
+                    <li><a href="${tg.url('/'+pname+'/results/ctoxicity/addtest')}">Add CT Test</a></li>
+                    <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readresult')}">Add results</a></li>
+                    <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readphotos')}">Add Photos</a></li>
+                </ul>
+            </div>
+            <div style="margin 0 auto;display: inline-block;">
+                <h2 style="text-align:center">CT Tests</h2>
+                <py:for each="test in tests">
+                    <table py:if="tests.index(test)%3==0" width="180px" style="float:left;position:relative;border-right:2px solid black;color:#200000;">
+                        <tr style="background-color:#E8E8E8;"><td>Name<span style="float:right">ID</span></td></tr>
+                        <tr><td>Test Type:</td></tr>
+                        <tr style="background-color:#E8E8E8;"><td>Incubation time:</td></tr>
+                        <tr><td style="border:none;width:150px;">Notes:</td></tr>
+                    </table>
+                    <table width="180px" style="float:left;position:relative;text-align:left" id="${test.id}">
+                        <tr style="background-color:#E8E8E8;"><td><a  href="${tg.url('/'+pname+'/results/edit')}/${test.id}" style="font-weight:bold" title="edit">${test.name}</a><span style="float:right">${test.id}</span></td></tr>
+                        <tr><td>${test.type}</td></tr>
+                        <tr style="background-color:#E8E8E8;"><td>${test.time} &nbsp;</td></tr>
+                        <tr><td style="border:none;width:150px;">${test.notes} &nbsp;</td></tr>
+                    </table>
+                    <br py:if="tests.index(test)%3==2" />
+                    <hr py:if="tests.index(test)%3==2" />
+                    <br py:if="tests.index(test)%3==2" />
+                </py:for>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear:both;margin-bottom:250px;" />
+
+</body>
+</html>

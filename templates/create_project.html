@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+<script>
+
+var i = 2; // Global Variable for Name
+/*
+=================
+Creating Text Box for name field in the Form.
+=================
+*/
+function textBoxCreate(){
+var y = document.createElement("INPUT");
+var br = document.createElement("br");
+y.setAttribute("type", "text");
+y.setAttribute("Placeholder", "Cell_Line_" + i);
+y.setAttribute("Name", "Cell_Line_" + i);
+document.getElementById("myForm").appendChild(y);
+document.getElementById("myForm").appendChild(br);
+i++;
+}
+</script>
+  <title>Adamed molgears</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;float:left;">
+    <h4 style="text-align:center;">Add project</h4>
+    <div style="clear:both;"/>
+     <hr style="border: 2px ridge #000;" />
+</div>
+<div class="accept" style="float:None;width:None;border:1px solid white">
+    <h2 style="text-align:center;">Create new project</h2>
+    <form action="${tg.url('/create_project')}" enctype="multipart/form-data" method="post" name="form">
+        <table  style="margin:0 auto;">
+            <tr>
+                <td class="left"><label for="name"><b style="color:red;  font-size: 80%;">*</b> Name: </label></td>
+                <td class="right"><input type="text" name="name" style="width:200px;" /></td>
+            </tr>
+            <tr>
+                <td class="left">
+                    <div class="two"><input type="button" class="name" onclick="textBoxCreate()" value="Add next" /><b style="color:red;  font-size: 80%;">*</b></div>
+                </td>
+                <td class="right">
+                    <input type="text" name="Tag_Name_1" placeholder="Cell_Line_1" />
+                    <p id="myForm"></p>
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><label for="description">Description: </label></td>
+                <td class="right"><textarea name="description" size="5" style="width:200px;"></textarea></td>
+            </tr>
+        <tr>
+        <td class="left"></td>
+        <td class="right"><input type="submit" name="submit" value="Save" style="width:100px;" /><input type="reset" value="Reset" style="width:100px;" /></td></tr>
+        <tr>
+            <td class="left"></td>
+            <td class="right">
+                <br /><b style="color:red;  font-size: 80%;">*</b>  - Required fields.
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+<div style="clear:both;"/>
+<br /><br />
+</body>
+</html>

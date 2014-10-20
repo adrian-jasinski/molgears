@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <title>Compounds ${pname}</title>
+  <style>
+  tr.colcolor {
+    background-color: silver;
+    border-style : solid;
+    border-width:1px;
+    border-color : black;
+}
+  tr.col {
+    background-color: white;
+    border-style : solid;
+    border-width:1px;
+    border-color : black;
+}
+  </style>
+</head>
+
+<body onLoad='showexample()' onUnload='saveJMECookie()'>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/new')}">Add new</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/read_from_file')}">Import from file</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/showgroups')}"><b>Groups</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/history')}">History of changes</a></li>
+        </ul>
+    </div>
+</div>
+ 
+ 
+<div class="accept">
+    <div style="margin 0 auto;display: inline-block;">
+        <h2 style="text-align:center">Show Groups</h2>
+        <a class="add_link" href="${tg.url('/'+pname+'/molecules/addgroup')}">Add new</a><br /><br />
+            <table width="800px" style="float:left;position:relative;border:none;color:#200000;">
+                <tr>
+                    <th>ID</th>
+                    <th>Next Name</th>
+                    <th>Prefix</th>
+                    <th>Sufix</th>
+                    <th>Precision</th>
+                    <th>Next</th>
+                </tr>
+                <tr py:for="group in ngroups" class="${ngroups.index(group)%2 and 'col' or 'colcolor'}">
+                    <td>${group.id}</td>
+                    <td><a href="${tg.url('/'+pname+'/molecules/editgroup')}/${group.id}">${group.prefix and group.prefix + '-' or ''}${(group.precision-len(str(group.next)))*'0'}${group.next}${group.sufix and '-' + group.sufix or ''}</a></td>
+                    <td>${group.prefix}</td>
+                    <td>${group.sufix}</td>
+                    <td>${group.precision}</td>
+                    <td>${group.next}</td>
+                </tr>
+
+            </table>
+    </div>
+
+</div>
+<div style="clear:both;" />
+</body>
+</html>

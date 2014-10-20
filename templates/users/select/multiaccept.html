@@ -1,0 +1,80 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+  <title>Requests ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/select/get_all')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/select')}">Poka偶 proponowane</a></li>
+            <li><a href="${tg.url('/'+pname+'/select/history')}">History of changes</a></li>
+        </ul>
+    </div>
+</div>
+   
+<div class="accept">
+<h2 class="text-align:center;">Accept compounds: <br /></h2>
+  <form action="${tg.url('/'+pname+'/select/multiaccept')}/${args[0]}" enctype="multipart/form-data" method="post" name="form">
+  <input py:for="arg in args[1:]" type="checkbox" name="argv" value="${arg}" checked="yes">${arg}</input><br /><br />
+    <table style="width:700px;">
+        <tr>
+            <td><label class="etap_max" for="etap_max"><b style="color:red;">*</b> Number of phases: </label></td>
+            <td>
+                <select name="etap_max">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3"  selected="yes">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows="2" value=""></textarea></td>
+        </tr>
+        <tr>
+            <td><label  for="principal"><b style="color:red;">*</b> Recipient: </label></td>
+            <td>
+            <select name="principal">
+                <option value="${user}" py:for="user in users">${user}</option>
+            </select> 
+            </td>
+        </tr>
+            <tr>
+            <td><label for="tags">Tags: </label></td>
+            <td>
+    
+                <ul>
+                    <li py:for="tag in alltags"  style="list-style: none; display: inline; text-indent: -1em; margin:0px;padding:0px;">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                    </li>
+                </ul>
+             </td>
+        </tr>
+    <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /><input id="submit" type="reset" value="Reset" /></td></tr>
+    </table>
+<input type="hidden" name="come_from" value="${come_from}" />
+  </form>
+</div>
+
+</body>
+</html>
