@@ -1,0 +1,140 @@
+label.id{
+float: left;
+width: 100px;
+font-weight: bold;
+text-align: center;
+}
+
+label.name{
+float: left;
+width: 240px;
+font-weight: bold;
+text-align: center;
+}
+
+label.tags{
+position:relative;
+left:10px;
+top:30px;
+font-weight: bold;
+text-align: center;
+}
+
+
+label.structure{
+float: left;
+width: 430px;
+font-weight: bold;
+position:absolute;
+text-align: center;
+padding-left: 2px;
+}
+
+#id{
+width: 100px;
+margin-bottom: 5px;
+float: left;
+text-align: center;
+}
+
+#name{
+width: 240px;
+margin-bottom: 5px;
+float: left;
+text-align: center;
+}
+
+#structure{
+width: 500px;
+float: left;
+font-size: 14px;
+padding-left: 2px;
+}
+
+#notes{
+width: 430px;
+font-size: 14px;
+padding-left: 2px;
+}
+
+.boxes{
+width: 1em;
+}
+
+#submit{
+width: 200px;
+font-size: 13px;
+}
+
+br{
+clear: left;
+}
+
+div.tags{
+position: relative;
+left:10px;
+top:60px;
+
+}
+
+table, th, td
+{
+border: 0px transparent;
+text-align: left;
+}
+
+#params td {
+text-align: center;
+}
+
+#form_tags{
+    width:600px;
+    list-style:none;
+    line-height:normal;
+    margin:0;
+    padding:0; 
+}
+#form_tags li{
+    float: left;
+    width: 150px;
+    border: 0px;
+}
+
+
+/*
+++++++++++++++++++++++++
+++++ Validation of form ++++
+++++++++++++++++++++++++
+*/
+
+#field { margin-left: .5em; float: right; }
+#field, label { float: right; font-family: Arial, Helvetica, sans-serif; font-size: small; }
+br {
+    clear: both;
+}
+input,textarea,select { 
+    margin-bottom: .5em;
+}
+input.error,textarea.error,select.error{ 
+    border: 2px solid red;
+}
+label.error {
+	background: url('../images/unchecked.gif') no-repeat;
+	padding-left: 16px;
+	margin-left: .3em;
+    color:red;
+}
+label.valid {
+	background: url('../images/checked.gif') no-repeat;
+	display: block;
+	width: 16px;
+	height: 16px;
+}
+#error{
+    border-color: red;
+    border-style: solid;
+}
+#valid{
+    border-color: blue;
+    border-style: solid;
+}

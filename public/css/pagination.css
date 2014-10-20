@@ -1,0 +1,156 @@
+.pagelist strong {
+        padding: 0px;
+}
+
+p.pagelist {
+        text-align: left;
+        font-size: 125%;
+}
+
+div.pagelist {
+        text-align: left;
+        width: 100%;
+        float:none;
+        margin-left:250px;
+}
+
+div.tabela{
+        text-align: left;
+}
+
+a.tabela{
+        text-align: center;
+        vertical-align: middle;
+}
+
+
+a.prevPage {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 8px;
+        padding-bottom: 15px;
+        text-decoration: none;
+        }
+
+.nextPage {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 8px;
+        padding-bottom: 15px;
+        text-decoration: none;
+        }
+
+.pagelist span{
+padding-left:3px;
+left:60px;
+}
+
+.graph{
+position: relative;
+z-index: 0;
+}
+
+.graph:hover{
+background-color: transparent;
+z-index: 99;
+}
+
+.graph span{ /*CSS for enlarged image*/
+font-size:12px;
+position: absolute;
+background-color: #D0D0D0;
+padding: 15px;
+left: -100px;
+border: 1px dashed gray;
+visibility: hidden;
+color: black;
+text-decoration: none;
+}
+
+.graph span img{ /*CSS for enlarged image*/
+border-width: 0;
+padding: 2px;
+}
+
+.graph:hover span{ /*CSS for enlarged image on hover*/
+visibility: visible;
+position: absolute;
+top: 15px;
+left: -200px; /*position where enlarged image should offset horizontally */
+
+}
+
+
+/*GRAPH FP*/
+
+.graph_fp{
+position: relative;
+z-index: 0;
+}
+
+.graph_fp:hover{
+background-color: transparent;
+z-index: 99;
+}
+
+.graph_fp span{ /*CSS for enlarged image*/
+font-size:12px;
+position: absolute;
+background-color: #D0D0D0;
+padding: 15px;
+left: -100px;
+border: 1px dashed gray;
+visibility: hidden;
+color: black;
+text-decoration: none;
+}
+
+.graph_fp span img{ /*CSS for enlarged image*/
+border-width: 0;
+padding: 2px;
+}
+
+.graph_fp:hover span{ /*CSS for enlarged image on hover*/
+visibility: visible;
+position: absolute;
+top: -50px;
+left: -530px; /*position where enlarged image should offset horizontally */
+
+}
+
+/*GRAPH_CT*/
+
+.graph_ct{
+position: relative;
+z-index: 0;
+}
+
+.graph_ct:hover{
+background-color: transparent;
+z-index: 99;
+}
+
+.graph_ct span{ /*CSS for enlarged image*/
+font-size:12px;
+position: absolute;
+background-color: #D0D0D0;
+padding: 15px;
+left: -100px;
+border: 1px dashed gray;
+visibility: hidden;
+color: black;
+text-decoration: none;
+}
+
+.graph_ct span img{ /*CSS for enlarged image*/
+border-width: 0;
+padding: 2px;
+}
+
+.graph_ct:hover span{ /*CSS for enlarged image on hover*/
+visibility: visible;
+position: absolute;
+top: -50px;
+left: -450px; /*position where enlarged image should offset horizontally */
+
+}

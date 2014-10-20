@@ -1,0 +1,79 @@
+.download {
+    border:1px solid black;
+    width:800px;
+    float:left;
+    background-color:#eee;
+    margin-bottom:5px;
+    margin-top:5px;
+    display:none
+}
+.download .caption{
+    background-color:#666;
+    border:1px solid black;
+    text-align:center;
+    color:white;
+    font-size:14px;
+    height:20px;
+}
+
+.download table{
+    border:none;
+    border-collapse:separate;
+    border-spacing:15px 1px;
+    width:100%;
+}
+.download th{
+    border-bottom: 2px groove silver;
+    text-align:center
+}
+.download td{
+    vertical-align:top
+}
+.div-table{
+    display:table;
+    border:1px solid black;
+    width:800px;
+    float:left;
+    background-color:#eee;
+    margin-bottom:5px;
+    margin-top:5px;
+}
+.div-table-caption{
+    display:table-caption;
+    text-align:center;
+    color:white;
+    font-weight:bold;
+    background:#666;
+    border:1px solid black;
+    font-size:14px;
+    height:20px;
+}
+.div-table-row{
+    display:none
+}
+.div-table-col-left{
+    display:table-cell;
+    padding: 5px;
+    border:1px solid #ddd;
+    vertical-align:middle;
+    text-align:left;
+}
+.div-table-col-right{
+    display:table-cell;
+    padding: 5px;
+    border:1px solid #ddd;
+    vertical-align:middle;
+    text-align:right;
+}
+
+.tableCell1 {
+    display: inline-block;
+    vertical-align:top;
+    width: 100%;
+    margin-bottom:14px;
+}
+.tableCell2 {
+    display: inline-block;
+    vertical-align:bottom;
+    width: 100%;
+}
