@@ -1,0 +1,32 @@
+ 
+                       
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" py:if="False"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/cssmenu.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+  <title>molgears: ${pname}</title>
+</head>
+
+<body class="tundra">
+    <div id="crud_content">
+        <div id="left_content" style="display:block;">
+            ${sidebar()}
+        </div>
+        <div class="crud_table">
+            <div id="crud_tab"  style="text-align:left;">
+                <h2><span style="color:red">${pname}</span> Project information page: </h2>
+                <h3>You are loggin as <font style="color:red">${userid}</font></h3>
+            </div>
+        </div>            
+  <div class="clearingdiv" />
+  <div class="notice"> Info page.</div>
+  </div>
+  <div style="clear:both;" />
+</body>
+</html>

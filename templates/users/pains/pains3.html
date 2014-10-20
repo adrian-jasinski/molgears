@@ -1,0 +1,123 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="master.html" />
+<head>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+    <link rel="stylesheet" type="text/css" href="${tg.url('/css/jqcontextmenu.css')}" />
+    <script type="text/javascript" src="${tg.url('/javascript/cookie.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/akcje.js')}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/jqcontextmenu.js')}"></script>
+
+    <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+    <script type="text/javascript">
+jQuery(document).ready(function($){
+	$('body.tundra').addcontextmenu('contextmenu1') //apply context menu to links with class="mylinks"
+})
+</script>
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-darkness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  
+  <script>
+  $(document).ready(function() {
+    $("#date1").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg", gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+    $("#date2").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg" , gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+  });
+  </script>
+<script type="text/javascript" src="${tg.url('/javascript/show.js')}"></script>
+
+<title>Molecules Listing</title>
+</head>
+<body class="tundra" onload="recoverInputs(document.forms.selection,retrieveCookie('pains3'),true);ChangeAll(this);ChooseAll();showNotEmpty0();">
+  <div py:if="pname" id="sb_top" class="sidebar2">
+      <h2><a href="${tg.url('/'+pname)}">${pname.upper()}</a></h2>
+      <ul id="mainmenu_sidebar">
+        <li><a href="${tg.url('/'+pname+'/pains1')}" class="${('', 'active')[defined('page') and page=='pains1']}">Pains1</a></li>
+        <li><a href="${tg.url('/'+pname+'/pains2')}" class="${('', 'active')[defined('page') and page=='pains2']}">Pains2</a></li>
+        <li><a href="${tg.url('/'+pname+'/pains3')}" class="${('', 'active')[defined('page') and page=='pains3']}">Pains3</a> (${currentPage.item_count})</li>
+      </ul>
+        <hr style="border: 2px ridge #000;" />
+        <div>
+            <p class="pagelist" style="font-size:12px;text-align:center;">
+            <a class="prevPage" href="${tg.url('/pains/pains3?page')}=${currentPage.previous_page}&amp;${tmpl}">&lt;</a>
+            ${currentPage.pager(format='~3~', page_param='page', show_if_single_page=True)}
+            <a class="nextPage" href="${tg.url('/pains/pains3?page')}=${currentPage.next_page}&amp;${tmpl}">&gt;</a>
+            </p>
+        </div>
+  </div>
+
+<!--!HTML for Context Menu 1-->
+
+<form name="selection" onsubmit="setCookie('pains3',getFormString(this,true),10);">
+<div class="accept">
+<div style="clear:both;"/>
+    <div id="crud_content">
+    <div class="crud_table">
+        <div id="crud_tab">
+            <table id="" class="grid" cellpadding="2">
+                <thead >
+                    <tr>
+                        <th class="col"><input type="checkbox" onClick="toggle(this);CheckIfSelected();ShowLength();" id="maincheckbox" /></th>
+                        <th class="col">ID <br /><a class="sort_up" href="${tg.url('/pains/pains3?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=id')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/pains/pains3?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=id')}&amp;desc=1">&nbsp; </a></th>
+                        <th class="col">Name<br /><a class="sort_up" href="${tg.url('/pains/pains3?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=name')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/pains/pains3?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=name')}&amp;desc=1">&nbsp; </a></th>
+                        <th class="col">Image<br />&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:for="row in pains" class="${pains.index(row)%2 and 'odd' or 'even'}" id="${row.id}">
+                        <td class="col"><input type="checkbox" name="select" value="${row.id}" onchange="ShowLength();ChangeMe(this,'${row.id}')" /></td>
+                        <td class="col">${row.id}</td>
+                        <td class="col"><a href="${tg.url('/pains/pains3/details')}/${row.id}">${row.name}</a></td>
+                        <td class="col">
+                        <a class="thumbnail" href="#thumb"><img src="${tg.url('/img/pains3')}/${row.id}.png" width="30%" height="30%" border="0" /><span><img src="${tg.url('/img/pains3')}/legend${row.id}.png" /><br />[<b>${row.id}</b>] ${row.name}</span></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+                <py:if test="currentPage.item_count == 0">
+                    No Records Found.
+                </py:if>
+        <div class="pagelist">
+            <p class="pagelist">
+            <a class="prevPage" href="${tg.url('/pains/pains3?page')}=${currentPage.previous_page}&amp;${tmpl}">&lt;&lt;&lt;</a>
+            ${currentPage.pager(format='~3~', page_param='page', show_if_single_page=True)}
+            <a class="nextPage" href="${tg.url('/pains/pains3?page')}=${currentPage.next_page}&amp;${tmpl}">&gt;&gt;&gt;</a>
+            </p>
+        </div>
+            </div>
+
+    
+        </div>
+    </div>
+</div>
+    <div style="clear:both;"/>
+               <select id="crud_search_field" size="3" name="akcja" style="visibility:hidden;">
+                    <option id="edit" value="edit">Edit</option>
+                    <option value="accept">Create Request</option>
+                    <option value="library">Add to Library</option>
+                    <option id="pdf" value="pdf">Eksportuj PDF</option>
+                    <option id="xls" value="xls">Eksportuj XLS</option>
+                    <option id="txt" value="txt">Eksportuj TXT</option>
+                </select>
+    
+<ul id="contextmenu1" class="jqcontextmenu">
+    <li style="font-weight:bold;padding:5px;font-size:13px;text-align:center;"><span>Select option:</span></li>
+     <li>
+     
+            <a href="#" onclick="set_option('edit');">Edit</a>
+            <a href="#" onclick="set_option('accept');">Create Request</a>
+            <a href="#" onclick="set_option('library');">Add to Library</a>
+            <a href="#" onclick="set_pdf();">Eksportuj PDF</a>
+            <a href="#" onclick="set_xls();">Eksportuj XLS</a>
+            <a href="#" onclick="set_txt();">Eksportuj TXT</a>
+    </li>
+</ul>
+    </form>
+</body>
+</html>

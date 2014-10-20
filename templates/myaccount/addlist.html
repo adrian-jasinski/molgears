@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+  <style type="text/css">
+    table td.left
+    {
+    border:None;
+    padding-left:0px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:10px;
+    margin:0;
+    text-align:right;
+    }
+    table td.right
+    {
+    border:None;
+    padding-left:10px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:0px;
+    margin:0;
+    text-align:left;
+    }
+  </style>
+  <title>Adamed molgears</title>
+</head>
+
+<body>
+<?python
+    from collections import OrderedDict
+?>
+<div id="left_content" style="display:block;float:left;">
+    <h4 style="text-align:center;">My Lists</h4>
+    <div style="clear:both;"/>
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/myaccount/mylists')}">Created</a></li>
+            <li><a href="${tg.url('/myaccount/sharedlists')}">Shared</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/myaccount/addlist')}"><b>Add list</b></a></li>
+        </ul>
+    </div>
+</div>
+<div class="accept" style="float:None;width:None;border:1px solid white">
+    <h2 style="text-align:center;">Create new list</h2>
+    <form action="${tg.url('/myaccount/addlist')}" enctype="multipart/form-data" method="post" name="form">
+    <py:for each="arg in get_args"><input type="checkbox" name="argv" value="${arg}" checked="yes" style="color:black">${arg}</input></py:for>
+        <table  style="margin:0 auto;">
+            <tr>
+                <td class="left"><label for="name"><b style="color:red;  font-size: 80%;">*</b> Name: </label></td>
+                <td class="right"><input type="text" name="name" style="width:200px;" /></td>
+            </tr>
+            <tr>
+                <td class="left"><label for="table"><b style="color:red;  font-size: 80%;">*</b> Table: ${ntable}</label></td>
+                <td class="right">
+                    <select name="table" size="7" style="width:205px;">
+                    <py:for each="k,v in OrderedDict([('Compounds','Compounds'),('PCompounds','Requests'),('SCompounds','Synthesis'),('LCompounds','Library'),('Results','Activity'),('ResultsFP','Binding'),('CTResults','Ctoxicity')]).iteritems()">
+                        <py:choose test="k == ntable">
+                            <py:when test="True"><option value="${k}" selected="selected">${v}</option></py:when>
+                            <py:otherwise><option value="${k}">${v}</option></py:otherwise>
+                        </py:choose>
+                    </py:for>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><label for="permitusers">Authorized Users:</label></td>
+                <td class="right">  
+                    <select name="permitusers" size="8" multiple="" style="width:205px;">
+                        <option py:for="usr in users" value="${usr.user_name}">${usr.display_name.replace('.', ' ').title()}</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><label for="table"><b style="color:red;  font-size: 80%;">*</b> Projekt:</label></td>
+                <td class="right">
+                    <select name="project" style="width:205px;">
+                    <py:for each="proj in allproj">
+                        <option value="${proj.name}">${proj.name}</option>
+                    </py:for>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><label for="notes">Notes: </label></td>
+                <td class="right"><textarea name="notes" size="5" style="width:200px;"></textarea></td>
+            </tr>
+        <tr>
+        <td class="left"></td>
+        <td class="right"><input type="submit" name="submit" value="Save" style="width:100px;" /><input type="reset" value="Reset" style="width:100px;" /></td></tr>
+        <tr>
+            <td class="left"></td>
+            <td class="right">
+                <br /><b style="color:red;  font-size: 80%;">*</b>  - Required fields.
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+<div style="clear:both;"/>
+<br /><br />
+</body>
+</html>

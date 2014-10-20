@@ -1,0 +1,79 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+<style type="text/css">
+@font-face {
+font-family: PDF, "PDF";
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana.ttf');
+}
+
+@font-face {
+font-family: PDF2, "PDF2";
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana.ttf');
+}
+
+
+body {
+font-family: PDF;
+}
+h1, th{src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana_Bold.ttf');
+font-family: PDF2;
+}
+</style>
+    <title>Synthesis</title>
+
+</head>
+<body class="tundra" style="background-color:white;">
+    <div id="crud_content">
+      <h1 style="text-align:center">Synthesis </b>( ${currentPage.item_count} )</h1>
+      <div style="text-align:center">
+    <div class="crud_table">
+        <div id="crud_tab">
+        <table id="" class="grid" cellpadding="1" border="0.5px">
+            <thead>
+                <tr>
+                    <th class="col">GID (ID)</th>
+                    <th class="col">Name</th>
+                    <th class="col">Image<br />&nbsp;</th>
+                    <th class="col">Create date</th>
+                    <th class="col">Owner</th>
+                    <th class="col">Recipient</th>
+                    <th class="col">Status</th>
+                    <th class="col">Etap</th>
+                    <th class="col">Priority</th>
+                    <th class="col">Tags<br />&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr py:for="row in scompound" class="${row.status.name}">
+                    <td class="col"><b>${row.gid}</b> (${row.id})</td>
+                    <td class="col">${row.mol.name}</td>
+                    <td class="col">
+                    <img src="./molgears/public/img/${row.gid}.png" width="${size[0]}px" height="${size[1]}px" border="0" />
+                    </td>
+                    <td class="col">${row.create_date}</td>
+                    <td class="col">${row.owner.replace('.',' ')}</td>
+                    <td class="col">${row.principal.replace('.',' ')}</td>
+                    <td class="col">${row.status.name}</td>
+                    <td class="col">${next(obj.etap for obj in row.effort if obj.id==row.effort_default)}/${next(obj.etap_max for obj in row.effort if obj.id==row.effort_default)}</td>
+                    <td class="col">${row.priority}</td>
+                    <td class="col">
+                        <span py:for="tag in row.mol.tags">${tag.name}, <br /></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+                <py:if test="currentPage.item_count == 0">
+                    No Records Found.
+                </py:if>
+            </div>
+
+    
+        </div>
+    </div>
+    </div>
+    <div style="clear:both;"/>
+</body>
+</html>

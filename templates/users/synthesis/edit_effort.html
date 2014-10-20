@@ -1,0 +1,85 @@
+ 
+   
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <title>Synthesis ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/synthesis/get_all')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis')}">Show my</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div>
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/synthesis/details')}/${scompound.gid}/${scompound.id}">Details</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/addreag')}/${scompound.id}">Add reagents</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/edit')}/${scompound.id}">Edit</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/allefforts')}/${scompound.id}"><b>Efforts</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/accept')}/${scompound.id}">Recive</a></li>
+        </ul>
+     </div>
+</div> 
+ 
+ 
+<div class="accept">
+<h2 class="text-align:center;">Edit effort <span style="color:red">${sorted(scompound.effort, key=lambda x: x.id).index(effort)+1}</span></h2>
+  <form action="${tg.url('/'+pname+'/synthesis/edit_effort')}/${scompound.id}/${effort.id}" enctype="multipart/form-data" method="post" >
+    <table style="width:700px;">
+        <tr>
+            <td><label for="id">GID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${scompound.gid}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="id">Synthesis ID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${scompound.id}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="structure">Smiles: </label></td>
+            <td><input id="structure" type="text" name="structure" value="${scompound.mol.structure}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label for="name">Name: </label></td>
+            <td><input id="accept" type="text" name="name" value="${scompound.mol.name}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label for="effort_name">Effort name: </label></td>
+            <td><input id="accept" type="text" name="effort_name" value="${effort.name}"   /></td>
+        </tr>
+        <tr>
+            <td><b style="color:red;  font-size: 80%;">*</b> Reaction path: </td>
+            <td><span py:if="effort.reaction">${effort.reaction[0].name}</span><span py:if="effort.rxnfile">${effort.rxnfile.name}<br /></span><input type="file" name="reaction" /> </td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" type="text" name="notes" value="${effort.notes}">${effort.notes}</textarea></td>
+        </tr>
+            <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /></td></tr>
+        <tr>
+        <td></td>
+        <td>
+            <br /><b style="color:red;  font-size: 80%;">*</b>  - file formats: jpg, jpeg, png, rxn.<br />
+        </td>
+        </tr>
+    </table>
+  </form>
+</div>
+<div style="clear:both;" />
+</body>
+</html>

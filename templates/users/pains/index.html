@@ -1,0 +1,149 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="master.html" />
+<head>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+    <link rel="stylesheet" type="text/css" href="${tg.url('/css/jqcontextmenu.css')}" />
+    <script type="text/javascript" src="${tg.url('/javascript/cookie.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/akcje.js')}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/jqcontextmenu.js')}"></script>
+
+    <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+    <script type="text/javascript">
+jQuery(document).ready(function($){
+	$('body.tundra').addcontextmenu('contextmenu1') //apply context menu to links with class="mylinks"
+})
+</script>
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-darkness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  
+  <script>
+  $(document).ready(function() {
+    $("#date1").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg", gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+    $("#date2").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg" , gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+  });
+  </script>
+<script type="text/javascript" src="${tg.url('/javascript/show.js')}"></script>
+
+<title>Molecules Listing</title>
+</head>
+<body class="tundra" onload="recoverInputs(document.forms.selection,retrieveCookie('ipains'),true);ChangeAll(this);ChooseAll();showNotEmpty0();">
+  <div py:if="pname" id="sb_top" class="sidebar2">
+      <h2><a href="${tg.url('/'+pname)}">${pname.upper()}</a> (${len(currentPage.items)})</h2>
+      <ul id="mainmenu_sidebar">
+      
+        <li><a href="${tg.url('/'+pname+'/pains1')}" class="${('', 'active')[defined('page') and page=='pains1']}">Pains1</a></li>
+        <li><a href="${tg.url('/'+pname+'/pains2')}" class="${('', 'active')[defined('page') and page=='pains2']}">Pains2</a></li>
+        <li><a href="${tg.url('/'+pname+'/pains3')}" class="${('', 'active')[defined('page') and page=='pains3']}">Pains3</a></li>
+      </ul>
+        <hr style="border: 2px ridge #000;" />
+        <div >
+            <p class="pagelist" style="font-size:12px;text-align:center;">
+            <a class="prevPage" href="${tg.url('/pains/?page')}=${currentPage.previous_page}&amp;${tmpl}">&lt;</a>
+            ${currentPage.pager(format='~3~', page_param='page', show_if_single_page=True)}
+            <a class="nextPage" href="${tg.url('/pains/?page')}=${currentPage.next_page}&amp;${tmpl}">&gt;</a>
+            </p>
+        </div>
+        <hr style="border: 2px ridge #000;" />
+        <a href="${tg.url('/'+pname+'/check')}" style="color:black;">check Compounds</a>
+  </div>
+
+<!--!HTML for Context Menu 1-->
+
+<form name="selection" onsubmit="setCookie('ipains',getFormString(this,true),10);">
+<div class="accept">
+<div style="clear:both;"/>
+    <div id="crud_content">
+    <div class="crud_table">
+       <div id="crud_tab">
+<h3>PAINS - Pan Assay Interference Compounds</h3>
+<p>
+Zestaw filtrów wyszukujący Compounds z różnego rodzaju powodów problematyczne, często dające fałszywie pozytywne wyniki.
+Details można znaleźć w pracy <a href = "http://pubs.acs.org/doi/abs/10.1021/jm901137j">Jonathan B. Baell and Georgina A. Holloway,J. of Med. Chem. 2010 53 (7), 2719-2740 </a>.
+A ciekawe i użyteczne podsumowanie na stronie <a href="http://blog.rguha.net/?p=850">http://blog.rguha.net/?p=850</a> oraz <a href="http://pipeline.corante.com/archives/2010/02/08/polluting_the_literature_with_pains.php">Derek Lowe</a>.
+</p>
+<p>
+<ul>
+Zaimplementowano filtry odpowiadające tabelom S6-S8 z materiałów dodatkowych związanych z publikacją <a href="http://pubs.acs.org/doi/suppl/10.1021/jm901137j/suppl_file/jm901137j_si_001.pdf">link</a>.<br />
+<li><img src="${tg.url('/images/flag1.png')}" /> PAINS1 - filtr p_l15 (TABELA S8)<br /></li>
+<li><img src="${tg.url('/images/flag2.png')}" /> PAINS2 - filtr p_l150 (TABELA S7)<br /></li>
+<li><img src="${tg.url('/images/flag3.png')}" /> PAINS3 - filtr p_m150 (TABELA S6)<br /></li>
+</ul>
+Filtry zostały zwizualizowane przy pomocy <a href="http://smartsview.zbh.uni-hamburg.de/smartsview/view">SMARTSviewer</a>.
+</p>
+ <table id="" class="grid">
+            <thead>
+                <tr>
+                    <th class="col"><input type="checkbox" onClick="toggle(this);CheckIfSelected();ShowLength();" id="maincheckbox" /></th>
+                    <th class="col">GID</th>
+                        <th class="col">Name</th>
+                        <th class="col">Image<br />&nbsp;</th>
+                        <th class="col">Create date</th>
+                        <th class="col">Creator</th>
+                        <th class="col">Tags<br />&nbsp;</th>
+                        <th class="col">State</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr py:for="row in pains" class="${pains.index(row)%2 and 'odd' or 'even'}" id="${row.gid}">
+                    <td class="col"><input type="checkbox" name="select" value="${row.gid}" onchange="ShowLength();ChangeMe(this,'${row.gid}')" /></td>
+                    <td class="col">${row.gid}</td>
+                    <td class="col"><a href="${tg.url('/')}${str(row.project[0].name)}/molecules/details/${row.gid}">${row.name}</a>
+                        <py:if test="row.pains1"> <a href="${tg.url('/pains/pains1/details')}/${row.pains1_id}" ><img src="${tg.url('/images/flag1.png')}" /></a></py:if>
+                        <py:if test="row.pains2"> <a href="${tg.url('/pains/pains2/details')}/${row.pains2_id}" ><img src="${tg.url('/images/flag2.png')}" /></a></py:if>
+                        <py:if test="row.pains3"> <a href="${tg.url('/pains/pains3/details')}/${row.pains3_id}" ><img src="${tg.url('/images/flag3.png')}" /></a></py:if>
+                        </td>
+                        <td class="col">
+                        <a class="thumbnail" href="${tg.url('/'+pname+'/molecules?smiles=')}${str(row.structure).replace('+', '%2B').replace('#','%23')}&#38;method=smililarity&#38;text_GID=&#38;text_name=&#38;text_creator=&#38;text_notes=&#38;date_from=&#38;date_to=&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.name}</span></a>
+                        </td>
+                        <td class="col">${row.create_date}</td>
+                        <td class="col">${row.creator.replace('.', ' ')}</td>
+                        <td class="col">
+                        <ul>
+                            <li py:for="tag in row.tags"  style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;">${tag.name}</li>
+                        </ul>
+                        </td>
+                        <td class="col">
+                            <span title="1.Do_syntezy" style="color:red">${row.pnum}</span><br />
+                            <span title="2.Synthesis" style="color:blue">${row.snum}</span><br />
+                            <span title="3.Library" style="color:green">${row.lnum}</span>
+                        </td>
+
+                </tr>
+            </tbody>
+        </table>
+            </div>
+    
+        </div>
+    </div>
+</div>
+    <div style="clear:both;"/>
+               <select id="crud_search_field" size="3" name="akcja" style="visibility:hidden;">
+                    <option id="edit" value="edit">Edit</option>
+                    <option value="accept">Utwórz zlecenie syntezy</option>
+                    <option value="library">Add to Library</option>
+                    <option id="pdf" value="pdf">Eksportuj PDF</option>
+                    <option id="xls" value="xls">Eksportuj XLS</option>
+                    <option id="txt" value="txt">Eksportuj TXT</option>
+                </select>
+    
+<ul id="contextmenu1" class="jqcontextmenu">
+    <li style="font-weight:bold;padding:5px;font-size:13px;text-align:center;"><span>Select option:</span></li>
+     <li>
+     
+            <a href="#" onclick="set_option('edit');">Edit</a>
+            <a href="#" onclick="set_option('accept');">Utwórz zlecenie syntezy</a>
+            <a href="#" onclick="set_option('library');">Add to Library</a>
+            <a href="#" onclick="set_pdf();">Eksportuj PDF</a>
+            <a href="#" onclick="set_xls();">Eksportuj XLS</a>
+            <a href="#" onclick="set_txt();">Eksportuj TXT</a>
+    </li>
+</ul>
+    </form>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="master.html" />
+<head>
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+    <link rel="stylesheet" type="text/css" href="${tg.url('/css/jqcontextmenu.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/filter.css')}" />
+    
+    <script type="text/javascript" src="${tg.url('/javascript/cookie.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/akcje.js')}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/jqcontextmenu.js')}"></script>
+
+    <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+    <script type="text/javascript">
+jQuery(document).ready(function($){
+	$('body.tundra').addcontextmenu('contextmenu1') //apply context menu to links with class="mylinks"
+})
+document.onkeypress = keyPress;
+function keyPress(e){
+var x = e || window.event;
+var key = (x.keyCode || x.which);
+if(key == 13 || key == 3){
+    document.getElementById("search").click();
+}
+}
+</script>
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-darkness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  
+  <script>
+  $(document).ready(function() {
+    $("#date1").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg", gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+    $("#date2").datepicker({ altField: 'input#date', altFormat: 'yy-mm-dd', dateFormat: "yy-mm-dd", showOn: 'button', buttonImageOnly: true, buttonImage: "/molgears/images/datepicker.jpeg" , gotoCurrent: true, maxDate: "+0d", minDate: new Date(2012, 1 - 1, 1)});
+  });
+  </script>
+<script type="text/javascript" src="${tg.url('/javascript/show.js')}"></script>
+<title>Compounds ${pname}</title>
+</head>
+<body class="tundra" onload="recoverInputs(document.forms.selection,retrieveCookie('molGetAll2'),false);ChangeAll(this);ChooseAll();ShowNotEmpty();" onunload="setCookie('molGetAll2',getFormString(document.forms.selection,true),10);">
+<form name="selection" onchange="setCookie('molGetAll2',getFormString(this,true),10);">
+
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules')}"><b>Show all</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/new')}">Add new</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/read_from_file')}">Import from file</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/showgroups')}">Groups</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/history')}">History of changes</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+    <div>
+        <p class="pagelist" style="font-size:12px;text-align:center;">
+            <a class="prevPage" href="${tg.url('/'+pname+'/molecules/?page')}=${currentPage.previous_page}&amp;${tmpl}">&lt;</a>
+                ${currentPage.pager(format='~3~', page_param='page', show_if_single_page=True)}
+            <a class="nextPage" href="${tg.url('/'+pname+'/molecules/?page')}=${currentPage.next_page}&amp;${tmpl}">&gt;</a>
+        </p>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+    <div id="filter">
+          <input type="checkbox" name="manager" onclick="showID(this,'download');" id="manager" />Download manager
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+    <div id="filter">
+          <b>Filter</b><br />
+            <input type="checkbox" name="choosen" value="" onclick="search_toggle(this);" id="all" style="color:red;" /><b>&nbsp;</b><br />
+            <input type="checkbox" class="choose" name="choosen" value="" onclick="ChooseAll(this);" id="text_smiles" />Structure<br />
+            <input type="checkbox" class="choose" name="choosen" value="" onclick="ChooseAll(this);" id="text_GID" />GID<br />
+            <input type="checkbox" class="choose" name="choosen" value="" onclick="ChooseAll(this);" id="text_name" />Name<br />
+            <input type="checkbox" class="choose" name="choosen" value="" onclick="ChooseAll(this);" id="text_creator" />Creator<br />
+            <input type="checkbox" class="choose" name="choosen" value="" onclick="ChooseAll(this);" id="text_notes" />Notes<br />
+            <input type="checkbox" class="choose" name="choosen" value="" onclick="ChooseAll(this);" id="text_tags" />Tags<br />
+            <input type="checkbox" class="choose" name="choosen" value="" onclick="ChooseAll(this);" id="text_date" />Date<br />
+    </div>
+</div>
+<div class="accept">
+<h3 py:if="ulist">List <span style="color:blue">${ulist.name}</span> owner: <span style="color:blue">${ulist.tg_user.user_name}</span></h3>
+    <div class="download" id="download">
+        <div class="caption"><b>Download manager</b></div>
+        <table>
+        <tr><th>Structures</th><th>File type</th><th>Info</th><th>Attributes</th><th>Data</th></tr>
+            <tr>
+                <td>
+                    <input type="radio" name="sell_type" value="all" checked="checked" onclick="otherSelect()" />total<br />
+                    <input type="radio" name="sell_type" value="selected" onclick="otherSelect();CheckIfSelected();ShowLength();" id="selected" />selected <div id="myResults" style="display:inline">&nbsp;</div><br />
+                    <input type="radio" name="sell_type" id="other" value="range" onclick="otherSelect()" />range<br />
+                    <div id="otherBox" style="display:none">
+                        from <input type="text" name="select_from" size="2" /> to <input type="text" name="select_to" size="2" />
+                    </div>
+                </td>
+                <td>
+                    <input type="radio" name="file_type" value="pdf" checked="yes" />pdf<br />
+                    <input type="radio" name="file_type" value="xls" />xls<br />
+                    <input type="radio" name="file_type" value="sdf" />sdf<br />
+                    <input type="radio" name="file_type" value="csv" />csv<br />
+                    <input type="radio" name="file_type" value="txt" />txt<br />
+                </td>
+                <td>
+                    <input type="checkbox" name="options" value="nr" />No.<br />
+                    <input type="checkbox" name="options" value="gid" />GID<br />
+                    <input type="checkbox" name="options" value="name" />primary name<br />
+                    <input type="checkbox" name="options" value="names" />all of the names<br />
+                    <input type="checkbox" name="options" value="smiles" />SMILES<br />
+                    <input type="checkbox" name="options" value="inchi" />InChi<br />
+                </td>
+                <td>
+                    <input type="checkbox" name="options" value="num_atoms" />atoms<br />
+                    <input type="checkbox" name="options" value="mw" />molecular weight<br />
+                    <input type="checkbox" name="options" value="hba" />hba<br />
+                    <input type="checkbox" name="options" value="hbd" />hbd<br />
+                    <input type="checkbox" name="options" value="tpsa" />TPSA<br />
+                    <input type="checkbox" name="options" value="logp" />logP<br />
+                </td>
+                <td>
+                    <input type="checkbox" name="options" value="image" onchange="showID(this,'resize');" />Image<br />
+                    <div id="resize" style="display:none;margin-left:10px;">
+                        <input type="radio" name="getsize" value="100" checked="checked" />100x100<br />
+                        <input type="radio" name="getsize" value="200" />200x200<br />
+                        <input type="radio" name="getsize" value="300" />300x300<br />
+                        <input type="radio" name="getsize" value="400" />400x400<br />
+                        <div style="clear:both;"/>
+                    </div>
+                    <input type="checkbox" name="options" value="create_date" />Create date<br />
+                    <input type="checkbox" name="options" value="creator" />Creator<br />
+                    <input type="checkbox" name="options" value="tags" />Tags<br />
+                    <input type="checkbox" name="options" value="notes" />Notes<br />
+                    
+                </td>
+            </tr>
+            <tr style="text-align:center;"><td>&nbsp;</td><td>&nbsp;</td><td><input type="submit" name="search" value="Download" style="background-color:#707070;color:white;border: 2px outset #707070;" /></td><td>&nbsp;</td><td>&nbsp;</td></tr>
+        </table>
+    </div>
+    <div class="div-table">
+        <div class="div-table-caption" id="caption">Filtering search results</div>
+        <div class="div-table-row" id="text_smiles1">
+            <div class="div-table-col-right">
+                <input type="radio" name="method" value="smililarity" /> Smililarity  <br />
+                <input type="radio" name="method" value="substructure" checked="yes" /> Substructure <br />
+                <input type="radio" name="method" value="identity" /> Exact Structure <br />
+            </div>
+            <div class="div-table-col-left">
+                <b>SMILES</b><br />
+                <input type="text" size="40" value="" name="smiles" class="filternotempty" /><br /><input type="button" value="Draw Structure" onClick="startEditor();" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_GID1">
+            <div class="div-table-col-right">
+                <b>GID:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_GID" size="4" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_name1">
+            <div class="div-table-col-right">
+                <b>Name:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_name" size="20" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_creator1">
+            <div class="div-table-col-right">
+                <b>Creator:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_creator" size="20" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_notes1">
+            <div class="div-table-col-right">
+                <b>Notes:</b>
+            </div>
+            <div class="div-table-col-left">
+                <input type="text" name="text_notes" size="20" class="filternotempty" />
+            </div>
+        </div>
+        <div class="div-table-row" id="text_tags1">
+            <div class="div-table-col-right">
+                <b>Tags:</b>
+            </div>
+            <div class="div-table-col-left">
+                <div class ="tags">
+                    <ul style="width:560px;list-style: none; line-height: normal;margin: 0;padding: 0; ">
+                            <li py:for="tag in alltags" style="float: left; width: 140px; border: 0px;">
+                                <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="div-table-row"  id="text_date1">
+            <div class="div-table-col-right">
+                <b>Date</b>
+            </div>
+            <div class="div-table-col-left">
+                <div class="demo">
+                    from: <input id="date1" name="date_from" class="filternotempty" /><br />
+                    to: <input id="date2" name="date_to" class="filternotempty" />
+                </div>
+            </div>
+        </div>
+        
+        <div class="div-table-row" style="display:table-row" id="search_box">
+            <div class="div-table-col-right">
+                &nbsp;
+            </div>
+            <div class="div-table-col-left">
+                <input type="submit" name="search" id="search" value="Search" onclick="set_reset();" style="background-color:#707070;color:white;border:2px outset #707070;" />
+                <input type="button" name="clear" value="Reset" onclick="clearForm(this.form);deleteCookie('molGetAll2');ChangeAll();" style="background-color:silver;color:black;border:2px outset silver;" />
+            </div>
+
+        </div>        
+    </div>
+    <div id="crud_content">
+    <div class="crud_table">
+        <div id="crud_tab">
+            <table id="" class="grid" cellpadding="2">
+                <thead >
+                    <tr>
+                        <th class="col"><input type="checkbox" onClick="toggle(this);CheckIfSelected();ShowLength();" id="maincheckbox" /></th>
+                        <th class="col">GID <br /><a class="sort_up" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=gid')}&amp;desc=0">&nbsp; </a>
+                            <a class="sort_down" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=gid')}&amp;desc=1">&nbsp; </a></th>
+                        <th class="col">Name<br /><a class="sort_up" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=name')}&amp;desc=0">&nbsp; </a>
+                            <a class="sort_down" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=name')}&amp;desc=1">&nbsp; </a></th>
+                        <th class="col">Image<br />&nbsp;</th>
+                        <th class="col">Create date<br /><a class="sort_up" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=create_date')}&amp;desc=0">&nbsp; </a>&nbsp;
+                            <a class="sort_down" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=create_date')}&amp;desc=1">&nbsp; </a></th>
+                        <th class="col">Creator<br /><a class="sort_up" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=creator')}&amp;desc=0">&nbsp; </a>
+                            <a class="sort_down" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=creator')}&amp;desc=1">&nbsp; </a></th>
+                        <th class="col">Tags<br />&nbsp;</th>
+                        <th class="col">QED<br /><a class="sort_up" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=qed')}&amp;desc=0">&nbsp; </a>
+                            <a class="sort_down" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=qed')}&amp;desc=1">&nbsp; </a></th>
+                        <th class="col">logP<br /><a class="sort_up" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=logp')}&amp;desc=0">&nbsp; </a>
+                            <a class="sort_down" href="${tg.url('/'+pname+'/molecules?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=logp')}&amp;desc=1">&nbsp; </a></th>
+                        <th class="col">State<br />&nbsp;</th>
+                        <th py:if="similarity" class="col">Similarity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:for="row in currentPage.items" class="${currentPage.items.index(row)%2 and 'odd' or 'even'}" id="${row.gid}">
+                        <td class="col"><input type="checkbox" name="select" value="${row.gid}" onchange="ShowLength();ChangeMe(this,'${row.gid}');ShowLength();CheckIfSelected();" /></td>
+                        <td class="col">${row.gid}</td>
+                        <td class="col"><a href="${tg.url('/'+pname+'/molecules/details')}/${row.gid}">${row.name}</a>
+                        <py:if test="row.pains1"> <a href="${tg.url('/pains/pains1/details')}/${row.pains1_id}" ><img src="${tg.url('/images/flag1.png')}" /></a></py:if>
+                        <py:if test="row.pains2"> <a href="${tg.url('/pains/pains2/details')}/${row.pains2_id}" ><img src="${tg.url('/images/flag2.png')}" /></a></py:if>
+                        <py:if test="row.pains3"> <a href="${tg.url('/pains/pains3/details')}/${row.pains3_id}" ><img src="${tg.url('/images/flag3.png')}" /></a></py:if>
+                        <br />
+                        <py:for each="item in row.names">
+                            <py:if test="item.name != row.name">
+                                ${item.name}<br />
+                            </py:if>
+                        </py:for></td>
+                        <td class="col">
+                        <a class="thumbnail" href="${tg.url('/'+pname+'/molecules?smiles=')}${str(row.structure).replace('+', '%2B').replace('#','%23')}&#38;method=smililarity&#38;text_GID=&#38;text_name=&#38;text_creator=&#38;text_notes=&#38;date_from=&#38;date_to=&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.name}</span></a>
+                        </td>
+                        <td class="col">${row.create_date}</td>
+                        <td class="col">${row.creator.replace('.', ' ')}</td>
+                        <td class="col">
+                        <ul>
+                            <li py:for="tag in row.tags" style="list-style: none; display: block; text-indent: -3em; margin:0px;padding:0px;"><a href="${tg.url('/'+pname+'/molecules')}?search=Szukaj&#38;text_tags=${tag.id}&#38;akcja=edit&#38;method=substructure">${tag.name}</a></li>
+                        </ul>
+                        </td>
+                        <td class="col">${row.qed}</td>
+                        <td class="col">${round(row.logp,2)}</td>
+                        <td class="col">
+                            <span title="1.Do_syntezy" style="color:red">${row.pnum}</span><br />
+                            <span title="2.Synthesis" style="color:blue">${row.snum}</span><br />
+                            <span title="3.Library" style="color:green">${row.lnum}</span>
+                        </td>
+                        <td py:if="similarity" class="col">${round(similarity[currentPage.items.index(row)],4)*100}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+                <py:if test="currentPage.item_count == 0">
+                    No Records Found.
+                </py:if>
+        <div class="pagelist">
+            <p class="pagelist">
+            <a class="prevPage" href="${tg.url('/'+pname+'/molecules/?page')}=${currentPage.previous_page}&amp;${tmpl}">&lt;&lt;&lt;</a>
+            ${currentPage.pager(format='~3~', page_param='page', show_if_single_page=True)}
+            <a class="nextPage" href="${tg.url('/'+pname+'/molecules/?page')}=${currentPage.next_page}&amp;${tmpl}">&gt;&gt;&gt;</a>
+            </p>
+        </div>
+            </div>
+
+    
+        </div>
+    </div>
+</div>
+
+<div style="clear:both;"/>
+<select id="crud_search_field" size="3" name="akcja" style="visibility:hidden;">
+    <option id="edit" value="edit">Edit</option>
+    <option value="accept">Create Request</option>
+    <option value="library">Add to Library</option>
+    <option id="delete" value="delete">Delete</option>
+</select>
+    
+<ul id="contextmenu1" class="jqcontextmenu">
+    <li style="font-weight:bold;padding:5px;font-size:13px;text-align:center;"><span>Select option:</span></li>
+     <li>     
+        <a href="#" onclick="set_option('edit');">Edit</a>
+        <a href="#" onclick="set_option('accept');">Create Request</a>
+        <a href="#" onclick="set_option('library');">Add to Library</a>
+        <a py:if="ulist" href="#" onclick="set_deletefromlist('${pname}','molecules','${ulist.id}');">Delete from list</a>
+        <a href="#" onclick="set_confirm_option('delete');">Delete</a>
+    </li>
+    <li><a href="#">Add to List:</a>
+        <ul>
+            <li><a href="#" onclick="create_list('Compounds');">+ Create new</a></li>
+            <li py:for="ulist in ulists"><a href="#" onclick="add_to_list('${ulist.id}', '${ulist.table}');">${ulist.name}</a></li>
+        </ul>
+    </li>
+</ul>
+<div style="display:none;position:fixed;bottom:0;right:3%;background-color:#e0e0e0;opacity:0.4;filter:alpha(opacity=40);" id="selection_box"><a href="javascript:uncheckselected();ChooseAll();"><img src="${tg.url('/images/x.png')}" />&nbsp;</a> selected <div id="myResultsBottom" style="display:inline">&nbsp;</div><br /></div>
+</form>
+</body>
+</html>

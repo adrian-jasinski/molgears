@@ -1,0 +1,235 @@
+/*details css*/
+div.detail_compound {
+    float:left;
+    margin: 0 auto;
+    padding:0px;
+    width:800px;
+}
+div.detail_compound2 {
+    clear: both;
+    width:600px;
+}
+
+div.detail_notes {
+    float:none;
+    margin: 0 auto;
+    width:750px;
+}
+
+div.details2 {
+    margin: 0 auto;
+    float:right;
+    display: inline-block;
+    width:300px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+div.details {
+    margin: 0 auto;
+    float:left;
+    display: inline-block;
+    width:360px;
+    padding-left:10px;
+}
+
+div.history {
+    table-layout:fixed;
+    width:780px;
+}
+
+.history table {
+    background-color: #E8E8E8;
+    }
+
+table.details{
+    margin:0 auto;
+}
+
+.details tbody{
+    border:1px solid #ccc;    
+}
+
+.details th{
+    border:1px solid #ccc;
+}
+
+.details td.col {
+    border:1px solid #ccc;
+}
+.details td.col2 {
+    border:1px solid #ccc;
+    white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    white-space: pre-wrap;       /* css-3 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    word-break: break-all;
+    white-space: normal;
+}
+#neutralny {
+    background-color: #e0e0e0;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+
+#proposed {
+    background-color: #FFFF88;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+
+#accepted {
+    background-color: lightblue;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+
+#rejected {
+    background-color: #F5A9A9;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+
+#canceled {
+    background-color: #F5A9A9;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+
+#pending {
+    background-color: lightyellow;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+
+#synthesis {
+    background-color: lightblue;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+
+#finished {
+    background-color: #FF8000;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+
+#received {
+    background-color: #99FF99;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+#zam¨®wiony {
+    background-color: lightblue;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+#realized {
+    background-color: #99FF99;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+#discontinued {
+   background-color: #9999CC;
+    margin:0px auto;
+    padding: 15px;
+    border:none;
+}
+ul#after {
+	list-style: none;
+	margin-left: 0;
+	padding-left: 0;
+    display: inline;
+    text-indent: -1em;
+}
+li#after {
+	list-style: inline;
+	margin-left: 0;
+	padding-left: 0;
+    display: inline;
+	}
+ul#tags {
+    list-style: none;
+	margin: 0px;
+	padding-left: 0;
+    display: inline-block;
+}
+ul#tags li{
+    color: #fff;
+    font-weight:bold;
+    list-style-type: none;
+	list-style: inline;
+	padding: 2px;
+    padding-left: 5px;
+    display: inline-block;
+	margin: 0;
+    margin-top: 3px;
+}
+ul#tags li a{
+    color: #fff;
+    font-weight:bold;
+    padding:2px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+    border-radius: 4px;
+	background: #2e7682; /* for non-css3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#2e7682', endColorstr='#1d414d'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#2e7682), to(#1d414d)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #2e7682,  #1d414d); /* for firefox 3.6+ */
+}
+ul#tags li a:hover{
+    color: #000;
+    font-weight:bold;
+    padding:3px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+    border-radius: 4px;
+	background: #2e7682; /* for non-css3 browsers */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#2e7682', endColorstr='#1d414d'); /* for IE */
+	background: -webkit-gradient(linear, left top, left bottom, from(#2e7682), to(#1d414d)); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  #2e7682,  #1d414d); /* for firefox 3.6+ */
+}
+
+.graph{
+position: relative;
+z-index: 0;
+}
+
+.graph:hover{
+background-color: transparent;
+z-index: 99;
+}
+
+.graph span{ /*CSS for enlarged image*/
+position: absolute;
+background-color: #D0D0D0;
+padding: 15px;
+left: -100px;
+border: 1px dashed gray;
+visibility: hidden;
+color: black;
+text-decoration: none;
+}
+
+.graph span img{ /*CSS for enlarged image*/
+border-width: 0;
+padding: 2px;
+}
+
+.graph:hover span{ /*CSS for enlarged image on hover*/
+visibility: visible;
+top: -15px;
+left: -200px; /*position where enlarged image should offset horizontally */
+
+}

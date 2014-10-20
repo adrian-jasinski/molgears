@@ -1,0 +1,107 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/details.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+  <title>Ctoxicity ${pname}</title>
+
+</head>
+
+<body class="tundra">
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+         <ul>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/tests')}">CT Tests</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readresult')}">Add results</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readphotos')}">Add Photos</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/history')}">History of changes</a></li>
+          </ul>
+    </div>
+</div>
+
+<div class="accept">
+    <div id="crud_content">
+        <h3>Result Details</h3>
+        <div class="detail_compound">
+            <div class="details">
+                <br />
+                <table width="400px" style="float:left;">
+                   <tr style="background-color:#E8E8E8;"><th style="text-align:right;padding-right:10px;border:none;">Create date:</th><td> ${result.create_date}</td></tr>
+                   <tr><th style="text-align:right;padding-right:10px;border:none;">Cell Line:</th><td> ${result.cell_line}</td></tr>
+                   <tr style="background-color:#E8E8E8;"><th style="text-align:right;padding-right:10px;border:none;">Name of Test:</th><td> <a href="${tg.url('/'+pname+'/results/ctoxicity/showonetest')}/${result.test.id}">${result.test.name}</a></td></tr>
+                   <tr style="background-color:#E8E8E8;"><th style="text-align:right;padding-right:10px;border:none;">Data file:</th><td> <a py:if="result.files" href="${tg.url('/files/resultsct')}/${result.files[0].filename}"> ${result.files[0].name}</a></td></tr>
+                   <tr style="background-color:#E8E8E8;"><th style="text-align:right;padding-right:10px;">IC50:</th><td> ${result.ic50}</td></tr>
+                   <tr ><th style="text-align:right;padding-right:10px;">Hillslope:</th><td> ${result.hillslope}</td></tr>
+                   <tr style="background-color:#E8E8E8;"><th style="text-align:right;padding-right:10px;">R&sup2;:</th><td> ${result.r2}</td></tr>
+                   <tr><th style="text-align:right;padding-right:10px;border:none;">Notes:</th><td> ${result.notes}</td></tr>
+                </table>
+            </div>
+            <div class="details2">
+                <a href="${tg.url('/'+pname+'/molecules/edit')}/${result.lcompounds.gid}"><img src="${tg.url('/img')}/${result.lcompounds.gid}.png" height="270" width="270" id="neutralny" /></a>
+                <span style="text-align:right;padding-right:10px;border:none;color:#286571;">${result.lcompounds.mol.name}</span>GID: ${result.gid}
+            </div>
+        </div>
+        <div style="clear:both;"/>
+        <div class="detail_notes" style="width: 800px;margin: 10px auto;color: #666;">
+            <ul id="nav">
+                <li class="current"><a href="#nav">Details</a>
+                    <ul>
+                        <li><a style="font-weight:normal" href="${tg.url('/'+pname+'/molecules/details')}/${result.lcompounds.gid}">Compound</a></li>
+                        <li><a style="font-weight:normal" href="${tg.url('/'+pname+'/results/ctoxicity/details')}/${result.lcompounds.gid}/${result.lcompounds.id}">Binding</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Edit</a>
+                    <ul>
+                        <li><a href="${tg.url('/'+pname+'/molecules/edit')}/${result.lcompounds.gid}">Edit structure</a></li>
+                        <li><a href="${tg.url('/'+pname+'/results/ctoxicity/edit_result')}/${result.lcompounds.id}/${result.id}">Edit result</a></li>
+                    </ul>
+                </li>
+                <li><a href="${tg.url('/'+pname+'/results/ctoxicity/new_result')}/${result.lcompounds.id}">Add results</a></li>
+                <li ><a onclick="return confirm('Usunąć wynik?')" href="${tg.url('/'+pname+'/results/ctoxicity/del_result')}/${result.lcompounds.id}/${result.id}">Delete result</a></li>
+            </ul>
+        </div>
+        <br style="clear:both;" />
+        <div class="detail_notes" style="width: 800px;margin: 10px auto;color: #666;">
+            <img src="${tg.url('/img/graphs')}/${result.lid}_${result.id}.png" border="0" />
+            <py:if test="not result.files">No graph.</py:if>
+        </div>
+        <div class="detail_notes" style="width: 800px;margin: 10px auto;color: #666;">
+            <img src="${tg.url('/img/graphsct')}/${result.lid}_${result.id}.png" border="0" />
+            <py:if test="not result.files">No graph.</py:if>
+        </div>
+        <div class="history">
+            <h3 style="text-align:center">History of changes.</h3>
+            <table class="details">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th>Changes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:for="history in result.history">
+                        <td class="col">${history.user}</td>
+                        <td class="col">${history.status}</td>
+                        <td class="col">${history.date}</td>
+                        <td class="col2">${history.changes}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div style="clear:both;"/>
+
+</body>
+</html>

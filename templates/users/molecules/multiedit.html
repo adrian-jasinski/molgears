@@ -1,0 +1,85 @@
+ 
+   
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" href="${tg.url('/css/toggle-switch.css')}" />
+  
+  <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+    <script language="javascript"> 
+function toggle2() {
+	var ele = document.getElementById("toggleText2");
+	var text = document.getElementById("displayText2");
+	if(ele.style.display == "block") {
+    		ele.style.display = "none";
+		text.innerHTML = "show";
+  	}
+	else {
+		ele.style.display = "block";
+		text.innerHTML = "hide";
+	}
+} 
+</script>
+
+  <title>Compounds ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/new')}">Add new</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/read_from_file')}">Import from file</a></li><li><a href="${tg.url('/'+pname+'/molecules/showgroups')}">Groups</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/history')}">History of changes</a></li>
+        </ul>
+    </div>
+</div>
+ 
+ 
+ 
+<div class="accept">
+<h2 class="text-align:center;">Edit compounds numbers: <br /></h2>
+  <form action="${tg.url('/'+pname+'/molecules/multiedit')}/${args[0]}" enctype="multipart/form-data" method="post" name="form" style="color:black">
+  <input py:for="arg in args[1:]" type="checkbox" name="argv" value="${arg}" checked="yes" style="color:black">${arg}</input><br /><br />
+  <label for="notes" style="margin-right:90px;">Notes: </label><textarea id="notes" name="notes" rows="2" value=""></textarea><br /><br /><br />
+    <table style="width:500px;color:black;">
+    <tr><th>Name</th><th>Add/Delete Tag</th><th style="padding-left:80px;">Overwrite?</th></tr>
+    <py:for each="tag in alltags" > 
+        <tr style="border:1px solid black;">
+            <td class="col">${tag[0].name}</td>
+            <td class="col" style="width:50px;">
+                <py:if test="tag[1]=='ALL'"><input type="checkbox" name="text_tags" value="${tag[0].id}" checked="yes" /></py:if>
+                <py:if test="tag[1]=='SOME'"><span style="background-color:silver; text-align:center;text-valign:center;"><input type="checkbox" name="text_tags" value="${tag[0].id}"  /></span><b style="color:red;font-size:130%" title="tag wystepuje w którymś ze związków">!</b></py:if>
+                <py:if test="tag[1]==False"><input type="checkbox" name="text_tags" value="${tag[0].id}" /></py:if>${tag[0].id}
+            </td>
+            <td>
+                <label class="checkbox toggle candy" onclick="" style="color:black;width:80px;">
+                    <input id="view" type="checkbox" name="${tag[0].id}" style="color:black;width:30px;" />
+                    <p>
+                        <span style="color:black;width:30px;">Yes</span>
+                        <span style="color:black;width:30px;">No</span>
+                    </p>
+                    <a class="slide-button"></a>
+                </label>
+            </td>
+        </tr>
+    </py:for>
+    <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" style="width:60px;" /></td><td><input id="submit" type="reset" value="Reset" style="width:60px;" /></td></tr>
+    </table>
+<input type="hidden" name="come_from" value="${come_from}" />
+  </form>
+</div>
+<div style="clear:both;" />
+</body>
+</html>

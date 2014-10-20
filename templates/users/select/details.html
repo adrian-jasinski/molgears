@@ -1,0 +1,217 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/details.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+    <link rel="stylesheet" type="text/css" href="${tg.url('/css/jqcontextmenu.css')}" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="${tg.url('/javascript/jqcontextmenu.js')}"></script>
+  <title>Requests ${pname}</title>
+    <script language="javascript"> 
+function toggle() {
+	var ele = document.getElementById("toggleText");
+	var text = document.getElementById("displayText");
+	if(ele.style.display == "inline") {
+    		ele.style.display = "none";
+		text.innerHTML = "show";
+  	}
+	else {
+		ele.style.display = "inline";
+		text.innerHTML = "hide";
+	}
+} 
+</script>
+</head>
+
+<body class="tundra">
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+      <ul>
+        <li><a href="${tg.url('/'+pname+'/select/get_all')}">Show all</a></li>
+        <li><a href="${tg.url('/'+pname+'/select')}">Show requested</a></li>
+        <li><a href="${tg.url('/'+pname+'/select/history')}">History of changes</a></li>
+      </ul>
+    </div>
+</div>
+
+<div class="accept">
+<div id="crud_content">
+    <div class="detail_compound">
+<!--!    <h2 style="text-align:center">Details związku <span style="color:blue;font-weight:bold; font-style:italic">${pcompound.mol.name}</span> <span style="color:gray;font-weight:bold; font-style:italic">(${pcompound.gid})</span> </h2>-->
+        <div class="details">
+        <br />
+            <table width="400px" style="float:left;">
+                <tr>
+                <td><b style="font-size:16px;color:#286571;">${pcompound.mol.name}</b><span style="font-size:16px;float:right;color:#B0B0B0;" title="GID">${pcompound.gid}</span></td>
+                </tr>
+                <tr>
+                
+                    <td>
+                    
+                    <py:for each="item in pcompound.mol.names">
+                      <py:if test="item.name != pcompound.mol.name">
+                             ${item.name}&nbsp;&nbsp;
+                        </py:if>
+                      </py:for>
+                    </td></tr>
+            </table>
+            <br /><br />
+            <table id="params" style="width:400px;text-align:center;text-valign:center;" align="center" valign="center">
+                <thead>
+                <tr style="text-align:center;text-valign:center;">
+                    <th style="text-align:center;text-valign:center;">atoms</th>
+                    <th style="text-align:center;text-valign:center;">rings</th>
+                    <th style="text-align:center;text-valign:center;">molecular weight</th>
+                    <th style="text-align:center;text-valign:center;">logP</th>
+                    <th style="text-align:center;text-valign:center;">hba</th>
+                    <th style="text-align:center;text-valign:center;">hbd</th>
+                    <th style="text-align:center;text-valign:center;">tpsa</th>
+                    <th style="text-align:center;text-valign:center;">qed</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>${pcompound.mol.num_hvy_atoms}/${pcompound.mol.num_atoms}</td>
+                        <td>${pcompound.mol.num_rings}</td>
+                        <td style="color:${pcompound.mol.mw>500 and 'red' or 'black'}">${pcompound.mol.mw}</td>
+                        <td style="color:${round(pcompound.mol.logp,2)>5 and 'red' or 'black'}">${round(pcompound.mol.logp,2)}</td>
+                        <td style="color:${pcompound.mol.hba>10 and 'red' or 'black'}">${pcompound.mol.hba}</td>
+                        <td style="color:${pcompound.mol.hbd>5 and 'red' or 'black'}">${pcompound.mol.hbd}</td>
+                        <td>${pcompound.mol.tpsa}</td>
+                        <td>${pcompound.mol.qed}</td>
+                    </tr>
+                </tbody>
+            </table>
+                <!--!<tr><th style="border:none;width:50px">Tags:</th><td><py:for each="tag in pcompound.mol.tags">${tag.name}<br /></py:for></td></tr>-->
+            <br /> <br />
+            <a id="displayText" href="javascript:toggle();" style="color:blue;">show</a>
+            <div id="toggleText" style="display: none;width:300px;word-wrap: break-word;">
+            <table width="400px" style="float:left;">
+                <tbody>
+                    <tr><th style="border:none;width:50px">Formula:</th><td>${formula}</td></tr>
+                    <tr style="background-color:#E8E8E8;"><th style="border:none;width:50px">InChI:</th><td><div style="float:left;width:300px;word-wrap: break-word;">${pcompound.mol.inchi}</div></td></tr>
+                    <tr><th style="border:none;width:50px">SMILES:</th><td><div style="float:left;width:300px;word-wrap: break-word;">${pcompound.mol.structure}</div></td></tr>
+                </tbody>
+            </table>
+            </div>
+            <br /><br />
+            <div style="width:400px;">
+            <b>Tags: </b><br /><br />
+                <ul id="tags">
+                    <li py:for="tag in pcompound.mol.tags" id="tags"><a href="${tg.url('/'+pname+'/select/')}get_all?page=&#38;search=Szukaj&#38;text_tags=${tag.id}">${tag.name}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="details2">
+            <a href="${tg.url('/'+pname+'/select/')}?smiles=${str(pcompound.mol.structure).replace('+', '%2B').replace('#','%23')}&amp;search=Szukaj&amp;method=smililarity"><img src="${tg.url('/img')}/${pcompound.gid}.png" height="270" width="270" id="${pcompound.status.name}" /></a>
+        </div>
+    </div>
+<div style="clear:both;"/>
+<div class="detail_notes" style="width: 800px;margin: 10px auto;color: #666;">
+<ul id="nav">
+	<li class="current"><a href="${tg.url('/'+pname+'/molecules/details')}/${pcompound.gid}">Details</a></li>
+	<li><a href="#">Edit</a>
+		<ul>
+			<li><a href="${tg.url('/'+pname+'/molecules/edit')}/${pcompound.gid}">Edit structure</a></li>
+			<li><a href="${tg.url('/'+pname+'/select/edit')}/${pcompound.id}">Edit request</a></li>
+		</ul>
+	</li>
+	<li><a href="${tg.url('/'+pname+'/select/accept')}/${pcompound.id}">Accept request</a></li>
+</ul>
+</div>
+<br style="clear:both;" />
+    
+<div class="start_menu">
+    <ul id="menu">
+      <li><a href="#0" class="selected">Requests (${len(pcompounds)})</a></li>
+      <li><a href="${scompound and ('/molgears/'+pname+'/synthesis/details/'+str(scompound.gid)+'/'+str(scompound.id)) or '#menu'}" class="${len(scompounds)==0 and 'blocked' or ''}">Synthesis (${len(scompounds)})</a>
+        <ul py:if="scompounds">
+			<li py:for="scomp in scompounds"><a href="${tg.url('/'+pname+'/synthesis/details')}/${scomp.gid}/${scomp.id}" style="background-color:${scompound and scompound.id == scomp.id and '#e0e0e0' or ''}">${scomp.gid}-${scomp.seq}</a></li>
+		</ul>
+      </li>
+      <li><a href="${lcompound and ('/molgears/'+pname+'/library/details/'+str(lcompound.gid)+'/'+str(lcompound.id)) or '#menu'}" class="${len(lcompounds)==0 and 'blocked' or ''}">Library (${len(lcompounds)})</a>
+        <ul py:if="lcompounds">
+			<li py:for="lcomp in lcompounds"><a href="${tg.url('/'+pname+'/library/details')}/${lcomp.gid}/${lcomp.id}" style="background-color:${lcompound and lcompound.id == lcomp.id and '#e0e0e0' or ''}">${lcomp.gid}-${lcomp.seq}</a></li>
+		</ul>
+      </li>
+      <li><a href="${lcompound and ('/molgears/'+pname+'/results/binding/details/'+str(lcompound.gid)+'/'+str(lcompound.id)) or '#menu'}" class="${sum(len(lc.mdm2) for lc in lcompounds)==0 and 'blocked' or ''}">Binding (${sum(len(lc.mdm2) for lc in lcompounds)})</a>
+        <ul py:if="lcompounds">
+			<li py:for="lcomp in lcompounds"><a href="${tg.url('/'+pname+'/results/binding/details')}/${lcomp.gid}/${lcomp.id}" style="background-color:${lcompound and lcompound.id == lcomp.id and '#e0e0e0' or ''}">${lcomp.gid}-${lcomp.seq}</a></li>
+		</ul>
+      </li>
+    <li><a href="${lcompound and ('/molgears/'+pname+'/results/ctoxicity/details/'+str(lcompound.gid)+'/'+str(lcompound.id)) or '#menu'}" class="${sum(len(lc.ctoxicity) for lc in lcompounds)==0 and 'blocked' or ''}">Ctoxicity (${sum(len(lc.ctoxicity) for lc in lcompounds)})</a>
+        <ul py:if="lcompounds">
+			<li py:for="lcomp in lcompounds"><a href="${tg.url('/'+pname+'/results/ctoxicity/details')}/${lcomp.gid}/${lcomp.id}" style="background-color:${lcompound and lcompound.id == lcomp.id and '#e0e0e0' or ''}">${lcomp.gid}-${lcomp.seq}</a></li>
+		</ul>
+      </li>
+    </ul>
+    <div class="content_navi_list">
+        <ul id="navi_list">
+            <li py:for="pcom in pcompounds" class="${pcom.id ==pcompound.id and 'current' or ''}"><a href="${tg.url('/'+pname+'/select/details/')}${pcom.gid}/${pcom.id}" title="${pcom.gid}-${pcom.seq}">${pcom.gid}-${pcom.seq}</a></li>
+        </ul>
+    </div>
+    <div class="clear"> </div>
+    <div class="content">
+
+        <h2 style="text-align:center">Details of Synthesis request</h2>
+        <table width="450px" style="float:left;">
+            <tr style="background-color:#E8E8E8;"><th style="border:none;width:150px">Request ID:</th><td>${pcompound.id}</td></tr>
+            <tr><th style="border:none;width:150px">Creator:</th><td>${pcompound.owner}</td></tr>
+            <tr style="background-color:#E8E8E8;"><th style="border:none;width:150px">Recipient:</th><td>${pcompound.principal}</td></tr>
+        </table>
+        <table width="300px" style="float:right;">
+            <tr style="background-color:#E8E8E8;"><th style="border:none;width:150px">Status:</th><td>${pcompound.status.name}</td></tr>
+            <tr><th style="border:none;width:150px">Priority:</th><td><div class="starRate">
+                        <div><b></b></div>
+                            <ul>
+                            <li py:for="i in range(5,0,-1)"><a href="#"><span></span><b py:if="i == pcompound.priority"></b></a></li>
+                            </ul>
+                    </div></td></tr>
+            <tr style="background-color:#E8E8E8;"><th style="border:none;width:150px">Create date:</th><td>${pcompound.create_date}</td></tr>
+        </table>
+        <div py:if="pcompound.notes" class="detail_notes"> 
+            <p style="text-align:center;"><br /> <b style="color:red">Notes: </b><br /></p>
+            <p style="border:1px solid #E8E8E8 ">${pcompound.notes} </p>
+            <br />
+        </div>
+        <br />
+        <hr />
+        <div class="history">
+            <h3 style="text-align:center">History of changes.</h3>
+            <table class="details">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th>Changes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:for="history in pcompound.history">
+                        <td class="col">${history.user}</td>
+                        <td class="col">${history.status}</td>
+                        <td class="col">${history.date}</td>
+                        <td class="col2">${history.changes}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<div style="clear:both;"/>
+
+</body>
+</html>

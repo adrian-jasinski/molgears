@@ -1,0 +1,187 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="${tg.url('/javascript/jquery.validate.js')}"></script>
+  <title>Compounds ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/new')}">Add new</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/read_from_file')}">Import from file</a></li><li><a href="${tg.url('/'+pname+'/molecules/showgroups')}">Groups</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/history')}">History of changes</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+    <hr style="border: 2px ridge #000;" />
+    <div id="cssmenu">
+            <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules/details')}/${compound.gid}">Details</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/edit')}/${compound.gid}">Edit</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/accept')}/${compound.gid}">Create Request</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/library')}/${compound.gid}"><b>Add to Library</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/remove')}/${compound.gid}" onclick="return(confirm('Confirm deleting!'))">Delete</a></li>
+        </ul>
+    </div>
+</div>
+ 
+ 
+<div class="accept">
+  <h2 class="accept">Add to Library.</h2>
+  <form action="${tg.url('/'+pname+'/molecules/add_to_library')}/${compound.gid}" method="post" id="myform" >
+    <table style="width:700px;">
+        <tr>
+            <td><label for="gid">GID: </label></td>
+            <td><input id="accept" type="text" name="gid" value="${compound.gid}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="structure">Smiles: </label></td>
+            <td><input id="structure" type="text" name="structure" value="${compound.structure}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label for="name">Name: </label></td>
+            <td><input id="accept" type="text" name="name" value="${compound.name}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label for="form">Form: </label></td>
+            <td><textarea id="notes" name="form" rows="2" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="kwas"><b style="color:red;">*</b> Acid purity [%]: </label></td>
+            <td><input id="kwas" type="text" name="kwas" value="0" size="1" /> File: <input type="file" name="kwas_file" /> </td>
+        </tr>
+        <tr>
+            <td><label for="zasada"><b style="color:red;">*</b> Basic purity [%]: </label></td>
+            <td><input id="accept" type="text" name="zasada" value="0" size="1" /> File: <input type="file" name="zasada_file" /></td>
+        </tr>
+        <tr>
+            <td><label for="state">State [mg]: </label></td>
+            <td><input type="text" name="state" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="box">Box: </label></td>
+            <td><input type="text" name="box" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="entry">Entry: </label></td>
+            <td><input type="text" name="entry" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="source">Source: </label></td>
+            <td><input type="text" name="source" value="" /></td>
+        </tr>
+        <tr>
+            <td><label for="lso"> LSO:  </label></td>
+            <td><textarea id="notes" name="lso" rows="2"></textarea></td>
+        </tr>
+        <tr>
+            <td><label for="chemist"> Chemist: </label></td>
+            <td>
+                <select name="chemist">
+                  <option value="" selected="yes">None</option>
+                  <py:for each="user in users">
+                    <option value="${user}">${user}</option>
+                  </py:for>
+            </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="showme">Show in Activity: </label></td>
+            <td>
+                <select name="showme">
+                    <option value="True" select="selected">Yes</option>
+                    <option value="False">No</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows="2" value="None" >${compound.notes}</textarea></td>
+        </tr>
+                <tr>
+            <td><label for="tags"><b style="color:red;">*</b> Tags: </label></td>
+            <td>
+    
+                <ul style="width:600px;list-style: none; line-height: normal;margin: 0;padding: 0; ">
+                <fieldset class="tags"><legend>Select Tag</legend>
+                    <li py:for="tag in alltags" style="float: left; width: 150px; border: 0px;">
+                        <py:if test="tag in compound.tags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}"  checked="yes" id="tags" title="&nbsp;" />${tag.name}
+                        </py:if>
+                        <py:if test="not tag in compound.tags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                        </py:if>
+                    </li>
+                </fieldset>
+                </ul>
+                <br /><br />
+             </td>
+        </tr>
+            <tr><td></td><td><input id="submit" type="submit" name="submit" value="Accept" /></td></tr>
+        <tr>
+        <td></td>
+        <td>
+            <br /><b style="color:red;  font-size: 80%;">*</b>  - required fields / one of the purity is required.
+        </td>
+    </tr>
+    </table>
+  </form>
+</div>
+<div style="clear:both;" />
+<script>
+// form validation
+jQuery.validator.setDefaults({
+debug: false,
+success: "valid"
+});
+$( "#myform" ).validate({
+    rules: {
+        kwas: {
+            required: true,
+            number: true,
+            minlength: 1
+        },
+        zasada: {
+            required: true,
+            number: true,
+            minlength: 1
+        },
+        tags: {
+            required: true,
+            minlength: 1
+        },
+    },
+   errorPlacement: function(error, element)
+    {
+        if( element.attr('name') == 'tags' ) {
+            error.appendTo( element.closest('.tags') );
+            element.closest('.tags').attr('id','error');
+        } else {
+            error.insertAfter(element);
+        }
+    },
+    success: function(label) {
+        if( label.attr('for') == 'tags' ) {
+            label.closest('.tags').attr('id','valid');
+            label.addClass('valid');
+        } else {
+            label.addClass('valid');
+        }
+    },
+});
+</script>
+</body>
+</html>

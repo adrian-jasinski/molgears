@@ -1,0 +1,180 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+  <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+  <title>Library ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+         <ul>
+            <li><a href="${tg.url('/'+pname+'/library')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/library/history')}">History of changes</a></li>
+          </ul>
+    </div>
+</div>
+<div class="accept">
+    <div style="clear:both;"/>
+    <div class="detail_notes" style="width: 800px;margin: 10px auto;color: #666;">
+        <ul id="nav">
+            <li><a href="${tg.url('/'+pname+'/library/details')}/${lcompound.gid}/${lcompound.id}">Details</a></li>
+            <li class="current"><a href="#">Edit</a>
+                <ul>
+                    <li><a href="${tg.url('/'+pname+'/molecules/edit')}/${lcompound.gid}">Edit structure</a></li>
+                    <li><a href="${tg.url('/'+pname+'/library/edit')}/${lcompound.id}">Library Edit</a></li>
+                </ul>
+            </li>
+            <li><a href="${tg.url('/'+pname+'/library/remove')}/${lcompound.id}" onclick="return(confirm('Potwierdź usuwanie związku'))">Delete</a></li>
+        </ul>
+    </div>
+<h2 class="text-align:center;">Edit Library Compound.</h2>
+  <form action="${tg.url('/'+pname+'/library/put')}/${lcompound.id}" enctype="multipart/form-data" method="post" name="form">
+    <table style="width:700px;">
+        <tr>
+            <td><label for="id">GID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${lcompound.gid}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="id">Library ID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${lcompound.id}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="smiles">Smiles: </label></td>
+            <td><input type="text" size="40" value="${lcompound.mol.structure}" name="smiles" disabled="True" /></td>
+        </tr>
+        <tr>
+            <td><label for="name">Name: </label></td>
+            <td><input id="accept" type="text" name="name" value="${lcompound.mol.name}" disabled="True" /></td>
+        </tr>
+        <tr>
+            <td><label for="forma">Form: </label></td>
+            <td><textarea id="notes" name="forma" rows="2" value="None" >${lcompound.form}</textarea></td>
+        </tr>
+        <tr>
+            <td><label for="purity"> Purity: </label></td>
+            <td><py:if test="lcompound.purity"><p py:for="p in lcompound.purity"><input type="text" name="${p.type}" value="${p.value}"  size="1" />
+                <input type="text" name="type_${p.type}" value="${p.type}"  disabled="yes" size="4" />
+            <py:for each="f in p.filename">
+                file: <a href=" ${tg.url('/files')}/${f.filename}">[ ${f.name} ]</a><br />
+                <input type="file" name="file_${p.type}" size="20" value="test" /> ( change file )
+            </py:for>
+            <py:if test="not p.filename">
+                <br /><input type="file" name="file_${p.type}" size="20" value="test" /> ( add file )
+            </py:if>
+            </p>
+            </py:if>
+            <py:if test="not lcompound.purity">
+            <input type="text" name="acid" value="0"  size="1" /><input type="text" name="type_acid" value="acid"  disabled="yes" size="4" /><input type="file" name="file_acid" size="20" value="test" /><br />
+            <input type="text" name="basic" value="0"  size="1" /><input type="text" name="type_basic" value="basic"  disabled="yes" size="4" /><input type="file" name="file_basic" size="20" value="test" />
+            </py:if>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="state"> State [mg]: </label></td>
+            <td><input type="text" name="state" value="${lcompound.state}" size="4" disabled="yes"/> - <input type="text" name="minusstate" value="" size="4" /></td>
+        </tr>
+        <tr>
+            <td><label for="box"> Box: </label></td>
+            <td><input id="accept" type="text" name="box" value="${lcompound.box}"  /></td>
+        </tr>
+        <tr>
+            <td><label for="entry"> Entry: </label></td>
+            <td><input id="accept" type="text" name="entry" value="${lcompound.entry}"  /></td>
+        </tr>
+        <tr>
+            <td><label for="lso">LSO: </label></td>
+            <td><input id="accept" type="text" name="lso" value="${lcompound.lso}"  /></td>
+        </tr>
+        <tr>
+            <td><label for="source"> Source: </label></td>
+            <td><input id="accept" type="text" name="source" value="${lcompound.source}"  /></td>
+        </tr>
+        <tr>
+            <td><label for="content"> Content: </label></td>
+            <td>
+                <input type="text" name="lcontent" value="${lcompound.content and lcompound.content.value or ''}"  size="4" />
+                <py:if test="lcompound.content and lcompound.content.files">
+                <py:for each="f in lcompound.content.files">
+                    file: <a href=" ${tg.url('/files')}/${f.filename}">[ ${f.name} ]</a><br />
+                    <input type="file" name="lcontentfile_replace_${f.id}" size="20" /> ( change file )<br />
+                </py:for>
+                </py:if>
+                <py:if test="not (lcompound.content and lcompound.content.files)">
+                    add files:<br /><input type="file" name="lcontentfile1" size="20" value="" /><br /> 
+                    <input type="file" name="lcontentfile2" size="20" value="" />
+                </py:if>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="chemist"> Chemist: </label></td>
+            <td>
+                <select name="chemist">
+                  <option value="" selected="yes">None</option>
+                  <py:for each="user in users">
+                  <py:if test="user == lcompound.owner">
+                    <option value="${user}" selected="yes">${user}</option>
+                  </py:if>
+                  <py:if test="user != lcompound.owner">
+                    <option value="${user}">${user}</option>
+                  </py:if>
+                  </py:for>
+            </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="showme"> Show in Activity tests: </label></td>
+            <td>
+                <select name="showme">
+                    <py:choose test="lcompound.showme">
+                        <py:when test="True">
+                            <option value="True" selected="yes">Yes</option>
+                            <option value="False">No</option>
+                        </py:when>
+                        <py:otherwise>
+                            <option value="False" selected="yes">No</option>
+                            <option value="True">Yes</option>
+                        </py:otherwise>
+                    </py:choose>
+            </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows="2" value="None" >${lcompound.notes}</textarea></td>
+        </tr>
+            <tr>
+            <td><label for="tags">Tags: </label></td>
+            <td>
+    
+                <ul id="form_tags">
+                    <li py:for="tag in alltags"  style="list-style: none; display: inline; text-indent: -1em; margin:0px;padding:0px;">
+                        <py:if test="tag in tags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}"  checked="yes" id="tags" title="&nbsp;" />${tag.name}
+                        </py:if>
+                        <py:if test="not tag in tags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                        </py:if>
+                    </li>
+                </ul>
+             </td>
+        </tr>
+    <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /><input id="submit" type="reset" value="Reset" /></td></tr>
+    </table>
+<input type="hidden" name="come_from" value="${come_from}" />
+  </form>
+</div>
+<div style="clear:both;"/>
+</body>
+</html>

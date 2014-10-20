@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+  <title>Synthesis ${pname}</title>
+</head>
+
+<body class="tundra">
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+    <ul>
+        <li><a href="${tg.url('/'+pname+'/synthesis/get_all')}">Show all</a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis')}">Show my</a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis/recieve')}" style="color:blue;">Recieve</a></li>
+        <li><a href="${tg.url('/'+pname+'/synthesis/history')}">History of changes</a></li>
+      </ul>
+    </div>
+</div>
+
+ 
+<div class="accept">
+<h2 class="text-align:center;">Edit compounds numbers: <br /></h2>
+  <form action="${tg.url('/'+pname+'/synthesis/multiedit')}/${args[0]}" enctype="multipart/form-data" method="post" name="form">
+  <input py:for="arg in args[1:]" type="checkbox" name="argv" value="${arg}" checked="yes">${arg}</input><br /><br />
+    <table style="width:700px;">
+        <tr>
+            <td><label class="etap_max" for="priority"> Priority: </label></td>
+            <td>
+                <select name="priority">
+                <option value="0"  selected="yes">0</option>
+                <py:for each="item in range(1,6)">
+                            <option value="${item}">${item}</option>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows="2" value=""></textarea></td>
+        </tr>
+            <tr>
+            <td><label for="tags">Tags: </label></td>
+            <td>
+    
+                <ul id="form_tags">
+                    <li py:for="tag in alltags"  style="list-style: none; display: inline; text-indent: -1em; margin:0px;padding:0px;">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                    </li>
+                </ul>
+             </td>
+        </tr>
+    <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /><input id="submit" type="reset" value="Reset" /></td></tr>
+    </table>
+<input type="hidden" name="come_from" value="${come_from}" />
+  </form>
+</div>
+
+</body>
+</html>

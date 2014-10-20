@@ -1,0 +1,99 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+  <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="${tg.url('/javascript/jquery.validate.js')}"></script>
+  <title>Ctoxicity ${pname}</title>
+</head>
+
+<body onLoad='readJMECookie()' onUnload='saveJMECookie()'>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+         <ul>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/?showall=YES')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/tests')}"><b>CT Tests</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readresult')}">Add results</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readphotos')}">Add Photos</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/history')}">History of changes</a></li>
+          </ul>
+    </div>
+</div>
+ 
+ 
+<div class="accept">
+    <div class="detail_notes" style="width: 800px;margin: 10px auto;color: #666;">
+        <ul id="nav">
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/?showall=YES')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/tests')}">Show CT Tests</a></li>
+            <li class="current"><a href="${tg.url('/'+pname+'/results/ctoxicity/addtest')}">Add CT Test</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readresult')}">Add results</a></li>
+            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readphotos')}">Add Photos</a></li>
+        </ul>
+    </div>
+    <h2 class="text-align:center;">Add new CT Test.</h2>
+    <form action="${tg.url('addtest')}" enctype="multipart/form-data" method="post" name="selection" id="myform">
+        <table style="width:720px;">
+            <tr>
+                <td><label for="name"><b style="color:red;font-size">* </b>Name of Test </label></td>
+                <td><input type="text" size="42" value="" name="name" /></td>
+            </tr>
+            <tr>
+                <td><label for="type"><b style="color:red;">* </b>Test Type </label></td>
+                <td><input type="text" size="42" value="" name="type" /></td>
+            </tr>
+            <tr>
+                <td><label for="time"><span style="color:blue;"> Incubation time</span></label></td>
+                <td><input type="text" size="42" value="" name="time" /></td>
+            </tr>
+            <tr>
+                <td><label for="notes">Notes: </label></td>
+                <td><textarea id="notes" name="notes" rows="2" value="" ></textarea></td>
+            </tr>
+                <tr><td></td>
+                <td>
+                    <div name="newboxes" id="newboxes2" style="display:block">
+                    <input id="submit" type="submit" value="Save" /><input id="submit" type="reset" value="Reset" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <br /><b style="color:red;  font-size: 80%;">*</b>  - required fields <br />
+                    <span style="color:blue;">blue color</span> - required number
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div style="clear:both;" />
+<script>
+// form validation
+jQuery.validator.setDefaults({
+debug: false,
+success: "valid"
+});
+$( "#myform" ).validate({
+    rules: {
+        name: "required",
+        type: "required",
+        time: {
+            required: true,
+            number: true,
+        },
+    },
+});
+</script>
+</body>
+</html>

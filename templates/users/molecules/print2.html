@@ -1,0 +1,99 @@
+<html xmlns="http://www.w5.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+    <title>Struktury</title>
+<style type="text/css">
+@font-face {
+font-family: PDF, "PDF";
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana.ttf');
+}
+@font-face {
+font-family: PDF2, "PDF2";
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana_Bold.ttf');
+}
+
+
+body {
+font-family: PDF;
+}
+th.col{
+font-family: PDF2;
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana_Bold.ttf');
+}
+h1, th{
+font-family: PDF;
+src: url('/usr/share/fonts/truetype/msttcorefonts/Verdana_Bold.ttf');
+}
+</style>
+</head>
+<body class="tundra" style="background-color:white;">
+    <div id="crud_content">
+      <h1 style="text-align:center"><b>Compounds </b> (${len(compound)})</h1>
+      <div style="text-align:center">
+    <div class="crud_table">
+        <div id="crud_tab">
+            <table id="" class="grid" cellpadding="1" border="0.5px">
+                <thead >
+                    <tr style="background-image:url('${tg.url('/images/menubg.png')}'); background-repeat:no-repeat;background-position: -20px top;">
+                        <th class="col" py:if="'nr' in options"><br />No.</th>
+                        <th class="col" py:if="'gid' in options"><br />GID</th>
+                        <th class="col" py:if="'name' in options"><br />Name</th>
+                        <th class="col" py:if="'names' in options"><br />Names</th>
+                        <th class="col" py:if="'smiles' in options"><br />Smiles</th>
+                        <th class="col" py:if="'image' in options"><br />Image</th>
+                        <th class="col" py:if="'inchi' in options"><br />InChi</th>
+                        <th class="col" py:if="'num_atoms' in options"><br />Atoms</th>
+                        <th class="col" py:if="'mw' in options"><br />Molecular weight</th>
+                        <th class="col" py:if="'logp' in options"><br />logP</th>
+                        <th class="col" py:if="'hba' in options"><br />hba</th>
+                        <th class="col" py:if="'hbd' in options"><br />hbd</th>
+                        <th class="col" py:if="'tpsa' in options"><br />tpsa</th>
+                        <th class="col" py:if="'create_date' in options"><br />Create date</th>
+                        <th class="col" py:if="'creator' in options"><br />Creator</th>
+                        <th class="col" py:if="'tags' in options"><br />Tags</th>
+                        <th class="col" py:if="'notes' in options"><br />Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:for="row in compound" class="${compound.index(row)%2 and 'odd' or 'even'}" style="margin:1px;padding:1px;">
+                        <td class="col" py:if="'nr' in options">${compound.index(row)+1}</td>
+                        <td class="col" py:if="'gid' in options">${row.gid}</td>
+                        <td class="col" py:if="'name' in options">${row.name}</td>
+                        <td class="col" py:if="'names' in options"><br />
+                        <py:for each="item in row.names">
+                             ${item.name}<br />
+                        </py:for></td>
+                        <td class="col" py:if="'smiles' in options" style="margin:0px;padding:0px;width:300px;display: inline-block;word-wrap: break-word;white-space: pre-wrap;">${row.structure}</td>
+                        <td class="col" py:if="'image' in options">
+                        <img src="./molgears/public/img/${row.gid}.png" width="${size[0]}px" height="${size[1]}px" border="0" />
+                        </td>
+                        <td class="col" py:if="'inchi' in options">${row.inchi}</td>
+                        <td class="col" py:if="'num_atoms' in options">${row.num_hvy_atoms}/${row.num_atoms}</td>
+                        <td class="col" py:if="'mw' in options">${row.mw}</td>
+                        <td class="col" py:if="'logp' in options">${row.logp}</td>
+                        <td class="col" py:if="'hba' in options">${row.hba}</td>
+                        <td class="col" py:if="'hbd' in options">${row.hbd}</td>
+                        <td class="col" py:if="'tpsa' in options">${row.tpsa}</td>
+                        <td class="col"  py:if="'create_date' in options">${row.create_date}</td>
+                        <td class="col"  py:if="'creator' in options">${row.creator.replace('.', ' ')}</td>
+                        <td class="col"  py:if="'tags' in options"><br />
+                            <span py:for="tag in row.tags">${tag.name}, <br /></span>
+                        </td>
+                        <td class="col"  py:if="'notes' in options">${row.notes}</td>
+                    </tr>
+                </tbody>
+            </table>
+                <py:if test="len(compound) == 0">
+                    No Records Found.
+                </py:if>
+            </div>
+
+    
+        </div>
+    </div>
+    </div>
+    <div style="clear:both;"/>
+</body>
+</html>

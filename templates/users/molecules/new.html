@@ -1,0 +1,154 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="${tg.url('/javascript/jquery.validate.js')}"></script>
+  
+  <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+  <script type="text/javascript" src="${tg.url('/javascript/formating.js')}"></script>
+  
+<script type="text/javascript" language="javascript">
+function setname(){
+  var myselect = document.getElementById("selectOpt");
+  var msg=myselect.options[myselect.selectedIndex].text;
+  if (msg == 'None'){
+    msg = '';
+  }
+  document.getElementById("name").value=msg;
+}
+</script>
+  <title>Compounds ${pname}</title>
+</head>
+
+<body onLoad='readJMECookie()' onUnload='saveJMECookie()'>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/new')}"><b>Add new</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/read_from_file')}">Import from file</a></li><li><a href="${tg.url('/'+pname+'/molecules/showgroups')}">Groups</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/history')}">History of changes</a></li>
+        </ul>
+    </div>
+</div>
+ 
+ 
+<div class="accept">
+      <div style="text-align:center">
+      <h3><p py:if="gid" class="text-align:center;"><a href="${pname}/molecules/edit/${gid}">Edit compound number ${gid}</a></p></h3>
+    </div>
+<h2 class="text-align:center;">Add to Compounds.</h2>
+  <form action="${tg.url('post')}" enctype="multipart/form-data" method="post" name="selection" id="myform" >
+    <table style="width:800px;">
+        <tr>
+            <td><label for="smiles"><b style="color:red;">*</b> Smiles: </label></td>
+            <td><input type="text" size="40" value="" name="smiles" id="smiles" style="float:left" /><input type="button" value="Draw Structure" onClick="startEditor();" /></td>
+        </tr>
+        <tr>
+            <td><label for="name"><b style="color:red;">*</b> Name: </label></td>
+            <td><input id="name" type="text" name="name" value="" style="float:left" />
+                <select name="ngroups" onchange="setname();" id="selectOpt">
+                    <option value="" selected="selected">None</option>
+                    <option py:for="group in ngroups" value="${group.id}">${group.prefix and group.prefix + '-' or ''}${(group.precision-len(str(group.next)))*'0'}${group.next}${group.sufix and '-' + group.sufix or ''}</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows="2" value="None" ></textarea></td>
+        </tr>
+        <tr>
+            <td><label>Isomer:</label></td>
+            <td><select name="isomer"><option value="no" selected="yes">No</option>
+                                    <option value="yes">Yes</option></select>
+            </td>
+        </tr>
+        <tr>
+            <td><label>PAINS:</label></td>
+            <td><select name="pains"><option value="no">uncheck</option>
+                                    <option value="yes" selected="yes">check</option></select>
+            </td>
+        </tr>             
+
+            <tr>
+            <td><label for="tags"><b style="color:red;">*</b> Tags: </label></td>
+            <td>
+    
+                <ul style="width:600px;list-style: none; line-height: normal;margin: 0;padding: 0; ">
+                    <fieldset class="tags"><legend>Select Tag</legend>
+                        <py:if test="not alltags"><a class="add_link" href="${tg.url('/create_tags')}" >Add tags</a></py:if>
+                        <li py:for="tag in alltags"  style="float: left; width: 150px; border: 0px;">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" id="tags" title="&nbsp;" />${tag.name}</li>
+                        
+                    </fieldset>
+                </ul>
+                <br /><br />
+             </td>
+        </tr>
+    <tr><td></td>
+        <td>
+            <div name="newboxes" id="newboxes2" style="display:block">
+            <input id="submit" type="submit" value="Save" /><input id="submit" type="reset" value="Reset" />
+            </div>
+        </td></tr>
+        <tr>
+            <td></td>
+            <td>
+                <br /><b style="color:red;  font-size: 80%;">*</b>  - required fields
+            </td>
+        </tr>
+    </table>
+    
+  </form>
+</div>
+<div style="clear:both;" />
+
+<script>
+// form validation
+jQuery.validator.setDefaults({
+debug: false,
+success: "valid"
+});
+$( "#myform" ).validate({
+    rules: {
+        smiles: "required",
+        name: {
+            required: true,
+            minlength: 3,
+        },
+        text_tags: {
+            required: true,
+            minlength: 1
+        }
+    },
+   errorPlacement: function(error, element)
+    {
+        if( element.attr('name') == 'text_tags' ) {
+            error.appendTo( element.closest('.tags') );
+            element.closest('.tags').attr('id','error');
+        } else {
+            error.insertAfter(element);
+        }
+    },
+    success: function(label) {
+        if( label.attr('for') == 'text_tags' ) {
+            label.closest('.tags').attr('id','valid');
+            label.addClass('valid');
+        } else {
+            label.addClass('valid');
+        }
+    },
+});
+</script>
+</body>
+</html>

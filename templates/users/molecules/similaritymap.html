@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <meta http-equiv="Pragma" content="no-cache" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/details.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+</head>
+
+<body class="tundra">
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/molecules')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/new')}">Add new</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/read_from_file')}">Import from file</a></li><li><a href="${tg.url('/'+pname+'/molecules/showgroups')}">Groups</a></li>
+            <li><a href="${tg.url('/'+pname+'/molecules/history')}">History of changes</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="accept">
+<div id="crud_content">
+    <div class="detail_compound">
+        <div class="details">
+            <br />
+            <br />
+            <a href="${tg.url('/'+pname+'/molecules/')}?smiles=${str(mol.structure).replace('+', '%2B').replace('#','%23')}&amp;search=Szukaj&amp;method=smililarity"><img src="${tg.url('/img')}/${mol.gid}.png" height="320" width="320" style="background-color: green;margin:0px auto;padding: 15px;border:none;" /></a>
+        </div>
+        <div class="details2">
+            <a href="${tg.url('/'+pname+'/molecules/')}?smiles=${str(refmol.structure).replace('+', '%2B').replace('#','%23')}&amp;search=Szukaj&amp;method=smililarity"><img src="${tg.url('/img')}/${refmol.gid}.png" height="320" width="320" style="background-color: #FFC9C9;margin:0px auto;padding: 15px;border:none;" /></a>
+        </div>
+    </div>
+<div style="clear:both;"/>
+<div class="detail_notes" style="width: 800px;margin:0px auto;color: #666;text-align:center;">
+    <hr />
+    <?python 
+        import time
+    ?>
+    Similarity:<span style="font-size:13px;font-weight:bold;"> ${similarity} %</span><br />
+    <a href="#"><img src="${tg.url('/files/download')}/${filename}?${time.time()}" /></a>
+    
+</div>
+</div>
+</div>
+<div style="clear:both;"/>
+
+</body>
+</html>

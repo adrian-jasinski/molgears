@@ -1,0 +1,152 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/details.css')}" />
+  <title>Synthesis ${pname}</title>
+<script language="javascript"> 
+function toggle() {
+	var ele = document.getElementById("toggleText");
+	var text = document.getElementById("displayText");
+	if(ele.style.display == "inline") {
+    		ele.style.display = "none";
+		text.innerHTML = "show";
+  	}
+	else {
+		ele.style.display = "inline";
+		text.innerHTML = "hide";
+	}
+}
+</script>
+
+</head>
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/synthesis/get_all')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis')}">Show my</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/synthesis/details')}/${scompound.gid}/${scompound.id}">Details</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/addreag')}/${scompound.id}">Add reagents</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/edit')}/${scompound.id}">Edit</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/allefforts')}/${scompound.id}"><b>Efforts</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/accept')}/${scompound.id}">Recive</a></li>
+        </ul>
+     </div>
+</div> 
+
+<div id="crud_content">
+    <div class="detail_compound">
+        <div class="details2">
+              <a href="${tg.url('/'+pname+'/synthesis/details')}/${scompound.gid}/${scompound.id}"><img src="${tg.url('/img')}/${scompound.gid}.png" height="240" width="240" id="${scompound.status.name}" /></a>
+        </div>
+        <div class="details">
+        <br />
+            <table width="400px" style="float:left;">
+                <tr>
+                <td><b style="font-size:16px;color:#286571;">${scompound.mol.name}</b><span style="font-size:16px;float:right;color:#B0B0B0;" title="GID">GID: ${scompound.gid} (ID: ${scompound.id})</span></td>
+                </tr>
+                <tr>
+                    <td>
+                    <py:for each="item in scompound.mol.names">
+                      <py:if test="item.name != scompound.mol.name">
+                             ${item.name}&nbsp;&nbsp;
+                        </py:if>
+                      </py:for>
+                    </td></tr>
+            </table>
+            <br /><br />
+            <table id="params" style="width:400px;text-align:center;text-valign:center;" align="center" valign="center">
+                <thead>
+                <tr style="text-align:center;text-valign:center;">
+                    <th style="text-align:center;text-valign:center;">atoms</th>
+                    <th style="text-align:center;text-valign:center;">rings</th>
+                    <th style="text-align:center;text-valign:center;">molecular weight</th>
+                    <th style="text-align:center;text-valign:center;">logP</th>
+                    <th style="text-align:center;text-valign:center;">hba</th>
+                    <th style="text-align:center;text-valign:center;">hbd</th>
+                    <th style="text-align:center;text-valign:center;">tpsa</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>${scompound.mol.num_hvy_atoms}/${scompound.mol.num_atoms}</td>
+                        <td>${scompound.mol.num_rings}</td>
+                        <td style="color:${scompound.mol.mw>500 and 'red' or 'black'}">${scompound.mol.mw}</td>
+                        <td style="color:${round(scompound.mol.logp,2)>5 and 'red' or 'black'}">${round(scompound.mol.logp,2)}</td>
+                        <td style="color:${scompound.mol.hba>10 and 'red' or 'black'}">${scompound.mol.hba}</td>
+                        <td style="color:${scompound.mol.hbd>5 and 'red' or 'black'}">${scompound.mol.hbd}</td>
+                        <td>${scompound.mol.tpsa}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br /><br />
+            <a id="displayText" href="javascript:toggle();" style="color:blue;">show</a>
+            <div id="toggleText" style="display: none;width:300px;word-wrap: break-word;">
+            <table width="400px" style="float:left;">
+                <tbody>
+                    <tr style="background-color:#E8E8E8;"><th style="border:none;width:50px">InChI:</th><td><div style="float:left;width:300px;word-wrap: break-word;">${scompound.mol.inchi}</div></td></tr>
+                    <tr><th style="border:none;width:50px">SMILES:</th><td><div style="float:left;width:300px;word-wrap: break-word;">${scompound.mol.structure}</div></td></tr>
+                </tbody>
+            </table>
+            </div>
+            <br /><br />
+            <p><b>Owner: </b>${scompound.owner}</p>
+            <p><b>Recipient: </b>${scompound.principal}</p>
+            <p><b>Status: </b>${scompound.status.name}</p>
+            <p><b>Priority</b>
+                    <div class="starRate"><div><b></b></div>
+                            <ul>
+                            <li py:for="i in range(5,0,-1)"><a href="#"><span></span><b py:if="i == scompound.priority"></b></a></li>
+                            </ul>
+                    </div>
+            </p>
+        </div>
+        <div style="clear:both;" />
+        <h2>List of efforts:</h2>
+        <p><a href="${tg.url('/'+pname+'/synthesis/effort_next')}/${scompound.id}" class="add_link">Add new</a></p>
+        <div py:for="effort in efforts">
+        <div style="clear:both;" />
+        <hr />
+            <div class="efforts" style="word-wrap: break-word;white-space: pre-wrap;">
+              <span py:if="effort.reaction" style="text-align:center;"><a class="thumbnail" href="${tg.url('/files')}/${effort.reaction[0].filename}"><img src="${tg.url('/files')}/${effort.reaction[0].filename}" width="130px" height="130px" border="0" title="ścieżka reakcji"/><span style="top:-200px;left: 150px;"><img src="${tg.url('/files')}/${effort.reaction[0].filename}" title="Reaction path" /><br />Droga syntezy: [<b>${scompound.gid}</b>] ${scompound.mol.name}</span></a></span>
+            </div>
+            <div class="efforts">  
+               <p><b>Effort number:</b> ${efforts.index(effort)+1}</p>
+                <p><b>Name:</b> ${effort.name}</p>
+                <p><b>ID:</b> ${effort.id}</p>
+                <p><b>Phases: </b>${effort.etap}/${effort.etap_max} </p>
+                <p><b>Reaction file:</b><span py:if="effort.rxnfile"><a href="${tg.url('/files')}/${effort.rxnfile.filename}">${effort.rxnfile.name}</a></span></p>
+                <p><b>Notes: </b>${effort.notes}</p>
+            </div>
+                <div class="efforts">  
+               <p><a href="${tg.url('/'+pname+'/synthesis/edit_effort')}/${scompound.id}/${effort.id}">Edit</a></p>
+                <p><a href="${tg.url('/'+pname+'/synthesis/etap')}/${scompound.id}/${effort.id}">Next etap</a></p>
+                <p py:if="not (scompound.effort_default==effort.id)"><a href="${tg.url('/'+pname+'/synthesis/effort_default')}/${scompound.id}/${effort.id}">Set as primary</a></p>
+                <p py:if="(scompound.effort_default==effort.id)"><span style="color:red;font-weight:bold;">Primary</span></p>
+            </div>
+        </div>
+        
+    </div>
+
+
+</div>
+<div style="clear:both;margin-bottom:250px;" />
+
+</body>
+</html>

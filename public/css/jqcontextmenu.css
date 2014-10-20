@@ -1,0 +1,51 @@
+.jqcontextmenu, .jqcontextmenu ul{ /*topmost and sub ULs, respectively*/
+font: normal 13px Verdana;
+margin: 0;
+padding: 0;
+position: absolute;
+left: 0;
+top: 0;
+list-style-type: none;
+background: white;
+border: 3px ridge black;
+visibility: hidden;
+display: none; /*collapse all sub menus to begin with*/
+box-shadow: 3px 3px 8px #818181; /*shadow for CSS3 capable browsers.*/
+-webkit-box-shadow: 3px 3px 8px #818181;
+-moz-box-shadow: 3px 3px 8px #818181;
+}
+
+
+.jqcontextmenu li{
+position: relative;
+background: #C0C0C0;
+word-wrap: break-word;
+}
+
+.jqcontextmenu li a{
+display: block;
+width: 140px; /*width of menu (not including side paddings)*/
+color: black;
+background: #eee;
+text-decoration: none;
+padding: 4px 5px;
+border: 1px solid white;
+}
+
+* html .jqcontextmenu li{ /*IE6 CSS hack*/
+display: inline-block;
+width: 170px; /*width of menu (include side paddings of LI A*/
+}
+
+.jqcontextmenu li a:hover{
+background: darkorange;
+font-weight:bold;
+border: 1px solid black;
+text-align:center;
+}
+
+.rightarrowclass{
+position: absolute;
+top: 6px;
+right: 5px;
+}

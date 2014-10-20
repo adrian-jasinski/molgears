@@ -1,0 +1,119 @@
+ 
+   
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
+  <title>Requests ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+      <ul>
+        <li><a href="${tg.url('/'+pname+'/select/get_all')}">Show all</a></li>
+        <li><a href="${tg.url('/'+pname+'/select')}">Show requested</a></li>
+        <li><a href="${tg.url('/'+pname+'/select/history')}">History of changes</a></li>
+      </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul id="mainmenu_sidebar">
+            <li><a href="${tg.url('/'+pname+'/select/details')}/${pcompound.gid}/${pcompound.id}">Details</a></li>
+            <li><a href="${tg.url('/'+pname+'/select/edit')}/${pcompound.id}"><b>Edit</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/select/accept')}/${pcompound.id}">Accept request</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="accept">
+<h2 class="text-align:center;">Edit request number ${pcompound.gid}.</h2>
+  <form action="${tg.url('/'+pname+'/select/put')}/${pcompound.id}" enctype="multipart/form-data" method="post" name="form">
+    <table style="width:700px;">
+        <tr>
+            <td><label for="id">GID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${pcompound.gid}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="id">Request ID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${pcompound.id}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="structure">Smiles: </label></td>
+            <td><input type="text" size="40" value="${pcompound.mol.structure}" name="smiles" disabled="True" /></td>
+        </tr>
+        <tr>
+            <td><label for="name">Name: </label></td>
+            <td><input id="accept" type="text" name="name" value="${pcompound.mol.name}"  disabled="True" /></td>
+        </tr>
+        <tr>
+            <td><label  for="principal"><b style="color:red;">*</b> Recipient: </label></td>
+            <td>
+            <select name="principal">
+            <py:for each="user in users">
+                <py:if test="user.display_name != pcompound.principal">
+                <option value="${user}">${user}</option>
+                </py:if>
+                <py:if test="user.display_name == pcompound.principal">
+                <option value="${user}" selected="yes">${user}</option>
+                </py:if>
+            </py:for>
+            </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label class="etap_max" for="priority"> Priority: </label></td>
+            <td>
+                <select name="priority">
+                <py:for each="item in range(0,6)">
+                        <py:choose test="item == pcompound.priority">
+                        <py:when test="True">
+                            <option value="${item}" selected="yes">${item}</option>
+                        </py:when>
+                        <py:otherwise>
+                            <option value="${item}">${item}</option>
+                        </py:otherwise>
+                    </py:choose>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label for="notes">Notes: </label></td>
+            <td><textarea id="notes" name="notes" rows="2" value="None" >${pcompound.notes}</textarea></td>
+        </tr>
+            <tr>
+            <td><label for="tags">Tags: </label></td>
+            <td>
+
+                <ul id="form_tags">
+                    <li py:for="tag in alltags"  style="list-style: none; display: inline; text-indent: -1em; margin:0px;padding:0px;">
+                        <py:if test="tag in tags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}"  checked="yes" id="tags" title="&nbsp;" />${tag.name}
+                        </py:if>
+                        <py:if test="not tag in tags">
+                            <input type="checkbox" name="text_tags" value="${tag.id}" class="filternotempty" />${tag.name}
+                        </py:if>
+                    </li>
+                </ul>
+             </td>
+        </tr>
+    <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /><input id="submit" type="reset" value="Reset" /></td></tr>
+    </table>
+    <input type="hidden" name="come_from" value="${come_from}" />
+  </form>
+</div>
+<div style="clear:both;" />
+</body>
+</html>

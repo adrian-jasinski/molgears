@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <title>Editing: ${user.user_name.replace('.', ' ').title()}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/myaccount')}">My profile</a></li>
+            <li><a href="${tg.url('/myaccount/edit')}"><b>Edit profile</b></a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+
+</div>
+<div class="accept" style="margin-left:50px;">
+<h2 style="text-align:center;">Edit User profile for: <span style="color:blue">${user.user_name.replace('.', ' ').title()}</span></h2>
+  <form action="${tg.url('/myaccount/save')}" enctype="multipart/form-data" method="post" name="form">
+    <table style="width:760px;">
+        <tr>
+            <td><label for="email">Email: </label></td>
+            <td><input type="text" size="40" value="${user.email_address}" name="email" /></td>
+        </tr>
+        <tr>
+            <td><label for="items_per_page">Compounds per page: </label></td>
+            <td><input type="text" size="2" value="${user.items_per_page}" name="items_per_page" /> Min 10; Max 150;</td>
+        </tr>
+        <tr>
+            <td><label for="limit_sim">Max similar compounds: </label></td>
+            <td><input type="text" size="2" value="${user.limit_sim}" name="limit_sim" /> Min 10; Max 50;</td>
+        </tr>
+        <tr>
+            <td><label for="threshold">Min similarity [%]: </label></td>
+            <td><input type="text" size="2" value="${user.threshold}" name="threshold" /> od 10 do 50 %</td>
+        </tr>
+        <tr>
+            <td><label for="old_password"><b style="color:red;">* Current password: </b></label></td>
+            <td><input id="accept" type="password" name="old_password" value=""  /></td>
+        </tr>
+        <tr>
+            <td><label for="password">New password: </label> </td>
+            <td><input id="accept" type="password" name="password" value=""  /> (Opcjonal. Required len > 6 )</td>
+        </tr>
+        <tr>
+            <td><label for="veryfie">Confirm password: </label> </td>
+            <td><input id="accept" type="password" name="veryfie" value=""  /> (Required for new password.)</td>
+        </tr>
+        <tr>
+            <td><label for="groups">User Groups: </label></td>
+            <td>
+                <select name="groups" multiple="multiple" size="${len(user.groups)}" style="width:200px;" disabled="yes">
+                    <option py:for="group in user.groups" value="">${group.group_name}</option>
+                </select>
+            </td>
+        </tr>
+            <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /><input id="submit" type="reset" value="Reset" /></td></tr>
+        <tr>
+            <td></td>
+            <td>
+                <br /><b style="color:red;  font-size: 80%;">*</b>  - Required fields. To applay changes please enter current password.
+            </td>
+        </tr>
+    </table>
+  </form>
+</div>
+<div style="clear:both;"/>
+</body>
+</html>

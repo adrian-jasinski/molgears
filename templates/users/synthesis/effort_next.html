@@ -1,0 +1,116 @@
+ 
+   
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/pagination.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <title>Synthesis ${pname}</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;">
+    ${sidebar()}
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/synthesis/get_all')}">Show all</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis')}">Show my</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>    
+     <hr style="border: 2px ridge #000;" />
+     <div>
+        <ul>
+            <li><a href="${tg.url('/'+pname+'/synthesis/details')}/${scompound.gid}/${scompound.id}">Details</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/edit')}/${scompound.id}">Edit</a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/allefforts')}/${scompound.id}"><b>Efforts</b></a></li>
+            <li><a href="${tg.url('/'+pname+'/synthesis/accept')}/${scompound.id}">Recive</a></li>
+        </ul>
+     </div>
+</div>
+ 
+<div class="accept">
+<h2 class="text-align:center;">Add Effort to Compound.</h2>
+  <form action="${tg.url('/'+pname+'/synthesis/effort_next')}/${scompound.id}" enctype="multipart/form-data" method="post" >
+    <table style="width:700px;">
+        <tr>
+            <td><label for="id">GID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${scompound.gid}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="id">Synthesis ID: </label></td>
+            <td><input id="accept" type="text" name="id" value="${scompound.id}" disabled="True" size="1" /></td>
+        </tr>
+        <tr>
+            <td><label for="structure">Smiles: </label></td>
+            <td><input id="structure" type="text" name="structure" value="${scompound.mol.structure}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label for="name">Name: </label></td>
+            <td><input id="accept" type="text" name="name" value="${scompound.mol.name}" disabled="True"  /></td>
+        </tr>
+        <tr>
+            <td><label for="effort_name">Effort name: </label></td>
+            <td><input id="accept" type="text" name="effort_name" value=""   /></td>
+        </tr>
+        <tr>
+            <td><label class="etap_max" for="etap_max"><b style="color:red; font-size: 80%;">*</b> Number of phases: </label></td>
+            <td>
+                <select name="etap_max">
+                <py:for each="i in range(1,15)">
+                    <py:choose test="etap_max == i">
+                        <py:when test="True">
+                            <option value="${i}" selected="yes">${i}</option>
+                        </py:when>
+                        <py:otherwise>
+                            <option value="${i}">${i}</option>
+                        </py:otherwise>
+                    </py:choose>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td><label class="etap_max" for="etap"><b style="color:red;font-size: 80%;">*</b> Finished phase: </label></td>
+            <td>
+                <select name="etap">
+                <py:for each="i in range(15)">
+                    <py:choose test="etap == i">
+                        <py:when test="True">
+                            <option value="${i}" selected="yes">${i}</option>
+                        </py:when>
+                        <py:otherwise>
+                            <option value="${i}">${i}</option>
+                        </py:otherwise>
+                    </py:choose>
+                </py:for>
+                </select> 
+            </td>
+        </tr>
+        <tr>
+            <td>Reaction path:</td>
+            <td><input type="file" name="reaction" accept="image/*" /> </td>
+        </tr>
+        <tr>
+            <td><label for="reason"><b style="color:red;font-size: 80%;">*</b> Reason for phase changing:  </label></td>
+            <td><textarea id="notes" name="reason" rows="2"></textarea></td>
+        </tr>
+            <tr><td></td><td><input id="submit" type="submit" name="submit" value="phase change" /></td></tr>
+        <tr>
+        <td></td>
+        <td>
+            <br /><b style="color:red;font-size: 80%;">*</b>  - required fields.<br />
+        </td>
+        </tr>
+    </table>
+  </form>
+</div>
+</body>
+</html>

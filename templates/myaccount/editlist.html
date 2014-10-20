@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/tabs.css')}" />
+  <style type="text/css">
+    table td.left
+    {
+    border:None;
+    padding-left:0px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:10px;
+    margin:0;
+    text-align:right;
+    }
+    table td.right
+    {
+    border:None;
+    padding-left:10px;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-right:0px;
+    margin:0;
+    text-align:left;
+    }
+  </style>
+  <title>My Lists</title>
+</head>
+
+<body>
+<div id="left_content" style="display:block;float:left;">
+    <h4 style="text-align:center;">My Lists</h4>
+    <div style="clear:both;"/>
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/myaccount/mylists')}">Created</a></li>
+            <li><a href="${tg.url('/myaccount/sharedlists')}">Shared</a></li>
+        </ul>
+    </div>
+    <div style="clear:both;"/>
+     <hr style="border: 2px ridge #000;" />
+     <div id="cssmenu">
+        <ul>
+            <li><a href="${tg.url('/myaccount/addlist')}">Create list</a></li>
+        </ul>
+    </div>
+</div>
+<div class="accept" style="float:None;width:None;border:1px solid white">
+    <h2 style="text-align:center;">Edycja listy nr <span style="color:blue">${mylist.id}</span></h2>
+    <form action="${tg.url('/myaccount/editlist')}/${mylist.id}" enctype="multipart/form-data" method="post" name="form">
+        <table  style="margin:0 auto;">
+            <tr>
+                <td class="left"><label for="name"><b style="color:red;  font-size: 80%;">*</b> Name: </label></td>
+                <td class="right"><input type="text" name="name" style="width:200px;" value="${mylist.name}" /></td>
+            </tr>
+            <tr py:with="dtab={'Compounds':'Struktury', 'PCompounds':'Requests','SCompounds':'Synthesis','LCompounds':'Library'}">
+                <td class="left"><label for="table">Table:</label></td>
+                <td class="right"><input type="text" name="name" style="width:200px;" disabled="disabled" value="${dtab[mylist.table]}" /></td>
+            </tr>
+            <tr>
+                <td class="left"><label for="permitusers">Authotized Users:</label></td>
+                <td class="right">
+                    <select name="permitusers" size="10" multiple="" style="width:205px;">
+                        <py:for each="usr in users">
+                            <py:choose test="usr in mylist.permitusers">
+                              <py:when test="True">
+                                <option  value="${usr.user_name}" selected="selected">${usr.display_name.replace('.', ' ').title()}</option>
+                              </py:when>
+                              <py:otherwise><option  value="${usr.user_name}">${usr.display_name.replace('.', ' ').title()}</option></py:otherwise>
+                            </py:choose>
+                            
+                        </py:for>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><label for="notes">Notes: </label></td>
+                <td class="right"><textarea name="notes" size="5" style="width:200px;">${mylist.notes}</textarea></td>
+            </tr>
+        <tr>
+        <td class="left"></td>
+        <td class="right"><input type="submit" name="submit" value="Save" style="width:100px;" /><input type="reset" value="Reset" style="width:100px;" /></td></tr>
+        <tr>
+            <td class="left"></td>
+            <td class="right">
+                <br /><b style="color:red;  font-size: 80%;">*</b>  - Require fields!
+            </td>
+        </tr>
+    </table>
+    </form>
+</div>
+<div style="clear:both;"/>
+<br /><br />
+</body>
+</html>
