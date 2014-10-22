@@ -1,0 +1,103 @@
+Installing prerequisites as packages is tested only for 
+Ubuntu 12.04+ and other debian-derived systems
+
+
+1. Installing TurboGears
+
+TurboGears is meant to run inside python virtualenv and provides its own private index
+to avoid messing with your system packages and to provide a reliable set of packages that will correctly work together.
+Be sure that you are in virtualenv mode during all installation procedure.
+$ sudo apt-get install python
+$ sudo apt-get install python-virtualenv
+$ virtualenv tg2env
+$ tg2env/bin/pip install tg.devtools
+$ source tg2env/bin/activate
+(tg2env)$ #now you are ready to work with TurboGears
+
+Start the project:
+
+(tg2env)$ gearbox quickstart molgears
+(tg2env)$ cd molgears
+
+#delete unneeded files created by quickstart. we will replace it later by our project.
+(tg2env)$ rm -rf ~/tg2env/molgears/molgears
+
+Download molgears project from github:
+https://github.com/admed/molgears
+
+copy molgears directory to:
+~/tg2env/molgears/
+
+
+2. Build rdkit from source code with INCHI support:
+https://github.com/rdkit/rdkit/blob/master/Docs/Book/Install.rst
+
+copy rdkit directory to:
+~/tg2env/lib/python2.X/site-packages/
+
+3. Download razi from my fork:
+https://github.com/admed/razi
+
+copy razi/razi to: ~/tg2env/lib/python2.X/site-packages/
+
+4. Install postgresql:
+https://help.ubuntu.com/community/PostgreSQL
+
+5. Build the catridge:
+https://code.google.com/p/rdkit/wiki/BuildingTheCartridge
+
+Create new databse and add catridge support to it:
+https://rdkit.readthedocs.org/en/latest/Cartridge.html#reference-guide
+
+6. Add information about your database to development.ini file:
+Edit the file: ~/tg2env/molgears/development.ini and comment the line:
+# sqlalchemy.url = sqlite:///%(here)s/devdata.db
+Than uncomment the line:
+sqlalchemy.url=postgres://username:password@hostname:port/databasename
+
+and put your data like database user name, password, hosname, port and databasename to this line
+
+7. Install additional libraries by pip:
+
+first install pip:
+(tg2env)$ sudo apt-get install pip
+
+than additional libraries by using command:
+(tg2env)$ pip install library_name
+
+where libraries are:
+
+- tw2.forms
+- tw.forms
+- Genshi
+- zope.sqlalchemy
+- webhelpers
+- repoe.who
+- repoze.who.plugins.sa
+- psycopg2
+- tgext.admin
+- pillow
+- paste
+- xhtml2pdf
+- xlwt
+- xlrd
+- numpy
+- scipy
+- matplotlib
+- sqlalchemy_migrate
+
+8. RUN your aplication:
+(tg2env)$ python setup.py develop
+(tg2env)$ gearbox setup-app
+(tg2env)$ gearbox serve
+
+than you can open your browser and go to address:
+http://127.0.0.1:8080
+
+login: manager
+passwor: managepass
+
+
+enjoy :)
+
+
