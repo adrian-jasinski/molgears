@@ -240,6 +240,7 @@ It contains subcontrolers:
                 DBSession.add(project)
                 DBSession.flush()
                 flash(l_(u'Task completed successfully'))
+                redirect(come_from)
             else:
                 flash(l_(u'Name and structure are required'), 'error')
                 redirect(come_from)

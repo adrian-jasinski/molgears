@@ -37,10 +37,15 @@ class ResultsController(BaseController):
         page_url = paginate.PageURL_WebOb(request)
         import pickle
         try:
+            htrfproteins = pickle.loads([test.cell_line for test in project.tests if test.name == 'HTRF'][0])
+        except:
+            htrfproteins = None
+        try:
             cells = pickle.loads([test.cell_line for test in project.tests if test.name == 'CT'][0])
         except:
             cells = None
         lcompound = DBSession.query(LCompound).join(LCompound.mol).filter(Compound.project.any(Projects.name==pname)).filter(LCompound.showme==True)
+        
         dsc = True
         order = LCompound.id
         tmpl = ''
