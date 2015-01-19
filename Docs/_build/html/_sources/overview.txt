@@ -39,8 +39,10 @@ Software Dependencies/Third-party software component
     * xhtml2pdf (`<http://www.xhtml2pdf.com/>`_)
     * pillow (`<https://github.com/python-pillow/Pillow>`_)
 
+    
+    
  .. _design-goal:
-   
+ 
 Design goal
 ===============================================================
 

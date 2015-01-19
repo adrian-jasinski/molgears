@@ -259,3 +259,4 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
 pdf_documents = [('index', u'MolGears_Docs', u'MolGears Docs', u'Adrian Jasinski'),]
+pdf_stylesheets = ['sphinx','kerning','a4']

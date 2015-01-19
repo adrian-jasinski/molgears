@@ -10,7 +10,8 @@ body {
     line-height: 150%;
     text-align: center;
     /*background-color: #AFC1C4; */
-    background-color: #BFD1D4;
+   /* background-color: #BFD1D4;*/
+    background-color: #2E7682;
     color: black;
     padding: 0;
     border: 1px solid #aaa;
@@ -20,7 +21,8 @@ body {
 }
 
 a {
-    color: #CA7900;
+/*    color: #CA7900;*/
+    color: #005DFF;
     text-decoration: none;
 }
 
@@ -91,7 +93,8 @@ a tt {
     background-color: transparent;
     font-weight: bold;
     border: 0;
-    color: #CA7900;
+    /*color: #CA7900;*/
+    color: #005DFF;
 }
 
 a tt:hover {
@@ -198,7 +201,8 @@ div.related ul li a {
     margin: 0;
     padding: 0 5px 0 5px;
     line-height: 1.75em;
-    color: #EE9816;
+/*    color: #EE9816;*/
+    color: #FFF;
 }
 
 div.related ul li a:hover {
@@ -234,7 +238,9 @@ div.sphinxsidebar h4, div.sphinxsidebar h3 {
     padding: 0.1em 0 0.1em 0.5em;
     color: white;
     border: 1px solid #86989B;
-    background-color: #AFC1C4;
+/*    background-color: #AFC1C4;*/
+    background-color: #43848E;
+
 }
 
 div.sphinxsidebar ul {
@@ -377,7 +383,8 @@ div.warning p.admonition-title {
     color: white;
     border-bottom: 1px solid #86989B;
     font-weight: bold;
-    background-color: #AFC1C4;
+    /*background-color: #AFC1C4;*/
+    background-color: #43848E;
 }
 
 div.warning {

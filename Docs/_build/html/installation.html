@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; molgears 0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="molgears 0 documentation" href="index.html" />
+    <link rel="up" title="MolGears’s" href="contents.html" />
+    <link rel="next" title="Getting started" href="getting_started.html" />
+    <link rel="prev" title="Database model" href="database_model.html" /> 
+  </head>
+  <body>
+
+<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
+<a href="index.html"><img src="_static/logo.png" border="0" alt="sampledoc"/></a>
+</div>
+
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="getting_started.html" title="Getting started"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="database_model.html" title="Database model"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+       <li><a href="contents.html">documentation </a> &raquo;</li>
+
+          <li><a href="contents.html" accesskey="U">MolGears&#8217;s</a> &raquo;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#installing-on-ubuntu">Installing on Ubuntu</a><ul>
+<li><a class="reference internal" href="#installing-turbogears">1. Installing TurboGears</a></li>
+<li><a class="reference internal" href="#build-rdkit-from-source-code-with-inchi-support">2. Build rdkit from source code with INCHI support</a></li>
+<li><a class="reference internal" href="#download-razi">3. Download razi</a></li>
+<li><a class="reference internal" href="#install-postgresql">4. Install postgresql</a></li>
+<li><a class="reference internal" href="#build-the-cartridge">5. Build the cartridge</a></li>
+<li><a class="reference internal" href="#development-ini">6.  development.ini</a></li>
+<li><a class="reference internal" href="#install-additional-libraries-by-pip">7. Install additional libraries by pip</a></li>
+<li><a class="reference internal" href="#run-your-aplication">8. RUN your aplication</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="database_model.html"
+                        title="previous chapter">Database model</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="getting_started.html"
+                        title="next chapter">Getting started</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/installation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Installing procedure is tested only for
+Ubuntu 12.04+ and other debian-derived systems
+but general steps should work for other systems</p>
+<div class="section" id="installing-on-ubuntu">
+<span id="installing-ubuntu"></span><h2>Installing on Ubuntu<a class="headerlink" href="#installing-on-ubuntu" title="Permalink to this headline">¶</a></h2>
+<p>Installation steps one by one.</p>
+<div class="section" id="installing-turbogears">
+<h3>1. Installing TurboGears<a class="headerlink" href="#installing-turbogears" title="Permalink to this headline">¶</a></h3>
+<p>TurboGears is meant to run inside python virtualenv and provides its own private index
+to avoid messing with your system packages and to provide a reliable set of packages that will correctly work together.
+First install python &amp; python-virtualenv:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ sudo apt-get install python
+$ sudo apt-get install python-virtualenv
+</pre></div>
+</div>
+<p>Running virtualenv with the option <em>&#8211;no-site-packages</em> will not include the packages that are installed globally.
+This can be useful for keeping the package list clean in case it needs to be accessed later.:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ virtualenv --no-site-packages tg2env
+</pre></div>
+</div>
+<p><em>in this tutorial we assume that you are in your home directory (~/ or /home/username) but you can choose your own
+directory for installation destination.</em></p>
+<p>To begin using the virtual environment, it needs to be activated:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ source tg2env/bin/activate
+(tg2env)$ cd tg2env           #now you are ready to work with TurboGears
+</pre></div>
+</div>
+<p><em>Be sure that you are in virtualenv mode during all installation procedure.</em></p>
+<p>Install turbogears:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ pip install tg.devtools
+</pre></div>
+</div>
+<p>Start the project:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ gearbox quickstart molgears
+</pre></div>
+</div>
+<p>Delete unneeded files created by quickstart. We will replace it later by our project:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ rm -rf ~/tg2env/molgears/molgears
+</pre></div>
+</div>
+<p>Download molgears project from <a class="reference external" href="githubhttps://github.com/admed/molgears">githubhttps://github.com/admed/molgears</a> to ~/tg2env/molgears/</p>
+<p>or use git:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ cd ~/tg2env/molgears/
+(tg2env)$ git clone https://github.com/admed/molgears
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-rdkit-from-source-code-with-inchi-support">
+<h3>2. Build rdkit from source code with INCHI support<a class="headerlink" href="#build-rdkit-from-source-code-with-inchi-support" title="Permalink to this headline">¶</a></h3>
+<p>Read the <a class="reference external" href="http://www.rdkit.org/docs/Install.html">rdkit docs Install</a>  for more informations.</p>
+<p><strong>Installing prerequisites</strong></p>
+<p>Install the following packages using apt-get:</p>
+<div class="highlight-python"><div class="highlight"><pre>flex bison build-essential python-numpy cmake python-dev
+libboost-dev libboost-python-dev libboost-regex-dev
+</pre></div>
+</div>
+<p><strong>Setting environment variables</strong></p>
+<p>RDBASE: the root directory of the RDKit distribution (e.g. ~/RDKit):</p>
+<div class="highlight-python"><div class="highlight"><pre>export RDBASE=&quot;/home/username/RDKit&quot;
+</pre></div>
+</div>
+<p>LD_LIBRARY_PATH: make sure it includes $RDBASE/lib and wherever the boost shared libraries were installed:</p>
+<div class="highlight-python"><div class="highlight"><pre>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$RDBASE/lib
+</pre></div>
+</div>
+<p>PYTHONPATH: make sure it includes $RDBASE:</p>
+<div class="highlight-python"><div class="highlight"><pre>export PYTHONPATH=$PYTHONPATH:$RDBASE
+</pre></div>
+</div>
+<p><strong>Building the RDKit</strong></p>
+<p>Fetch the source, here as tar.gz but you could use <a class="reference external" href="https://github.com/rdkit/rdkit">git</a> as well:</p>
+<div class="highlight-python"><div class="highlight"><pre>wget http://downloads.sourceforge.net/project/rdkit/rdkit/QX_20XX/RDKit_20XX_XX_X.tgz
+</pre></div>
+</div>
+<p>for download the latest version (Q3 2014):</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ mkdir ~/RDKit
+(tg2env)$ cd ~/RDKit
+(tg2env)$ wget http://downloads.sourceforge.net/project/rdkit/rdkit/Q3_2014/RDKit_2014_09_1.tgz
+</pre></div>
+</div>
+<p>unpack the archive:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ tar -xvf RDKit_2014_09_1.tgz
+</pre></div>
+</div>
+<p>move files to ~/RDKit directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ mv RDKit_2014_09_1/* ~/RDKit
+</pre></div>
+</div>
+<p>Download InChi:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ cd ~/RDKit/External/INCHI-API
+(tg2env)$ ./download-inchi.sh
+</pre></div>
+</div>
+<p>Building:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ cd $RDBASE
+(tg2env)$ mkdir build
+(tg2env)$ cd build
+(tg2env)$ cmake -DRDK_BUILD_INCHI_SUPPORT=ON ..
+(tg2env)$ make
+(tg2env)$ make install
+</pre></div>
+</div>
+<p>Testing the build (optional, but recommended):</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ ctest
+</pre></div>
+</div>
+<p>copy rdkit directory to:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ cp ~/RDKit/rdkit ~/tg2env/lib/python2.X/site-packages/
+</pre></div>
+</div>
+</div>
+<div class="section" id="download-razi">
+<h3>3. Download razi<a class="headerlink" href="#download-razi" title="Permalink to this headline">¶</a></h3>
+<p>Razi provides extensions to <a class="reference external" href="http://www.sqlalchemy.org/">SQLAlchemy</a> to work with chemical databases.</p>
+<p>Download razi from <a class="reference external" href="https://github.com/rvianello/razi">GitHub</a> or from <a class="reference external" href="https://github.com/admed/razi">my fork</a></p>
+<p>or by git:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ cd ~/RDKit
+(tg2env)$ git clone https://github.com/rvianello/razi
+</pre></div>
+</div>
+<p>copy razi/razi to: ~/tg2env/lib/python2.X/site-packages/:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ cp ~/RDKit/razi/razi ~/tg2env/lib/python2.X/site-packages/
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-postgresql">
+<h3>4. Install postgresql<a class="headerlink" href="#install-postgresql" title="Permalink to this headline">¶</a></h3>
+<p>To install use the command line and type:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ sudo apt-get install postgresql postgresql-contrib
+</pre></div>
+</div>
+<p><strong>Basic Server Setup</strong></p>
+<p>In a terminal, type:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ sudo -u postgres psql postgres
+</pre></div>
+</div>
+<p>Set a password for the &#8220;postgres&#8221; database role using the command:</p>
+<div class="highlight-python"><div class="highlight"><pre>postgres=# \password postgres
+</pre></div>
+</div>
+<p>and give your password when prompted. The password text will be hidden from the console for security purposes.</p>
+<p><em>Type Control+D to exit the posgreSQL prompt.</em></p>
+<p>Since the only user who can connect to a fresh install is the postgres user, here is how to create yourself a database
+account (which is in this case also a database superuser) with the same name as your login name and then create a password for the user:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ sudo -u postgres createuser --superuser $USER
+(tg2env)$ sudo -u postgres psql
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre>postgres=# \password $USER
+</pre></div>
+</div>
+<p><em>Type Control+D to exit the posgreSQL prompt.</em></p>
+<p>More <a class="reference external" href="https://help.ubuntu.com/community/PostgreSQL">installation information</a>.</p>
+<p><strong>Creating a database</strong></p>
+<p>To create the first database, which we will call &#8220;molgears&#8221;, simply type:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ sudo -u postgres createdb molgears
+</pre></div>
+</div>
+<p><strong>Configuration</strong></p>
+<p>To improve performance while loading the database and building the index, I changed a couple of postgres configuration settings in postgresql.conf
+as they recommend in <a class="reference external" href="https://rdkit.readthedocs.org/en/latest/Cartridge.html#reference-guide">rdkit cartridge docs</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">fsync</span> <span class="o">=</span> <span class="n">off</span>                           <span class="c"># turns forced synchronization on or off</span>
+<span class="n">synchronous_commit</span> <span class="o">=</span> <span class="n">off</span>              <span class="c"># immediate fsync at commit</span>
+<span class="n">full_page_writes</span> <span class="o">=</span> <span class="n">off</span>                <span class="c"># recover from partial page writes</span>
+</pre></div>
+</div>
+<p>And to improve search performance, I allowed postgresql to use more memory than the extremely conservative default settings:</p>
+<div class="highlight-python"><div class="highlight"><pre>shared_buffers = 2048MB               # min 128kB
+work_mem = 128MB                      # min 64kB
+</pre></div>
+</div>
+<p>Change requires restart:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ sudo /etc/init.d/postgresql restart
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-the-cartridge">
+<h3>5. Build the cartridge<a class="headerlink" href="#build-the-cartridge" title="Permalink to this headline">¶</a></h3>
+<p>Go to the cartridge directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ cd $RDBASE/Code/PgSQL/rdkit
+</pre></div>
+</div>
+<p>run compilation, installation and testing:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ make &amp;&amp; make install &amp;&amp; make installcheck
+</pre></div>
+</div>
+<p>Add rdkit cartridge extension to database:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ sudo -u postgres psql -c &#39;create extension rdkit&#39; molgears
+</pre></div>
+</div>
+<p>More info in <a class="reference external" href="https://rdkit.readthedocs.org/en/latest/Cartridge.html">rdkit docs</a> and
+<a class="reference external" href="https://code.google.com/p/rdkit/wiki/BuildingTheCartridge">rdkit google code</a>.</p>
+</div>
+<div class="section" id="development-ini">
+<h3>6.  development.ini<a class="headerlink" href="#development-ini" title="Permalink to this headline">¶</a></h3>
+<p>Add information about your database to development.ini file.
+Edit the file: ~/tg2env/molgears/development.ini and comment the line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># sqlalchemy.url = sqlite:///%(here)s/devdata.db</span>
+</pre></div>
+</div>
+<p>Than uncomment the line:</p>
+<div class="highlight-python"><div class="highlight"><pre>sqlalchemy.url=postgres://username:password@hostname:port/databasename
+</pre></div>
+</div>
+<p>put your data like database USER name, password, hostname (or host IP i.e. 127.0.0.1), port (i.e. 8080)
+and databasename (in this example &#8220;molgears&#8221;)</p>
+<p>example line:</p>
+<div class="highlight-python"><div class="highlight"><pre>sqlalchemy.url=postgres://mike:hiddenpassword@127.0.0.1:8080/molgears
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-additional-libraries-by-pip">
+<h3>7. Install additional libraries by pip<a class="headerlink" href="#install-additional-libraries-by-pip" title="Permalink to this headline">¶</a></h3>
+<p>Install by using the command:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ pip install library_name
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>where libraries are::</dt>
+<dd><ul class="first last simple">
+<li>tw2.forms</li>
+<li>tw.forms</li>
+<li>Genshi</li>
+<li>zope.sqlalchemy</li>
+<li>webhelpers</li>
+<li>repoe.who</li>
+<li>repoze.who.plugins.sa</li>
+<li>psycopg2</li>
+<li>tgext.admin</li>
+<li>pillow</li>
+<li>paste</li>
+<li>xhtml2pdf</li>
+<li>xlwt</li>
+<li>xlrd</li>
+<li>numpy</li>
+<li>scipy</li>
+<li>matplotlib</li>
+<li>sqlalchemy_migrate</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="run-your-aplication">
+<h3>8. RUN your aplication<a class="headerlink" href="#run-your-aplication" title="Permalink to this headline">¶</a></h3>
+<p>Go to molgears directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ cd ~/tg2env/molgears
+</pre></div>
+</div>
+<p>run setup.py:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ python setup.py develop
+(tg2env)$ gearbox setup-app
+</pre></div>
+</div>
+<p>run gearbox:</p>
+<div class="highlight-python"><div class="highlight"><pre>(tg2env)$ gearbox serve
+</pre></div>
+</div>
+<p>than you can open your browser and go to <a class="reference external" href="http://127.0.0.1:8080">address</a>:</p>
+<div class="highlight-python"><div class="highlight"><pre>http://hostname:port (i.e. http://127.0.0.1:8080).
+</pre></div>
+</div>
+<p>put your data:</p>
+<div class="highlight-python"><div class="highlight"><pre>login: manager
+passwor: managepass
+</pre></div>
+</div>
+<img alt="_images/login_panel.png" class="align-center" src="_images/login_panel.png" />
+<p>enjoy :)</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="getting_started.html" title="Getting started"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="database_model.html" title="Database model"
+             >previous</a> |</li>
+        <li><a href="index.html">home</a>|&nbsp;</li>
+        <li><a href="search.html">search</a>|&nbsp;</li>
+       <li><a href="contents.html">documentation </a> &raquo;</li>
+
+          <li><a href="contents.html" >MolGears&#8217;s</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Adrian Jasinski.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

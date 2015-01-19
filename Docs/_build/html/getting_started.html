@@ -25,7 +25,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="molgears 0 documentation" href="index.html" />
-    <link rel="prev" title="Database model" href="database_model.html" /> 
+    <link rel="up" title="MolGears’s" href="contents.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
   </head>
   <body>
 
@@ -40,12 +41,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="database_model.html" title="Database model"
+          <a href="installation.html" title="Installation"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">home</a>|&nbsp;</li>
         <li><a href="search.html">search</a>|&nbsp;</li>
        <li><a href="contents.html">documentation </a> &raquo;</li>
- 
+
+          <li><a href="contents.html" accesskey="U">MolGears&#8217;s</a> &raquo;</li> 
       </ul>
     </div>
 
@@ -54,8 +56,26 @@
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Getting started</a><ul>
-<li><a class="reference internal" href="#installing-your-doc-directory">Installing your doc directory</a><ul>
-<li><a class="reference internal" href="#fetching-the-data">Fetching the data</a></li>
+<li><a class="reference internal" href="#what-is-this">What is this?</a></li>
+<li><a class="reference internal" href="#admin-panel">Admin Panel</a><ul>
+<li><a class="reference internal" href="#projects-table">Projects Table</a></li>
+<li><a class="reference internal" href="#users-table">Users Table</a></li>
+<li><a class="reference internal" href="#tags-table">Tags Table</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#project-view">Project View</a><ul>
+<li><a class="reference internal" href="#compounds-table">Compounds Table</a><ul>
+<li><a class="reference internal" href="#left-vertical-menu">Left vertical menu</a></li>
+<li><a class="reference internal" href="#table-view">Table View</a></li>
+<li><a class="reference internal" href="#details-view">Details View</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#requests-table">Requests Table</a><ul>
+<li><a class="reference internal" href="#synthesis-acceptance">Synthesis acceptance</a></li>
+<li><a class="reference internal" href="#id5">Details view</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#synthesis-table">Synthesis Table</a></li>
 </ul>
 </li>
 </ul>
@@ -63,8 +83,8 @@
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="database_model.html"
-                        title="previous chapter">Database model</a></p>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/getting_started.txt"
@@ -93,88 +113,310 @@
             
   <div class="section" id="getting-started">
 <span id="id1"></span><h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installing-your-doc-directory">
-<span id="installing-docdir"></span><h2>Installing your doc directory<a class="headerlink" href="#installing-your-doc-directory" title="Permalink to this headline">¶</a></h2>
-<p>You may already have sphinx <a class="reference external" href="http://sphinx.pocoo.org/">sphinx</a>
-installed &#8211; you can check by doing:</p>
-<div class="highlight-python"><div class="highlight"><pre>python -c &#39;import sphinx&#39;
-</pre></div>
+<div class="section" id="what-is-this">
+<h2>What is this?<a class="headerlink" href="#what-is-this" title="Permalink to this headline">¶</a></h2>
+<p>This document is intended to provide an overview of web interface functionality.</p>
+<p>For bugs fix and/or suggestions for improvements, please contact me: <a class="reference external" href="mailto:adrian&#46;jasinski&#37;&#52;&#48;adamed&#46;com&#46;pl">adrian<span>&#46;</span>jasinski<span>&#64;</span>adamed<span>&#46;</span>com<span>&#46;</span>pl</a></p>
+<p>See first <a class="reference internal" href="installation.html#installation"><em>Installation</em></a> for running web interface.</p>
 </div>
-<p>If that fails grab the latest version of and install it with:</p>
-<div class="highlight-python"><div class="highlight"><pre>&gt; sudo easy_install -U Sphinx
-</pre></div>
+<div class="section" id="admin-panel">
+<span id="id2"></span><h2>Admin Panel<a class="headerlink" href="#admin-panel" title="Permalink to this headline">¶</a></h2>
+<p>To enter Admin Panel you should have admin privileges (managers group).</p>
+<p>Click <strong>Admin</strong> on top right side of the page (in horizontal menu).</p>
+<p>From this panel you can create and manage: Users, Projects and Tags.</p>
+<blockquote>
+<div><p><em>Admin Panel screenshot is presented below:</em></p>
+<img alt="_images/admin_panel.png" class="align-center" src="_images/admin_panel.png" />
+</div></blockquote>
+<div class="section" id="projects-table">
+<h3>Projects Table<a class="headerlink" href="#projects-table" title="Permalink to this headline">¶</a></h3>
+<p><em>In project table you have listed all created projects.</em>
+In <em>actions</em> column you can edit (by clicking pencil) or delete a project (delete button).</p>
+<blockquote>
+<div><img alt="_images/projects_table.png" class="align-center" src="_images/projects_table.png" />
+</div></blockquote>
+<p>You can create <strong>New Project</strong> by clicking Green Plus button on the top of the table.
+The Name of the Project and at least one Cell Line are required.</p>
+<blockquote>
+<div><img alt="_images/new_project.png" class="align-center" src="_images/new_project.png" />
+</div></blockquote>
+<p>After Creating new project the Group named as The Project with privileges to access the Project is added to database and is available in Users Table.
+An user to access the Project should be add to Group named as The project.</p>
+<p><em>You should create at least one project to start working with database!</em></p>
 </div>
-<p>Now you are ready to build a template for your docs, using
-sphinx-quickstart:</p>
-<div class="highlight-python"><div class="highlight"><pre>&gt; sphinx-quickstart
-</pre></div>
+<div class="section" id="users-table">
+<h3>Users Table<a class="headerlink" href="#users-table" title="Permalink to this headline">¶</a></h3>
+<p><em>In users table you can create/manage users accounts.</em>
+In <em>actions</em> column you can edit (by clicking pencil) or delete a user (delete button).</p>
+<blockquote>
+<div><img alt="_images/users_table.png" class="align-center" src="_images/users_table.png" />
+</div></blockquote>
+<p>You can create <strong>New User</strong> by clicking Green Plus button on the top of the table.
+You should set a password for a user and select Basic Groups and Projects Group.</p>
+<p>Managers group is for admin privileges, Users group is for basic access and Principals group is for receiving the compounds and notifications.
+If you want add a user access to any of the projects add it to Group named as the project (Select it from Projects Permissions).</p>
+<blockquote>
+<div><img alt="_images/new_user.png" class="align-center" src="_images/new_user.png" />
+</div></blockquote>
 </div>
-<p>accepting most of the defaults.  I choose &#8220;sampledoc&#8221; as the name of my
-project.  cd into your new directory and check the contents:</p>
-<div class="highlight-python"><div class="highlight"><pre>home:~/tmp/sampledoc&gt; ls
-Makefile      _static         conf.py
-_build                _templates      index.rst
-</pre></div>
+<div class="section" id="tags-table">
+<h3>Tags Table<a class="headerlink" href="#tags-table" title="Permalink to this headline">¶</a></h3>
+<p><em>In tags table you can manage/created tags.</em>
+In <em>actions</em> column you can edit (by clicking pencil) or delete a user (delete button).</p>
+<blockquote>
+<div><img alt="_images/tags_table.png" class="align-center" src="_images/tags_table.png" />
+</div></blockquote>
+<p>You can create <strong>New Tag</strong> by clicking Green Plus button on the top of the table.
+You can add one or more tags at once.</p>
+<blockquote>
+<div><img alt="_images/new_tag.png" class="align-center" src="_images/new_tag.png" />
+</div></blockquote>
 </div>
-<p>The index.rst is the master ReST for your project, but before adding
-anything, let&#8217;s see if we can build some html:</p>
-<div class="highlight-python"><div class="highlight"><pre>make html
-</pre></div>
 </div>
-<p>If you now point your browser to <tt class="file docutils literal"><span class="pre">_build/html/index.html</span></tt>, you
-should see a basic sphinx site.</p>
-<div class="section" id="fetching-the-data">
-<span id="id2"></span><h3>Fetching the data<a class="headerlink" href="#fetching-the-data" title="Permalink to this headline">¶</a></h3>
-<p>Now we will start to customize out docs.  Grab a couple of files from
-the <a class="reference external" href="https://github.com/matplotlib/sampledoc">web site</a>
-or git.  You will need <tt class="file docutils literal"><span class="pre">getting_started.rst</span></tt> and
-<tt class="file docutils literal"><span class="pre">_static/basic_screenshot.png</span></tt>.  All of the files live in the
-&#8220;completed&#8221; version of this tutorial, but since this is a tutorial,
-we&#8217;ll just grab them one at a time, so you can learn what needs to be
-changed where.  Since we have more files to come, I&#8217;m going to grab
-the whole git directory and just copy the files I need over for now.
-First, I&#8217;ll cd up back into the directory containing my project, check
-out the &#8220;finished&#8221; product from git, and then copy in just the files I
-need into my <tt class="file docutils literal"><span class="pre">sampledoc</span></tt> directory:</p>
-<div class="highlight-python"><div class="highlight"><pre>home:~/tmp/sampledoc&gt; pwd
-/Users/jdhunter/tmp/sampledoc
-home:~/tmp/sampledoc&gt; cd ..
-home:~/tmp&gt; git clone https://github.com/matplotlib/sampledoc.git tutorial
-Cloning into &#39;tutorial&#39;...
-remote: Counting objects: 87, done.
-remote: Compressing objects: 100% (43/43), done.
-remote: Total 87 (delta 45), reused 83 (delta 41)
-Unpacking objects: 100% (87/87), done.
-Checking connectivity... done
-home:~/tmp&gt; cp tutorial/getting_started.rst sampledoc/
-home:~/tmp&gt; cp tutorial/_static/basic_screenshot.png sampledoc/_static/
-</pre></div>
+<div class="section" id="project-view">
+<span id="id3"></span><h2>Project View<a class="headerlink" href="#project-view" title="Permalink to this headline">¶</a></h2>
+<p>The default view for user after logging in is a list of available projects. It&#8217;s also available from the top horizontal menu.
+User has permission to view and to access to the project after assigning it to a group named as the project.
+Lets select one of the projects:</p>
+<blockquote>
+<div><img alt="_images/start.png" class="align-center" src="_images/start.png" />
+</div></blockquote>
+<p>The default view of project is presented below.
+On the left side of page is placed menu for tables corresponding to the <a class="reference internal" href="project_workflow.html#basic-workflow"><em>Project basic workflow</em></a></p>
+<blockquote>
+<div><img alt="_images/project_info.png" class="align-center" src="_images/project_info.png" />
+</div></blockquote>
+<div class="section" id="compounds-table">
+<span id="id4"></span><h3>Compounds Table<a class="headerlink" href="#compounds-table" title="Permalink to this headline">¶</a></h3>
+<p>The Basic functionality of this table is to store structure information for each unique compound.
+Other tables have connection to structure by relationship to compounds. See: <a class="reference internal" href="database_model.html#database-model"><em>Database model</em></a>.</p>
+<p>Interface of other tables is very similar so we will use this table as an example and describe it in more detail.
+Interface is composed of two parts. Left vertical menu and table with sortable columns containing information and image of compound.</p>
+<blockquote>
+<div><img alt="_images/compound_table.png" class="align-center" src="_images/compound_table.png" />
+</div></blockquote>
+<div class="section" id="left-vertical-menu">
+<h4>Left vertical menu<a class="headerlink" href="#left-vertical-menu" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><p>Left vertical menu is divided into parts by horizontal lines.</p>
+<ol class="arabic simple">
+<li>The first part is the same as in the Project View except that it has been market the current table with the number of elements in brackets.</li>
+<li>The second part is for an actions performed on the table.</li>
+</ol>
+<blockquote>
+<div><ul>
+<li><p class="first">The default is to show all elements.</p>
+</li>
+<li><p class="first"><strong>Add new</strong> is a form for adding new compound to database. <a class="reference external" href="http://www.daylight.com/smiles/">SMILES</a>, Name and Tags (see: <a class="reference internal" href="#admin-panel"><em>Admin Panel</em></a> for tags creation) are required.</p>
+<p>SMILES code should be placed in the appropriate field manually or can be drawn using the <a class="reference external" href="http://peter-ertl.com/jsme/">JSME editor</a> , which will run when you press the &#8220;Draw Structure&#8221;
+button.</p>
+<p>Naming can be autonumerated (see more below in Groups) by selecting next number from selection form near the Name field.</p>
+<p>Option <em>Isomer</em> is setting flag &#8220;Isomer&#8221; on Compound and it&#8217;s allowing to add the same structure to database once more. By default Isomer is set to &#8220;No&#8221; and only unique structures are allowed.</p>
+<p>Option <a class="reference external" href="http://pubs.acs.org/doi/abs/10.1021/jm901137j">PAINS</a> is set for filtering
+<a class="reference external" href="http://pipeline.corante.com/archives/2010/02/08/polluting_the_literature_with_pains.php">&#8220;frequent hitter&#8221;</a> compounds and for setting a flag near a compound matched the filters.</p>
+<blockquote>
+<div><img alt="_images/add_new_compound_jsme.png" class="align-center" src="_images/add_new_compound_jsme.png" />
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Import from file</strong> option if for reading one or more compounds from file. Allowed file formats are sdf, mol, and smi (text file
+containing in each row SMILES code and the name of the compound separated by a space - remember to remove empty lines).</p>
+<blockquote>
+<div><img alt="_images/import_from_file.png" class="align-center" src="_images/import_from_file.png" />
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Groups</strong> - is for autonaming of compounds. It&#8217;s allow to create group of names autonumerated from database. The number is placed between prefix and sufix field with defined precision.</p>
+<blockquote>
+<div><img alt="_images/show_groups.png" class="align-center" src="_images/show_groups.png" />
+<p>To create <em>New Group</em> click green plus button (<em>Add new</em>) and fill the form:</p>
+<img alt="_images/new_group.png" class="align-center" src="_images/new_group.png" />
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li>Next part is containing navigation bar for switching the page. The same navigation bar is on the bottom of the table.</li>
+<li>Checking the checkbox &#8220;Download manager&#8221; will show div with downloading options on the top of the table.</li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li>You can choose the compounds for download<ul>
+<li>total - all compounds from the table,</li>
+<li>selected - select compound by checking the checkbox near chosen molecules in the table - it will change the row color,</li>
+<li>or choose a range from ... to ...</li>
+</ul>
+</li>
+<li>Select the file format (PDF, MS Excel, SDF, CSV - data separated by comma, TXT - data separated by space)</li>
+<li>Choose Information, Attributes or Data to download. In Data Column you can choose the image size in pixels.</li>
+</ul>
+<img alt="_images/download_manager.png" class="align-center" src="_images/download_manager.png" />
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li>Choose one of filtering option by checking the appropriate box in Filter section.</li>
+</ol>
+<ul class="simple">
+<li>For all options at once choose blank checkbox. Filter options will show on the top of the table.</li>
+<li>Options for structure filtering are: Similarity, Substructure, Exact Structure.</li>
+<li>For filtering the similarity is shown an additional column containing the percentage value of the similarity.</li>
+<li>For text fields (e.g. Name, Creator, Notes) you can use wildcard character asterisk (*) in your search criteria.</li>
+<li>Clicking the image of compound in the table will run similarity search with the chosen structure as the search criterion.</li>
+<li>Clicking the tag name from Tags column in the table will search all compound containing the chosen tag.</li>
+</ul>
+<blockquote>
+<div><img alt="_images/filtering_options.png" class="align-center" src="_images/filtering_options.png" />
+</div></blockquote>
+</div></blockquote>
 </div>
-<p>The last step is to modify <tt class="file docutils literal"><span class="pre">index.rst</span></tt> to include the
-<tt class="file docutils literal"><span class="pre">getting_started.rst</span></tt> file (be careful with the indentation, the
-&#8220;g&#8221; in &#8220;getting_started&#8221; should line up with the &#8216;:&#8217; in <tt class="docutils literal"><span class="pre">:maxdepth</span></tt>:</p>
-<div class="highlight-python"><div class="highlight"><pre>Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-   getting_started.rst
-</pre></div>
+<div class="section" id="table-view">
+<h4>Table View<a class="headerlink" href="#table-view" title="Permalink to this headline">¶</a></h4>
+<p>Some columns in Table header heve arrows for sorting in increasing/decreasing order.
+The firtst column  is for checking all compound from current page.
+GID - is Global ID - unique number for indexing compounds and it is connected to the compound structure.</p>
+<blockquote>
+<div><img alt="_images/table_header.png" class="align-center" src="_images/table_header.png" />
+</div></blockquote>
+<p>Select/unselect compounds independently by checking the checkbox near chosen molecule in the table - it will change the row color.</p>
+<p>You can use the the <strong>right mouse button</strong> to display a menu of tasks or options for selected compounds:</p>
+<blockquote>
+<div><img alt="_images/RMB.png" class="align-center" src="_images/RMB.png" />
+</div></blockquote>
+<ul>
+<li><p class="first">Edit - is for editing compound data. You can change the structure (it will change the structure for all related instances in requests, synthesis, library and results tables).
+Since multiple names are allowed for one compound you can add more names to compound here and set the chosen one as a primary.</p>
+<blockquote>
+<div><img alt="_images/edit_compound.png" class="align-center" src="_images/edit_compound.png" />
+</div></blockquote>
+</li>
+<li><p class="first">Create request - is connected to <a class="reference internal" href="project_workflow.html#basic-workflow"><em>Project basic workflow</em></a>. It allow to add compound to Requests Table [<strong>ref</strong>].</p>
+</li>
+</ul>
+<blockquote>
+<div><p>Required is selection of the Recipient. This person will be set as a the one to receive email notification about finish of synthesis.</p>
+<p>You can also set the priority of the synthesis (0-5).</p>
+<blockquote>
+<div><img alt="_images/create_request.png" class="align-center" src="_images/create_request.png" />
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li>Add to library - is connected to second path in <a class="reference internal" href="project_workflow.html#basic-workflow"><em>Project basic workflow</em></a>. It allow to add compound to Library Table [<strong>ref</strong>].</li>
+</ul>
+<blockquote>
+<div><p>Required is percentage value for one of the purity types (acid or basic in range from 0 to 100). You can optionally attach file with analytical report (e.g. HPLC/MS).</p>
+<p>State is float value for amount (in micrograms) of compound.</p>
+<blockquote>
+<div><img alt="_images/add_to_library.png" class="align-center" src="_images/add_to_library.png" />
+</div></blockquote>
+</div></blockquote>
 </div>
-<p>and then rebuild the docs:</p>
-<div class="highlight-python"><div class="highlight"><pre>cd sampledoc
-make html
-</pre></div>
+<div class="section" id="details-view">
+<h4>Details View<a class="headerlink" href="#details-view" title="Permalink to this headline">¶</a></h4>
+<p>The <strong>Details of Compound</strong> can be viewed after clicking &#8220;Name&#8221; field in table (in this example CHEMBL6380).</p>
+<blockquote>
+<div><p>The upper part of the page is the same for all tables and it is divided into two columns:</p>
+<ul class="simple">
+<li>The right side shows a compound image (click image to filter compounds by similarity).</li>
+<li>The left indicates the name and GID number in the first row.
+Than the following information about the descriptors by default colored black. The values are colored red if they exceed Lipinski rule of five.
+Toggle show/hide button is for Formula, InChI and SMILES data.
+The last information are Tags assigned for the compound.</li>
+</ul>
+<p>The second part is separated from the first by horizontal menu with actions buttons (actions are the same as in <strong>right mouse button menu</strong>).</p>
+<blockquote>
+<div><p>This view is different in each table. You can switch between tables by using bookmarks.
+This place is also good for checking if compound is added to other tables. If not it&#8217;s bookmark is blocked and font is colored by gray.</p>
+<p>Details section has all information about instance from the current table.</p>
+<p>Similar Compounds section is only for details in <em>Compound  table</em>. Mouse Hover on Similarity value will show molecule image.
+Clicking on the name will redirect to the details page of selected molecule. You can</p>
+<p>History of changes section will show all changes and actions recorded for molecule. Data are sorted by date.</p>
+</div></blockquote>
+<img alt="_images/compound_details.png" class="align-center" src="_images/compound_details.png" />
+</div></blockquote>
 </div>
-<p>When you reload the page by refreshing your browser pointing to
-<tt class="file docutils literal"><span class="pre">_build/html/index.html</span></tt>, you should see a link to the
-&#8220;Getting Started&#8221; docs, and in there this page with the screenshot.
-<cite>Voila!</cite></p>
-<p>Note we used the image directive to include to the screenshot above
-with:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">test</span>
-</pre></div>
 </div>
+<div class="section" id="requests-table">
+<h3>Requests Table<a class="headerlink" href="#requests-table" title="Permalink to this headline">¶</a></h3>
+<p>This table is a waiting list for compounds to be accepted to synthesis. Each instance in table can have one of three statuses:</p>
+<ul>
+<li><p class="first">proposed</p>
+<p>This is the default status for molecule in request table after being created. By default only &#8220;proposed&#8221; molecules are shown in Request Table.
+To view all instances choose option <em>&#8220;show all&#8221;</em>  in left vertical menu bar. Rows in table for this status are colored in yellow.</p>
+</li>
+<li><p class="first">accepted</p>
+<p>This status is set for molecules accepted to synthesis. See below how to accept a structure to synthesis.  Rows in table for this status are colored in cyan.</p>
+</li>
+<li><p class="first">reject</p>
+<dl class="docutils">
+<dt>This status is set for compound is synthesis is canceled for some reason. To reject compound select it from the table and than choose option <em>&#8220;Reject&#8221;</em> from <strong>right mouse botton menu bar</strong>.</dt>
+<dd><p class="first last">Rows in table for this status are colored in magenta.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<blockquote>
+<div><img alt="_images/requests_table.png" class="align-center" src="_images/requests_table.png" />
+</div></blockquote>
+<div class="section" id="synthesis-acceptance">
+<h4>Synthesis acceptance<a class="headerlink" href="#synthesis-acceptance" title="Permalink to this headline">¶</a></h4>
+<p>To accept selected molecules to synthesis choose option <em>&#8220;Accept&#8221;</em> from <strong>right mouse botton menu bar</strong>.</p>
+<blockquote>
+<div><img alt="_images/accept_request.png" src="_images/accept_request.png" />
+</div></blockquote>
+<p>Required is expected number of synthesis phases/etaps (it can be edited) and Recipient - person who will get notyfication about completion of synthesis and will accept the synthesized compound to library.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">User to be selected as Recipient should belong to the <em>&#8220;principals&#8221;</em> group. See: <a class="reference internal" href="#admin-panel"><em>Admin Panel</em></a> for editing user groups.</p>
+</div>
+</div></blockquote>
+<p>Accepted compound is added to Synthesis table <strong>[ref]</strong>.</p>
+<blockquote>
+<div><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>Compound will be assigned to the user who accepted it.</p>
+<p class="last">For this reason it should be accepted by the person who will be synthesize it.</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="id5">
+<h4>Details view<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<p>The <strong>Details of Requests</strong> can be viewed like in Compounds Table - after clicking &#8220;Name&#8221; field for chosen molecules in table.
+Frame around of the compound image is colored in accordance to status type.</p>
+<p>If the compound was added to the request more than once, you can switch between them by selecting the next number in the tabs (in this case, 403-1, 403-2 where 403 is a GID number).
+Current has frame in aqua color.</p>
+<blockquote>
+<div><img alt="_images/requests_details.png" src="_images/requests_details.png" />
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="synthesis-table">
+<h3>Synthesis Table<a class="headerlink" href="#synthesis-table" title="Permalink to this headline">¶</a></h3>
+<p>This table is created to store information related to the synthesis process and for tracking synthesis etaps and current status. Priority value is synhronized with request table and can be changed.
+The phases column present information about current phase vs expected number of phases. By default, only accepted by the user compounds are shown. To switch view to &#8220;all&#8221; choose option &#8220;Show all&#8221;
+from left vertical menu.</p>
+<p>Each instance in table can have one of statuses:</p>
+<ul>
+<li><p class="first">pending</p>
+<p>This is the default status for molecule in synthesis table after being accepted from requests. Rows in table for this status are colored in yellow.
+For this Status the -1 Phase is set.</p>
+</li>
+<li><p class="first">synthesis</p>
+<p>Status set for the compounds in the process of synthesis. Phases for this status are numbered from 0 to max number declared during acceptance from requests. Rows in table for this status are colored in cyan.</p>
+</li>
+<li><p class="first">finished</p>
+<p>Status set for the compounds after process of synthesis is finished (current phase number is the same as max number). Analytical data should be added to molecule. Rows in table for this status are colored in cyan.</p>
+</li>
+<li><p class="first">received</p>
+<p>Status set for the compounds after being recived by Recipient. As a result compound is added to Library table. Rows in table for this status are colored in green.</p>
+</li>
+<li><p class="first">rejected</p>
+<p>Status set for the compounds if we decided to not continue synthesis any more. When the molecule is rejected this status is set also for request with it originates. Rows in table for this status are colored in magenta.</p>
+</li>
+<li><p class="first">discontinued</p>
+<p>Status set for the compounds if we temporary decided to not continue synthesis. Previous status can be restored by choosing &#8220;continue&#8221; option from RMB menu. Rows in table for this status are colored in violet.</p>
+</li>
+</ul>
+<blockquote>
+<div><img alt="_images/synthesis_table.png" src="_images/synthesis_table.png" />
+</div></blockquote>
 </div>
 </div>
 </div>
@@ -192,12 +434,13 @@ with:</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="database_model.html" title="Database model"
+          <a href="installation.html" title="Installation"
              >previous</a> |</li>
         <li><a href="index.html">home</a>|&nbsp;</li>
         <li><a href="search.html">search</a>|&nbsp;</li>
        <li><a href="contents.html">documentation </a> &raquo;</li>
- 
+
+          <li><a href="contents.html" >MolGears&#8217;s</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
