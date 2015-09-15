@@ -15,7 +15,7 @@
     <script type="text/javascript" src="${tg.url('/javascript/jqcontextmenu.js')}"></script>
 <script type="text/javascript">
 jQuery(document).ready(function($){
-	$('body.tundra').addcontextmenu('contextmenu1') //apply context menu to links with class="mylinks"
+	$('body.tundra').addcontextmenu('contextmenu1'); //apply context menu to links with class="mylinks"
 })
 
 document.onkeypress = keyPress;
@@ -171,10 +171,10 @@ function showresults(id,len) {
         </table>
     </div>
     <div class="div-table">
-        <div class="div-table-caption" id="caption">Filtering search results</div>
+        <div class="div-table-caption" id="caption">Filtering options</div>
         <div class="div-table-row" id="text_smiles1">
             <div class="div-table-col-right">
-                <input type="radio" name="method" value="smililarity" /> Smililarity  <br />
+                <input type="radio" name="method" value="similarity" /> Similarity  <br />
                 <input type="radio" name="method" value="substructure" checked="yes" /> Substructure <br />
                 <input type="radio" name="method" value="identity" /> Exact Structure <br />
             </div>
@@ -337,7 +337,7 @@ function showresults(id,len) {
                                 </py:for>
                             </td>
                             <td class="${currentPage.items.index(row)%2 and 'col' or 'colcolor'}" style="background-image:url(${tg.url('/img')}/thumb${row.gid}.png);padding:0px;width:120px;height:120px;background-repeat:no-repeat;">
-                                <a class="thumbnail" href="${tg.url('/'+pname+'/results/ctoxicity/index?smiles=')}${unicode(row.mol.structure).replace('+', '%2B').replace('#','%23')}&#38;method&#61;smililarity&#38;search=Szukaj&#38;akcja="><img src="${tg.url('/images/empty.png')}" border="0" style="width:120px;" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.mol.name}</span></a>
+                                <a class="thumbnail" href="${tg.url('/'+pname+'/results/ctoxicity/index?smiles=')}${unicode(row.mol.structure).replace('+', '%2B').replace('#','%23')}&#38;method&#61;similarity&#38;search=Szukaj&#38;akcja="><img src="${tg.url('/images/empty.png')}" border="0" style="width:120px;" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.mol.name}</span></a>
                             </td>
                             <py:if test="celllines">
                             <td py:for="cell_line in celllines" class="${currentPage.items.index(row)%2 and 'col' or 'colcolor'}" style="background-color:${row.average_ct(cell_line)[0] == 0 and 'None' or htmlRgb(row.average_ct(cell_line)[0],0,100.0)};">

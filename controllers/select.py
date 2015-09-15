@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 """Sample controller with all its actions protected."""
-import tg
-from tg import expose, flash, redirect, request, url, lurl
-from tg.i18n import ugettext as _, lazy_ugettext as l_
-from molgears import model
-from molgears.model import DBSession, PCompound, PHistory, PStatus, Tags, SCompound, SStatus, SFiles, SHistory, SPurity, LCompound
-from molgears.model import Compound, Names, History, Efforts, User, Group, Projects
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
+from molgears.model import DBSession, PCompound, PHistory, PStatus, Tags, SCompound, SStatus, SHistory, LCompound
+from molgears.model import Compound, Names, Efforts, User, Group, Projects
 from molgears.model.auth import UserLists
 from molgears.lib.base import BaseController
-import transaction, os
-from pkg_resources import resource_filename
-from sqlalchemy import desc, asc
+import os
+#from pkg_resources import resource_filename
+from sqlalchemy import desc
 
 from rdkit import Chem
 from molgears.widgets.structure import checksmi
@@ -80,7 +78,7 @@ class SelectController(BaseController):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
                         from razi.postgresql_rdkit import tanimoto_threshold
-                        if method == 'smililarity':
+                        if method == 'similarity':
                             DBSession.execute(tanimoto_threshold.set(threshold))
                             query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
                             constraint = Compound.morgan.tanimoto_similar(query_bfp)
@@ -158,7 +156,7 @@ class SelectController(BaseController):
                         if type(tagi) != type([]):
                             tagi = [int(tags)]
                     else:
-                        tagi = [int(id) for id in tags]
+                        tagi = [int(tid) for tid in tags]
                     pcompound = pcompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
                 
                 try:
@@ -166,7 +164,7 @@ class SelectController(BaseController):
                     if isinstance(statusy, basestring):
                         statusy = [int(statusy)]
                     else:
-                        statusy = [int(id) for id in statusy]
+                        statusy = [int(sid) for sid in statusy]
                 except Exception:
                     statusy = None
                     pass
@@ -241,13 +239,13 @@ class SelectController(BaseController):
                     size = 100, 100
                 if kw['file_type'] == 'pdf':
                     filename = userid + '_selected.pdf'
-                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                    from xhtml2pdf.pisa import CreatePDF
                     from tg.render import render as render_template
                     import cStringIO
                     html = render_template({"length":len(pcompounds), "pcompound":pcompounds, "options":options, "size":size}, "genshi", "molgears.templates.users.select.print2", doctype=None)
                     dest = './molgears/files/pdf/' + filename
                     result = file(dest, "wb")
-                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                     result.close()
                     import paste.fileapp
                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -577,9 +575,10 @@ class SelectController(BaseController):
                     pass
                 if smiles:
                     if checksmi(smiles):
+                        
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
+                        if method == 'similarity':
                             from razi.postgresql_rdkit import tanimoto_threshold as t_threshold
                             DBSession.execute(t_threshold.set(threshold))
                             query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
@@ -658,7 +657,7 @@ class SelectController(BaseController):
                         if type(tagi) != type([]):
                             tagi = [int(tags)]
                     else:
-                        tagi = [int(id) for id in tags]
+                        tagi = [int(tid) for tid in tags]
                     pcompound = pcompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
                 
                 try:
@@ -666,7 +665,7 @@ class SelectController(BaseController):
                     if isinstance(statusy, basestring):
                         statusy = [int(statusy)]
                     else:
-                        statusy = [int(id) for id in statusy]
+                        statusy = [int(sid) for sid in statusy]
                 except Exception:
                     statusy = None
                     pass
@@ -742,13 +741,13 @@ class SelectController(BaseController):
                     size = 100, 100
                 if kw['file_type'] == 'pdf':
                     filename = userid + '_selected.pdf'
-                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                    from xhtml2pdf.pisa import CreatePDF
                     from tg.render import render as render_template
                     import cStringIO
                     html = render_template({"length":len(pcompounds), "pcompound":pcompounds, "options":options, "size":size}, "genshi", "molgears.templates.users.select.print2", doctype=None)
                     dest = './molgears/files/pdf/' + filename
                     result = file(dest, "wb")
-                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                     result.close()
                     import paste.fileapp
                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -1013,7 +1012,7 @@ class SelectController(BaseController):
         alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
         try:
             tags = [tag for tag in pcompound.mol.tags]
-        except Exception as msg:
+        except Exception:
             tags = [pcompound.mol.tags]
             pass
         come_from = request.headers['Referer']
@@ -1022,7 +1021,7 @@ class SelectController(BaseController):
     @expose()
     def put(self, *args, **kw):
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         pid = int(args[0])
         userid = request.identity['repoze.who.userid']
         pcompound = DBSession.query(PCompound).filter_by(id=pid).join(PCompound.mol).filter(Compound.project.any(Projects.name==pname)).first()
@@ -1093,7 +1092,7 @@ class SelectController(BaseController):
         Chamge status of synthesis compound as rejected and set request compound status as canceled.
         """
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         userid = request.identity['repoze.who.userid']
         try:
             come_from = request.headers['Referer']
@@ -1148,7 +1147,7 @@ class SelectController(BaseController):
         Chamge status of synthesis compound as discontinue and set request compound status as canceled.
         """
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         userid = request.identity['repoze.who.userid']
         try:
             come_from = request.headers['Referer']
@@ -1211,7 +1210,7 @@ class SelectController(BaseController):
             phistory = PHistory()
             phistory.gid = pcompound.gid
             phistory.user = userid
-            project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#            project = DBSession.query(Projects).filter(Projects.name==pname).first()
             phistory.project = pname
             phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             phistory.status = 'Usuwanie'
@@ -1237,7 +1236,7 @@ class SelectController(BaseController):
         alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
         try:
             tags = [tag for tag in pcompound.mol.tags]
-        except Exception as msg:
+        except Exception:
             tags = [pcompound.mol.tags]
             pass
         return dict(pcompound=pcompound, alltags=alltags, tags=tags, users=principals.users, default_user = pcompound.principal, come_from=come_from, page='select', pname=pname)
@@ -1251,7 +1250,7 @@ class SelectController(BaseController):
             if isinstance(kw['text_tags'], basestring):
                 tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
             else:
-                tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
+                tagi = [DBSession.query( Tags ).get(int(tid)) for tid in kw['text_tags']]
         except Exception as msg:
             flash(l_(u'Tags error: %s' %msg))
             redirect(request.headers['Referer'])
@@ -1285,7 +1284,7 @@ class SelectController(BaseController):
         shistory = SHistory()
         shistory.user = userid
         shistory.gid = scompound.mol.gid
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         shistory.project = pname
         shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         shistory.status = u'accept'
@@ -1310,7 +1309,7 @@ class SelectController(BaseController):
         
         phistory = PHistory()
         phistory.gid = pcompound.gid
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         phistory.project = pname
         phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         phistory.user = userid
@@ -1378,7 +1377,7 @@ class SelectController(BaseController):
             except Exception:
                 notes = None
             if argv:
-                project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#                project = DBSession.query(Projects).filter(Projects.name==pname).first()
                 userid = request.identity['repoze.who.userid']
                 for arg in argv:
                     try:
@@ -1386,7 +1385,7 @@ class SelectController(BaseController):
                             tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
                         else:
                             tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
-                    except Exception as msg:
+                    except Exception:
                         tagi = None
                     pcompound = DBSession.query(PCompound).get(int(arg))
                     if kw.has_key('priority'):
@@ -1454,7 +1453,7 @@ class SelectController(BaseController):
                     pcompound.status = DBSession.query( PStatus).get(3)
                     phistory = PHistory()
                     phistory.gid = pcompound.gid
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     phistory.project = pname
                     phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     phistory.user = userid
@@ -1522,7 +1521,7 @@ class SelectController(BaseController):
                     
                     shistory = SHistory()
                     shistory.gid = scompound.mol.gid
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     shistory.project = pname
                     shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     shistory.user = userid
@@ -1532,7 +1531,7 @@ class SelectController(BaseController):
                     pcompound.status = DBSession.query( PStatus).get(2)
                     phistory = PHistory()
                     phistory.gid = pcompound.gid
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     phistory.project = pname
                     phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     phistory.user = userid
@@ -1601,7 +1600,7 @@ class SelectController(BaseController):
                 if pcompound.status != DBSession.query(PStatus).get(2):
                     phistory = PHistory()
                     phistory.gid = pcompound.gid
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     phistory.project = pname
                     phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     phistory.user = userid
@@ -1622,7 +1621,7 @@ class SelectController(BaseController):
 #    @allow_only(predicates.not_anonymous())
     def download(self, *args):
         userid = request.identity['repoze.who.userid']
-        pname = request.environ['PATH_INFO'].split('/')[1]
+#        pname = request.environ['PATH_INFO'].split('/')[1]
         if not args:
             redirect(request.headers['Referer'])
         else:
@@ -1757,10 +1756,10 @@ class SelectController(BaseController):
     @expose()
     def deletefromlist(self, ulist_id, *args):
         ulist = DBSession.query(UserLists).get(ulist_id)
-        pname = request.environ['PATH_INFO'].split('/')[1]
+#        pname = request.environ['PATH_INFO'].split('/')[1]
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter_by(user_name=userid).first()
-        ulists = [l for l in user.lists if l.table == 'LCompounds']
+#        ulists = [l for l in user.lists if l.table == 'LCompounds']
         if (ulist in user.lists) or (user in ulist.permitusers):
             if ulist.elements:
                 import pickle

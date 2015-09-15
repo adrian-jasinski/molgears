@@ -4,7 +4,7 @@ Sample controller with all its actions protected.
 """
 import tg
 from tg import expose, flash, redirect, url, lurl, request
-from tg.i18n import ugettext as _, lazy_ugettext as l_
+from tg.i18n import lazy_ugettext as l_
 from molgears import model
 from molgears.model import DBSession, PCompound, PHistory, PStatus, Tags, SCompound, SStatus, SFiles, SHistory, SPurity, LCompound
 from molgears.model import Compound, Names, History, Efforts, User, Group, Projects, ResultsFP
@@ -91,7 +91,7 @@ class SamplesController(BaseController):
                     if checksmi(smiles):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
+                        if method == 'similarity':
                             from razi.postgresql_rdkit import tanimoto_threshold
                             DBSession.execute(tanimoto_threshold.set(threshold))
                             query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)

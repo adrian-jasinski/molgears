@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from sqlalchemy.orm import mapper, relationship, backref, relation
-from sqlalchemy import Table, ForeignKey, Column, Integer, String,  Date, DateTime,Text,  Float, Boolean, case
-from sqlalchemy.types import Integer, Unicode, PickleType
+from sqlalchemy.orm import relationship, relation
+from sqlalchemy import Table, ForeignKey, Column, case
+from sqlalchemy.types import Integer, Unicode, PickleType, DateTime, Text, Float, Boolean
 
-from molgears.model import DeclarativeBase, metadata, DBSession
+from molgears.model import DeclarativeBase, metadata
 
 from razi.orm import ChemColumn
 from razi.chemtypes import Molecule, BitFingerprint

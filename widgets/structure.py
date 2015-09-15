@@ -1,5 +1,3 @@
-from razi.orm import ChemColumn
-from razi.chemtypes import Molecule
 from rdkit.Chem import Draw,  MolFromSmiles, AllChem
 import os
 
@@ -23,7 +21,6 @@ def create_image(id, structure, filepath, template=None):
     Draw.MolToFile(mol, os.path.join(filepath,  'thumb' + str(id) + '.png'), size=(120, 120))
     
 def create_reaction_image(rxn_path, image_path):
-    from rdkit import Chem
     from rdkit.Chem import rdChemReactions as Reactions
     react = Reactions.ReactionFromRxnFile(rxn_path)
     from rdkit.Chem.Draw import ReactionToImage
@@ -34,7 +31,6 @@ def checksmi(smiles):
     return MolFromSmiles(str(smiles))
     
 from rdkit import Chem
-import cPickle
 
 def addsmi(filepath, limit=0):
     count = 1
@@ -80,7 +76,7 @@ def addsmi(filepath, limit=0):
             except Exception as msg:
                 print msg
             if not name:
-                name = 'unknow_' + infile.split('/')[-1]
+                name = 'unknow_' + inputfile.split('/')[-1]
             if not smiles:
                 continue
             if len(smiles) > 600: 
@@ -97,10 +93,3 @@ def addsmi(filepath, limit=0):
             if count == limit:
                 break
             count += count
-
-
-def main():
-    create_image(10, "CCC", "/home/adrian")
-
-if __name__ == "__main__":
-    main()

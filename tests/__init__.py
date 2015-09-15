@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Unit and functional test suite for molgears."""
+"""Unit and functional test suite for example."""
 
-from os import getcwd, path
+from os import getcwd
 
 from paste.deploy import loadapp
 from webtest import TestApp
@@ -43,12 +43,12 @@ def teardown_db():
 class TestController(object):
     """Base functional test case for the controllers.
 
-    The molgears application instance (``self.app``) set up in this test
+    The example application instance (``self.app``) set up in this test
     case (and descendants) has authentication disabled, so that developers can
     test the protected areas independently of the :mod:`repoze.who` plugins
     used initially. This way, authentication can be tested once and separately.
 
-    Check molgears.tests.functional.test_authentication for the repoze.who
+    Check example.tests.functional.test_authentication for the repoze.who
     integration tests.
 
     This is the officially supported way to test protected areas with

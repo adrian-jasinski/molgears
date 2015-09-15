@@ -659,7 +659,7 @@ padding-bottom:250px;
 .starRate a span {position:absolute; left:-300px;}
 
 
-a.add_link, a.edit_link, a.details_link, a.edit_link2{
+a.add_link, a.edit_link, a.details_link, a.edit_link2, a.delete_link{
     background-repeat: no-repeat;
     padding-left: 20px;
 }
@@ -678,6 +678,10 @@ a.edit_link{
 }
 a.edit_link2{
     background-image: url('../images/pencile.jpg');
+    color:#2e7682;
+}
+a.delete_link{
+    background-image: url('../images/delete.png');
     color:#2e7682;
 }
 

@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
-import tg
-from tg import expose, flash, redirect, request, url
-from tg.i18n import ugettext as _, lazy_ugettext as l_
-from molgears import model
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
 from molgears.model import DBSession, Projects, Tags, User
-from molgears.model.auth import UserLists
 from molgears.model import Compound, Names, PCompound, SCompound, LCompound, LPurity
 from molgears.model import TestCT, CTResults, CTHistory, CTFiles
+from molgears.model.auth import UserLists
 from molgears.controllers.error import ErrorController
 from molgears.lib.base import BaseController
 import os
 from pkg_resources import resource_filename
-from sqlalchemy import desc, asc
+from sqlalchemy import desc
 
 from rdkit import Chem
 from molgears.widgets.structure import checksmi
@@ -20,7 +18,7 @@ from datetime import datetime
 
 #from tg.decorators import paginate
 from webhelpers import paginate
-from tg.predicates import has_permission
+
 from molgears.widgets.rgbTuple import htmlRgb100
 
 __all__ = ['CytotoxicityController']
@@ -123,7 +121,7 @@ class CytotoxicityController(BaseController):
                     if checksmi(smiles):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
+                        if method == 'similarity':
 #                            from razi.postgresql_rdkit import tanimoto_threshold
 #                            DBSession.execute(tanimoto_threshold.set(threshold))
                             query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
@@ -208,11 +206,8 @@ class CytotoxicityController(BaseController):
                         if type(tagi) != type([]):
                             tagi = [int(tags)]
                     else:
-                        tagi = [int(id) for id in tags]
+                        tagi = [int(tid) for tid in tags]
                     lcompound = lcompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
-                if kw.has_key('text_test') and kw['text_test'] != u'':
-                    test = [int(kw['text_test'])]
-                    lcompound = lcompound.filter(LCompound.mdm2.any(ResultsFP.assey_id.in_(test)))
         
         if dsc:
             lcompound = lcompound.order_by(desc(order).nullslast())
@@ -272,13 +267,13 @@ class CytotoxicityController(BaseController):
                     size = 100, 100
                 if kw['file_type'] == 'pdf':
                     filename = userid + '_selected.pdf'
-                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                    from xhtml2pdf.pisa import CreatePDF
                     from tg.render import render as render_template
                     import cStringIO
                     html = render_template({"length":len(lcompounds), "lcompound":lcompounds, "celllines":celllines, "options":options, "size":size}, "genshi", "molgears.templates.users.results.ctoxicity.print2", doctype=None)
                     dest = './molgears/files/pdf/' + filename
                     result = file(dest, "wb")
-                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                     result.close()
                     import paste.fileapp
                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -561,7 +556,7 @@ class CytotoxicityController(BaseController):
         """Display a page to show a new record."""
         pname = request.environ['PATH_INFO'].split('/')[1]
         if kw:
-            userid = request.identity['repoze.who.userid']
+#            userid = request.identity['repoze.who.userid']
             if kw.has_key('name') and kw['name'] != u'' and kw.has_key('type') and kw['type'] != u'':
                 testct = TestCT()
                 testct.name = kw['name']
@@ -724,7 +719,6 @@ class CytotoxicityController(BaseController):
                 else:
                     assert row[0] == name, u'Zły format pliku'
                     top.append(float(row[1].replace(',', '')))
-                    i=0
                     list=[]
                     for el in row[2:]:
                         if str(el) != '*':
@@ -810,20 +804,16 @@ class CytotoxicityController(BaseController):
         formula = CalcMolFormula(Chem.MolFromSmiles(str(lcompound.mol.structure)))
         scompound = DBSession.query(SCompound).filter_by(id=lcompound.sid).join(SCompound.mol).filter(Compound.project.any(Projects.name==pname)).order_by('id').first()
         pcompound = ()
-        result = DBSession.query(ResultsFP).filter_by(lid=lcompound.id).join(LCompound.mol).filter(Compound.project.any(Projects.name==pname)).order_by('ResultsFP.id').first()
         assert lcompound.gid == gid,  "GID error."
         if scompound:
             assert scompound.gid == gid,  "GID error."
             pcompound = DBSession.query(PCompound).filter_by(id=scompound.pid).join(PCompound.mol).filter(Compound.project.any(Projects.name==pname)).first()
         if pcompound:
             assert pcompound.gid == gid,  "GID error."
-        if result:
-            assert result.gid == gid,  "GID error."
         scompounds = DBSession.query(SCompound).filter_by(gid=gid).join(SCompound.mol).filter(Compound.project.any(Projects.name==pname)).order_by('id').all()
         pcompounds = DBSession.query(PCompound).filter(PCompound.gid==gid).join(PCompound.mol).filter(Compound.project.any(Projects.name==pname)).order_by('id').all()
         lcompounds = DBSession.query(LCompound).filter_by(gid=gid).join(LCompound.mol).filter(Compound.project.any(Projects.name==pname)).order_by('id').all()
-        results = DBSession.query(ResultsFP).filter_by(gid=gid).join(LCompound.mol).filter(Compound.project.any(Projects.name==pname)).order_by('ResultsFP.id').all()
-        return dict(pcompound=pcompound, scompound=scompound, lcompound=lcompound, result=result, pcompounds=pcompounds, scompounds=scompounds, lcompounds=lcompounds, results=results, formula=formula, page='ctoxicity', pname=pname, celllines=celllines)
+        return dict(pcompound=pcompound, scompound=scompound, lcompound=lcompound, pcompounds=pcompounds, scompounds=scompounds, lcompounds=lcompounds, formula=formula, page='ctoxicity', pname=pname, celllines=celllines)
     
     @expose('molgears.templates.users.results.ctoxicity.showoneresult')
     def showoneresult(self, *args, **kw):
@@ -832,7 +822,7 @@ class CytotoxicityController(BaseController):
             pname = request.environ['PATH_INFO'].split('/')[1]
             result = DBSession.query(CTResults).get(id)
             import pickle as pcl
-        except Exception as msg:
+        except Exception:
             flash(l_(u'The choosen test does not exists.'), 'error')
             redirect(request.headers['Referer'])
         return dict(result=result, pcl=pcl, page='ctoxicity', pname=pname)
@@ -846,7 +836,7 @@ class CytotoxicityController(BaseController):
         userid = request.identity['repoze.who.userid']
         result = DBSession.query(CTResults).get(id)
         assert result.lid == lcompound.id
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         rhistory = CTHistory()
         rhistory.gid = result.gid
         rhistory.project = pname
@@ -929,7 +919,7 @@ class CytotoxicityController(BaseController):
                                 if checksmi(smiles):
                                     from razi.functions import functions
                                     from razi.expression import TxtMoleculeElement
-                                    if method == 'smililarity':
+                                    if method == 'similarity':
 #                                        from razi.postgresql_rdkit import tanimoto_threshold
 #                                        DBSession.execute(tanimoto_threshold.set(threshold))
                                         query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
@@ -1010,9 +1000,8 @@ class CytotoxicityController(BaseController):
                                     if type(tagi) != type([]):
                                         tagi = [int(tags)]
                                 else:
-                                    tagi = [int(id) for id in tags]
-                    
-                                import sqlalchemy
+                                    tagi = [int(tid) for tid in tags]
+                                    
                                 lcompound = lcompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
                                 
                         if dsc:
@@ -1073,13 +1062,13 @@ class CytotoxicityController(BaseController):
                                     size = 100, 100
                                 if kw['file_type'] == 'pdf':
                                     filename = userid + '_selected.pdf'
-                                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                                    from xhtml2pdf.pisa import CreatePDF
                                     from tg.render import render as render_template
                                     import cStringIO
                                     html = render_template({"length":len(lcompounds), "lcompound":lcompounds, "celllines":celllines, "options":options, "size":size}, "genshi", "molgears.templates.users.results.ctoxicity.print3", doctype=None)
                                     dest = './molgears/files/pdf/' + filename
                                     result = file(dest, "wb")
-                                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                                     result.close()
                                     import paste.fileapp
                                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -1385,7 +1374,7 @@ class CytotoxicityController(BaseController):
             if kw.has_key('cell_line') and kw['cell_line'] != u'':
                 if kw['cell_line'] !=result.cell_line:
                     result.cell_line = kw['cell_line']
-                    changes += u'; Linia: ' + cline
+                    changes += u'; Linia: ' + kw['cell_line']
             else:
                 flash(l_(u'Cell line is required'), 'error')
                 redirect(come_from)
@@ -1428,7 +1417,7 @@ class CytotoxicityController(BaseController):
                 filename = None
                 pass
             if filename and userid:
-                number = DBSession.query(ResultFiles).count() + 1
+                number = DBSession.query(CTFiles).count() + 1
                 newfilename = str(number) + '_' + userid + '_' + str(lid) + '_' + filename
                 newfilename.replace(' ', '_')
                 f_path = os.path.join(result_files_dir, newfilename)
@@ -1551,7 +1540,6 @@ class CytotoxicityController(BaseController):
             for arg in args:
                 lcompound = DBSession.query(LCompound).join(LCompound.mol).filter(Compound.project.any(Projects.name==pname)).filter(LCompound.id==int(arg)).first()
                 if lcompound.ctoxicity:
-                    resss = []
                     for result in lcompound.ctoxicity:
                         if lcompound:
                             if lcompound.entry and lcompound.box:
@@ -1672,10 +1660,10 @@ class CytotoxicityController(BaseController):
             Delete compound from User List.
         """
         ulist = DBSession.query(UserLists).get(ulist_id)
-        pname = request.environ['PATH_INFO'].split('/')[1]
+#        pname = request.environ['PATH_INFO'].split('/')[1]
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter_by(user_name=userid).first()
-        ulists = [l for l in user.lists if l.table == 'CTResults']
+#        ulists = [l for l in user.lists if l.table == 'CTResults']
         if (ulist in user.lists) or (user in ulist.permitusers):
             if ulist.elements:
                 import pickle
@@ -1718,7 +1706,7 @@ class CytotoxicityController(BaseController):
                         if result.files and result.files[0]:
                             name = lcompound.mol.name + ' ' + result.cell_line
                             f_path = os.path.join(result_files_dir, result.files[0].filename)
-                            from molgears.widgets.ct_result import read_one, save_fix_data, write_result
+                            from molgears.widgets.ct_result import read_one
                             X, M = read_one(f_path)
                             top = []
                             data =[]

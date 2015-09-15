@@ -18,7 +18,7 @@
     <title>Requests ${pname}</title>
 <script type="text/javascript">
 jQuery(document).ready(function($){
-	$('body.tundra').addcontextmenu('contextmenu1') //apply context menu to links with class="mylinks"
+	$('body.tundra').addcontextmenu('contextmenu1'); //apply context menu to links with class="mylinks"
 })
 document.onkeypress = keyPress;
 function keyPress(e){
@@ -150,16 +150,16 @@ if(key == 13 || key == 3){
         </table>
     </div>
     <div class="div-table">
-        <div class="div-table-caption" id="caption">Filtering search results</div>
+        <div class="div-table-caption" id="caption">Filtering options</div>
         <div class="div-table-row" id="text_smiles1">
             <div class="div-table-col-right">
-                <input type="radio" name="method" value="smililarity" /> Smililarity  <br />
+                <input type="radio" name="method" value="similarity" /> Similarity  <br />
                 <input type="radio" name="method" value="substructure" checked="yes" /> Substructure <br />
                 <input type="radio" name="method" value="identity" /> Exact Structure <br />
             </div>
             <div class="div-table-col-left">
                 <b>SMILES</b><br />
-                <input type="text" size="40" value="" name="smiles" class="filternotempty" /><br /><input type="button" value="Draw Structure" onClick="startEditor();" />
+                <input type="text" size="40" value="" name="text_smiles" class="filternotempty" /><br /><input type="button" value="Draw Structure" onClick="startEditor();" />
             </div>
         </div>
         <div class="div-table-row" id="text_GID1">
@@ -283,7 +283,7 @@ if(key == 13 || key == 3){
                     <td class="col">${row.gid}</td>
                     <td class="col"><a href="${tg.url('/'+pname+'/select/details')}/${row.gid}/${row.id}">${row.mol.name}</a></td>
                     <td class="col">
-                    <a class="thumbnail" href="${tg.url('/'+pname+'/select/index?smiles=')}${unicode(row.mol.structure).replace('+', '%2B').replace('#','%23')}&#38;method=smililarity&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.mol.name}</span></a>
+                    <a class="thumbnail" href="${tg.url('/'+pname+'/select/index?text_smiles=')}${unicode(row.mol.structure).replace('+', '%2B').replace('#','%23')}&#38;method=similarity&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.mol.name}</span></a>
                     </td>
                     <td class="col">${row.create_date}</td>
                     <td class="col">${row.owner.replace('.',' ')}</td>

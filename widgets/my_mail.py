@@ -2,8 +2,8 @@
 """Sample controller with all its actions protected."""
 def sendmail(toaddrs, msg, subject='chemdb synthesis'):
     import smtplib
-    import string, sys
-    fromaddr = 'adamed.chemdb@gmail.com'  
+    import string
+    fromaddr = 'molgears@mydomain.com'  
     toaddrs  = toaddrs
     msg = msg
     body = string.join((
@@ -14,17 +14,14 @@ def sendmail(toaddrs, msg, subject='chemdb synthesis'):
     msg), "\r\n")
   
     # Credentials (if needed)  
-    username = 'adamed.chemdb@gmail.com'  
-    password = 'adamedic4u'  
-      
-    # The actual mail send  
-    server = smtplib.SMTP('smtp.gmail.com:587')  
-    server.starttls()  
-    server.login(username,password)
-    server.sendmail(fromaddr, toaddrs, body)  
-    server.quit()  
-
-if __name__ == "__main__":
-    toaddrs = 'jasinski.adrian@gmail.com'
-    msg = "test"
-    sendmail(toaddrs, msg)
+#    username = ''  
+#    password = ''
+    try:
+        # The actual mail send  
+        server = smtplib.SMTP('localhost')  
+    #    server.starttls()  
+    #    server.login(username,password)
+        server.sendmail(fromaddr, toaddrs, body)  
+        server.quit()
+    except Exception:
+        print "Error: unable to send email"

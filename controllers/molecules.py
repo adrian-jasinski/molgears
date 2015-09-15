@@ -2,15 +2,13 @@
 """
 Molecules Controller is submodule for *RootController*
 """
-import tg
-from tg import expose, flash, redirect, url, lurl, request
-from tg.i18n import ugettext as _, lazy_ugettext as l_
-from molgears import model
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
 from molgears.model import DBSession, PCompound, PHistory, PStatus, Tags, SCompound, SFiles, LCompound, LPurity, LHistory
 from molgears.model import Compound, Names, History, User, Group, Projects, PAINS1, PAINS2, PAINS3, CompoundsFiles, NameGroups
 from molgears.model.auth import UserLists
 from molgears.lib.base import BaseController
-import transaction, os
+import os
 from pkg_resources import resource_filename
 from sqlalchemy import desc
 from molgears.widgets.format import raw_path_basename
@@ -19,7 +17,6 @@ from datetime import datetime
 from webhelpers import paginate
 from tg.predicates import has_permission
 from rdkit import Chem
-from tg import cache
 __all__ = ['MoleculesController']
 
 public_dirname = os.path.join(os.path.abspath(resource_filename('molgears', 'public')))
@@ -38,7 +35,6 @@ class MoleculesController(BaseController):
         Index controller for molecules.
         """
         pname = request.environ['PATH_INFO'].split('/')[1] # get project name
-        project = DBSession.query(Projects).filter(Projects.name==pname).first() # get project by name
         alltags =[tag for tag in DBSession.query(Tags).order_by('name').all()] # get a list of all tags
         compound = DBSession.query(Compound).filter(Compound.project.any(Projects.name==pname))
         dsc = True # default sorting by dsc
@@ -122,7 +118,7 @@ class MoleculesController(BaseController):
                     if checksmi(smiles):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
+                        if method == 'similarity':
                             from razi.postgresql_rdkit import tanimoto_threshold
                             DBSession.execute(tanimoto_threshold.set(threshold))
                             query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
@@ -187,7 +183,6 @@ class MoleculesController(BaseController):
                     else:
                         tagi = [int(id) for id in tags]
 
-                    import sqlalchemy
                     compound = compound.filter(Compound.tags.any(Tags.id.in_(tagi)))
         if dsc:
             compound = compound.order_by(desc(order).nullslast())
@@ -248,13 +243,13 @@ class MoleculesController(BaseController):
                     size = 100, 100
                 if kw['file_type'] == 'pdf':
                     filename = userid + '_molecules.pdf'
-                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                    from xhtml2pdf.pisa import CreatePDF
                     from tg.render import render as render_template
                     import cStringIO
                     html = render_template({"length":len(compounds), "compound":compounds, "options":options, "size":size}, "genshi", "molgears.templates.users.molecules.print2", doctype=None)
                     dest = './molgears/files/pdf/' + filename
                     result = file(dest, "wb")
-                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                     result.close()
                     import paste.fileapp
                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -574,7 +569,7 @@ class MoleculesController(BaseController):
                     smiles = str(structure)
                 except Exception:
                     smiles = structure.encode("ascii", "ignore")
-                changes = u'Nazwa: ' + name + u'; SMILES: ' + smiles + u'; Tagi: '
+                changes = u'Name: ' + name + u'; SMILES: ' + smiles + u'; Tags: '
                 if kw.has_key('isomer') and kw['isomer'] ==u'yes':
                     check = False
                     isomer = True
@@ -596,7 +591,7 @@ class MoleculesController(BaseController):
                 compound = Compound(name, structure, creator=userid)
                 if isomer:
                     compound.isomer = True
-                    changes += u'; IZOMER! '
+                    changes += u'; ISOMER! '
                 else:
                     compound.isomer = False
                 compound.tags = tagi
@@ -614,13 +609,13 @@ class MoleculesController(BaseController):
                     redirect(come_from)
                 from rdkit import Chem
                 from rdkit.Chem.inchi import MolToInchi
-                from silicos_it.descriptors import qed
+#                from silicos_it.descriptors import qed
                 mol = Chem.MolFromSmiles(smiles)
                 compound.inchi = MolToInchi(mol)                
-                compound.qed = round(qed.default(mol), 2)
+#                compound.qed = round(qed.default(mol), 2)
                 history = History()
                 history.user = userid
-                history.status = u'create new'
+                history.status = u'Create new'
                 history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 project = DBSession.query(Projects).filter(Projects.name==pname).first()
                 history.project = pname
@@ -698,7 +693,7 @@ class MoleculesController(BaseController):
             alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
             try:
                 tags = [tag for tag in compound.tags]
-            except Exception as msg:
+            except Exception:
                 tags = [compound.tags]
                 pass
             ngroups = DBSession.query(NameGroups).order_by(NameGroups.id).all()
@@ -711,8 +706,8 @@ class MoleculesController(BaseController):
     def put(self, *args, **kw):
         """Save a edited record."""
         pname = request.environ['PATH_INFO'].split('/')[1]
-        from razi.functions import functions
-        from razi.expression import TxtMoleculeElement
+#        from razi.functions import functions
+#        from razi.expression import TxtMoleculeElement
         from rdkit import Chem
         gid = args[0]
         userid = request.identity['repoze.who.userid']
@@ -776,7 +771,7 @@ class MoleculesController(BaseController):
                         if check:
                             flash(l_(u'The Compound exist in DB for project %s on GID number: %s' % (pname, check.gid)), 'warning')
                             redirect(come_from)
-                        changes = u'Nazwa: ' + name + u'; SMILES: ' + smiles + u'; Tagi: '
+                        changes = u'Name: ' + name + u'; SMILES: ' + smiles + u'; Tags: '
                         for tag in tagi:
                             changes += str(tag.name)
                         compound = Compound(name, structure, creator=userid)
@@ -804,7 +799,7 @@ class MoleculesController(BaseController):
                         compound.qed = round(qed.default(mol), 2)
                         history = History()
                         history.user = userid
-                        history.status = u'create new'
+                        history.status = u'Create new'
                         history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         project = DBSession.query(Projects).filter(Projects.name==pname).first()
                         history.project = pname
@@ -853,7 +848,7 @@ class MoleculesController(BaseController):
                     changes += u' Name: ' + kw['name'] + u';'
                     if kw.has_key('newmain') and kw['newmain'] != u'':
                         compound.name = kw['name']
-                        changes += u'; Nazwa główna: ' + kw['name']
+                        changes += u'; Main Name: ' + kw['name']
                 if u'ngroups' in kw and kw['ngroups'] != u'':
                     ngroup = DBSession.query(NameGroups).get(kw['ngroups'])
                     ngroup.next += 1
@@ -891,7 +886,7 @@ class MoleculesController(BaseController):
                         file1 = CompoundsFiles()
                         file1.name = newfile
                         file1.filename = new_file_name
-                        changes += '; Plik modelowanie: ' + newfile + ' (' + new_file_name + ')'
+                        changes += '; Files: ' + newfile + ' (' + new_file_name + ')'
                         compound.files += [file1]
                         DBSession.add(file1)
                 for k, v in kw.iteritems():
@@ -1067,7 +1062,7 @@ class MoleculesController(BaseController):
                             file1 = CompoundsFiles()
                             file1.name = filename
                             file1.filename = public_file_name
-                            changes += '; Plik modelowanie: ' + filename + ' (' + public_file_name + ')'
+                            changes += '; Files: ' + filename + ' (' + public_file_name + ')'
                             compound.files += [file1]
                             DBSession.add(file1)
                         newname = Names()
@@ -1090,11 +1085,11 @@ class MoleculesController(BaseController):
 #                        compound.status = status
                         history = History()
                         history.user = userid
-                        history.status = 'Wczytywanie pliku'
+                        history.status = 'Read from file'
                         project = DBSession.query(Projects).filter(Projects.name==pname).first()
                         history.project = pname
                         history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        changes = u'Nazwa:' + name + u'; SMILES:' + smiles + u'; Tags:'
+                        changes = u'Name:' + name + u'; SMILES:' + smiles + u'; Tags:'
                         for tag in tagi:
                             changes += str(tag.name) + '; '
                         if notes:
@@ -1182,7 +1177,7 @@ class MoleculesController(BaseController):
             alltags = [tag for tag in DBSession.query(Tags).order_by('name').all() ]
             try:
                 ctags = [c for c in compound.tags]
-            except Exception as msg:
+            except Exception:
                 ctags = [compound.tags.name]
                 pass
             default_user = userid
@@ -1205,7 +1200,7 @@ class MoleculesController(BaseController):
             if isinstance(kw['text_tags'], basestring):
                 tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
             else:
-                tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
+                tagi = [DBSession.query( Tags ).get(int(tid)) for tid in kw['text_tags']]
         except Exception as msg:
             flash(l_(u'Tags error: %s' %msg), 'error')
             redirect(come_from)
@@ -1234,9 +1229,8 @@ class MoleculesController(BaseController):
             phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             phistory.user = userid
             phistory.gid = pcompound.gid
-            project = DBSession.query(Projects).filter(Projects.name==pname).first()
             phistory.project = pname
-            phistory.status = 'accepted'
+            phistory.status = 'Accepted'
             pchanges = u'Gid: ' + str(gid) + u'; Owner:' + userid + '; '
     #        pchanges = 'Gid: ' + str(gid) + '; Właściciel:' + str(userid) + '; LSO: '  + str(lso) + '; '
             pchanges += u'priority: ' + kw['priority']
@@ -1246,8 +1240,8 @@ class MoleculesController(BaseController):
 
             history = History()
             history.user = userid
-            history.status = 'Akceptacja do projektu'
-            project = DBSession.query(Projects).filter(Projects.name==pname).first()
+            history.status = 'Create request'
+#            project = DBSession.query(Projects).filter(Projects.name==pname).first()
             history.project = pname
             history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             changes = u'Owner: ' + userid + u'; ' + u'Tags: '
@@ -1346,7 +1340,7 @@ class MoleculesController(BaseController):
             if isinstance(kw['text_tags'], basestring):
                 tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
             else:
-                tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
+                tagi = [DBSession.query( Tags ).get(int(tid)) for tid in kw['text_tags']]
         except Exception as msg:
             flash(l_(u'Tags error: %s' %msg), 'error')
             redirect(request.headers['Referer'])
@@ -1378,8 +1372,8 @@ class MoleculesController(BaseController):
 #        lcompound.source = 'LSO: ADAMED'
         history = History()
         history.user = userid
-        history.status = 'library'
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
+        history.status = 'Library'
+#        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         history.project = pname
         history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         history.changes = u'Added to library; Tags: '
@@ -1390,7 +1384,6 @@ class MoleculesController(BaseController):
         lhistory.user = userid
         lhistory.status = 'Created'
         lhistory.gid = lcompound.mol.gid
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         lhistory.project = pname
         lhistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         lchanges = u''
@@ -1482,7 +1475,7 @@ class MoleculesController(BaseController):
 
         if kw.has_key('form'):
             lcompound.form = kw['form']
-            lchanges += u'; Forma: ' + kw['form']
+            lchanges += u'; Forma ' + kw['form']
         if kw.has_key('state') and kw['state'] !=u'':
             try:
                 state = str(kw['state'])
@@ -1491,7 +1484,7 @@ class MoleculesController(BaseController):
             except Exception as msg:
                 flash(l_(u'Float required: %s' % msg), 'error')
                 redirect(request.headers['Referer'])
-            lchanges += u'; Stan mag.[mg]: ' + str(kw['state'])
+            lchanges += u'; State [mg]: ' + str(kw['state'])
         if kw.has_key('box'):
             lcompound.box = kw['box']
             lchanges += u'; Box: ' + kw['box']
@@ -1554,7 +1547,6 @@ class MoleculesController(BaseController):
                 history.user = userid
                 history.status = 'Delete name'
                 history.changes = u'Name "%s" deleted.' % name.name
-                project = DBSession.query(Projects).filter(Projects.name==pname).first()
                 history.project = pname
                 history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 compound.names.remove(name)
@@ -1583,8 +1575,7 @@ class MoleculesController(BaseController):
                     userid = request.identity['repoze.who.userid']
                     history = History()
                     history.user = userid
-                    history.status = 'name change'
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
+                    history.status = 'Renaming'
                     history.project = pname
                     history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     history.changes = u'main name changed from "%s" to "%s".' % (compound.name, name)
@@ -1630,7 +1621,7 @@ class MoleculesController(BaseController):
                     tagsids = [int(kw['text_tags'])]
                 else:
                     tagsids = [int(id) for id in kw['text_tags']]
-            except Exception as msg:
+            except Exception:
                 tagsids = []
             try:
                 if isinstance(kw['argv'], basestring):
@@ -1659,7 +1650,6 @@ class MoleculesController(BaseController):
                                     redirect(request.headers['Referer'])
                                 history = History()
                                 history.user = userid
-                                project = DBSession.query(Projects).filter(Projects.name==pname).first()
                                 history.project = pname
                                 history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 history.status = u'Multi - edit'
@@ -1683,7 +1673,6 @@ class MoleculesController(BaseController):
                                     redirect(request.headers['Referer'])
                                 history = History()
                                 history.user = userid
-                                project = DBSession.query(Projects).filter(Projects.name==pname).first()
                                 history.project = pname
                                 history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                 history.status = u'Multi - edit'
@@ -1756,14 +1745,12 @@ class MoleculesController(BaseController):
                     history = History()
                     history.user = userid
                     history.status = u'Multi - accept'
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     history.project = pname
                     history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    history.changes = u'Add to requests;'
+                    history.changes = u'Create request;'
                     phistory = PHistory()
                     phistory.user = userid
                     phistory.gid = pcompound.gid
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     phistory.project = pname
                     phistory.status = u'Multi - accept'
                     phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1850,7 +1837,6 @@ class MoleculesController(BaseController):
                     history = History()
                     history.user = userid
                     history.status = 'library'
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     history.project = pname
                     history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     history.changes = u'Compound added to library; '
@@ -1863,7 +1849,7 @@ class MoleculesController(BaseController):
                     lhistory = LHistory()
                     lhistory.user = userid
                     lhistory.gid = lcompound.mol.gid
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
+
                     lhistory.project = pname
                     lhistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     lhistory.status = 'Created'
@@ -1908,7 +1894,7 @@ class MoleculesController(BaseController):
                         lchanges += u' LSO: ' + kw['lso']
                     if kw.has_key('form') and kw['form'] != u'':
                         lcompound.form = kw['form']
-                        lchanges += u'; Forma: ' + kw['form']
+                        lchanges += u'; Form: ' + kw['form']
                     if kw.has_key('state') and kw['state'] != u'':
                         try:
                             state = str(kw['state'])
@@ -1917,7 +1903,7 @@ class MoleculesController(BaseController):
                         except Exception as msg:
                             flash(l_(u'Float required: %s' % msg), 'error')
                             redirect(request.headers['Referer'])
-                        lchanges += u'; amount [mg]: ' + str(kw['state'])
+                        lchanges += u'; State [mg]: ' + str(kw['state'])
                     if kw.has_key('box') and kw['box'] != u'':
                         lcompound.box = kw['box']
                         lchanges += u'; Box: ' + kw['box']
@@ -2145,7 +2131,6 @@ class MoleculesController(BaseController):
                             history.user = userid
                             history.status = u'delete'
                             history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                            project = DBSession.query(Projects).filter(Projects.name==pname).first()
                             history.project = pname
                             history.changes = u'Delete compound'
                             compound.history += [history]
@@ -2168,10 +2153,9 @@ class MoleculesController(BaseController):
     @expose()
     def deletefromlist(self, ulist_id, *args):
         ulist = DBSession.query(UserLists).get(ulist_id)
-        pname = request.environ['PATH_INFO'].split('/')[1]
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter_by(user_name=userid).first()
-        ulists = [l for l in user.lists if l.table == 'LCompounds']
+#        ulists = [l for l in user.lists if l.table == 'LCompounds']
         if (ulist in user.lists) or (user in ulist.permitusers):
             if ulist.elements:
                 import pickle
@@ -2203,7 +2187,6 @@ class MoleculesController(BaseController):
         fps_refmol = AllChem.GetMorganFingerprint(refmol, 2)
         similarity = DataStructs.TanimotoSimilarity(fps_mol, fps_refmol)
         
-        from rdkit.Chem import Draw
         from rdkit.Chem.Draw import SimilarityMaps
         fig, maxweight = SimilarityMaps.GetSimilarityMapForFingerprint(refmol, mol, lambda m,idx: SimilarityMaps.GetMorganFingerprint(m, atomId=idx, radius=1, fpType='count'), metric=DataStructs.TanimotoSimilarity)
         filename = '%s_similarity_map.png' % userid
@@ -2246,7 +2229,7 @@ class MoleculesController(BaseController):
             if u'precision' in kw and kw['precision'] != u'':
                 try:
                     ngroup.precision = int(kw['precision'])
-                except Exception as msg:
+                except Exception:
                     flash(l_(u'Presision should be an integer'), 'error')
                     redirect(come_from)
             else:
@@ -2287,7 +2270,7 @@ class MoleculesController(BaseController):
             if u'precision' in kw and int(kw['precision']) != ngroup.precision:
                 try:
                     ngroup.precision = int(kw['precision'])
-                except Exception as msg:
+                except Exception:
                     flash(l_(u'Presision should be an integer'), 'error')
                     redirect(come_from)
             if u'next' in kw and kw['next'] != u'':
@@ -2320,7 +2303,7 @@ class MoleculesController(BaseController):
 
     @expose()
     def images(self):
-        pname = request.environ['PATH_INFO'].split('/')[1]
+#        pname = request.environ['PATH_INFO'].split('/')[1]
        # recreate images for all structures
         for q in DBSession.query(Compound).order_by('gid')[:]:
             create_image(q.gid, q.structure, img_dir)

@@ -15,7 +15,7 @@
     <script type="text/javascript" src="${tg.url('/javascript/jqcontextmenu.js')}"></script>
 <script type="text/javascript">
 jQuery(document).ready(function($){
-	$('body.tundra').addcontextmenu('contextmenu1') //apply context menu to links with class="mylinks"
+	$('body.tundra').addcontextmenu('contextmenu1'); //apply context menu to links with class="mylinks"
 })
 
 document.onkeypress = keyPress;
@@ -59,7 +59,6 @@ if(key == 13 || key == 3){
          <ul>
             <li><a href="${tg.url('/'+pname+'/results/ctoxicity/tests')}">CT Tests</a></li>
             <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readresult')}">Add results</a></li>
-            <li><a href="${tg.url('/'+pname+'/results/ctoxicity/readphotos')}">Add Photos</a></li>
             <li><a href="${tg.url('/'+pname+'/results/ctoxicity/history')}">History of changes</a></li>
           </ul>
     </div>
@@ -84,7 +83,6 @@ if(key == 13 || key == 3){
             <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_owner" />Chemist<br />
             <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_tags" />Tags<br />
             <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_date" />Date<br />
-            <input type="checkbox" class="choose" name="choosen" value="structure" onclick="ChooseAll(this)" id="text_image" />Photos<br />
       </div>
 </div>
 <div class="accept">
@@ -147,10 +145,10 @@ if(key == 13 || key == 3){
     </div>
 
     <div class="div-table">
-        <div class="div-table-caption" id="caption">Filtering search results</div>
+        <div class="div-table-caption" id="caption">Filtering options</div>
         <div class="div-table-row" id="text_smiles1">
             <div class="div-table-col-right">
-                <input type="radio" name="method" value="smililarity" /> Smililarity  <br />
+                <input type="radio" name="method" value="similarity" /> Similarity  <br />
                 <input type="radio" name="method" value="substructure" checked="yes" /> Substructure <br />
                 <input type="radio" name="method" value="identity" /> Exact Structure <br />
             </div>
@@ -248,17 +246,6 @@ if(key == 13 || key == 3){
                 </div>
             </div>
         </div>
-        <div class="div-table-row" id="text_image1">
-            <div class="div-table-col-right">
-                <b>Zdjęcia:</b>
-            </div>
-            <div class="div-table-col-left">
-                <select id="text_image" name="text_image">
-                    <option id="plot" value="show">Show with Photos</option>
-                    <option id="plot" value="hide">Show without photos</option>
-                </select>
-            </div>
-        </div>
         <div class="div-table-row" style="display:table-row" id="search_box">
             <div class="div-table-col-right">
                 &nbsp;
@@ -295,7 +282,6 @@ if(key == 13 || key == 3){
                             <th class="col">R&sup2;<br /><a class="sort_up" href="${tg.url('/'+pname+'/results/ctoxicity/'+cell_line+'?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=r2')}&amp;desc=0">&nbsp; </a>
                                 <a class="sort_down" href="${tg.url('/'+pname+'/results/ctoxicity/'+cell_line+'?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=r2')}&amp;desc=1">&nbsp; </a></th>
                             <th class="col">Test<br />&nbsp;</th>
-                            <th class="col" py:for="i in range(4)">Photo<br />${i+1}&nbsp;</th>
                             <th py:if="similarity" class="col">Similarity<br />[%]&nbsp;    </th>
                         </tr>
                     </thead>
@@ -311,7 +297,7 @@ if(key == 13 || key == 3){
                                 </py:for>
                             </td>
                             <td class="${lcompound.index(row)%2 and 'col' or 'colcolor'}">
-                                <a class="thumbnail" href="${tg.url('/'+pname+'/results/ctoxicity/'+cell_line+'?smiles=')}${str(row.lcompounds.mol.structure).replace('+', '%2B').replace('#','%23')}&#38;method&#61;smililarity&#38;text_GID=&#38;text_ID=&#38;text_name=&#38;text_lso=&#38;text_entry=&#38;text_box=&#38;text_notes=&#38;date_from=&#38;date_to=&#38;search=Szukaj&#38;akcja=">
+                                <a class="thumbnail" href="${tg.url('/'+pname+'/results/ctoxicity/'+cell_line+'?smiles=')}${str(row.lcompounds.mol.structure).replace('+', '%2B').replace('#','%23')}&#38;method&#61;similarity&#38;text_GID=&#38;text_ID=&#38;text_name=&#38;text_lso=&#38;text_entry=&#38;text_box=&#38;text_notes=&#38;date_from=&#38;date_to=&#38;search=Szukaj&#38;akcja=">
                                     <img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>]</span></a>
                             </td>
                             <td class="${lcompound.index(row)%2 and 'col' or 'colcolor'}" style="background-color:${not row.ic50 and 'white' or row.ic50 == 0 and 'white' or htmlRgb(row.ic50,1,100)}; ">${row.ic50}</td>
@@ -320,9 +306,6 @@ if(key == 13 || key == 3){
                             <td class="${lcompound.index(row)%2 and 'col' or 'colcolor'}">
                                 ${row.test.name}  <br />(${row.test.type})
                             </td>
-                            <td class="${lcompound.index(row)%2 and 'col' or 'colcolor'}" py:for="p_nr in range(4)"><py:if test="row.photofiles and len(row.photofiles)&gt;3">
-                                <a class="graph" href="${tg.url('/files/resultsct/photo')}/${sorted(row.photofiles, key=lambda p: p.seq)[p_nr].filename}">
-                                    <p style="position:absolute;z-index:100;color:white;right:2px;bottom:-8px;font-size:90%">${round(sorted(row.photofiles, key=lambda p: p.seq)[p_nr].seq,1)}</p><img src="${tg.url('/files/resultsct/photo')}/${sorted(row.photofiles, key=lambda p: p.seq)[p_nr].filename}"  width="120px" height="120px" /><span>${sorted(row.photofiles, key=lambda p: p.seq)[p_nr].seq} [uM]<img src="${tg.url('/files/resultsct/photo')}/${sorted(row.photofiles, key=lambda p: p.seq)[p_nr].filename}"  width="400px" height="400px" /></span></a></py:if><br /></td>
                             <td py:if="similarity" class="col">${round(similarity[lcompound.index(row)],4)*100}</td>
                         </tr>
                     </tbody>

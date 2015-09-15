@@ -29,9 +29,7 @@ From this panel you can create and manage: Users, Projects and Tags.
 
  .. image:: _static/admin_panel.png
         :align: center
-        
-        
-        
+
 ----------------------------------------------------------------
 Projects Table
 ----------------------------------------------------------------
@@ -346,7 +344,7 @@ Each instance in table can have one of statuses:
 
 * finished
     
-  Status set for the compounds after process of synthesis is finished (current phase number is the same as max number). Analytical data should be added to molecule. Rows in table for this status are colored in cyan.
+  Status set for the compounds after process of synthesis is finished (current phase number is the same as max number). Analytical data should be added to molecule. Rows in table for this status are colored in orange.
 
 * received
 
@@ -355,6 +353,7 @@ Each instance in table can have one of statuses:
 * rejected
 
   Status set for the compounds if we decided to not continue synthesis any more. When the molecule is rejected this status is set also for request with it originates. Rows in table for this status are colored in magenta.
+  This change is permanent.
 
 * discontinued
 
@@ -362,4 +361,23 @@ Each instance in table can have one of statuses:
 
  .. image:: _static/synthesis_table.png
  
- 
+Available actions for synthesis table in RMB menu:
+
+ .. image:: _static/RMB_synthesis.png
+        :align: center
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Phase changing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Each molecule can have many synthesis path. Each path is represented by efford record. The number of added efforts is represented in Effort column in Synthesis Table.
+Click this number to view all efforts list or add new:
+
+ .. image:: _static/efforts_list.png
+        :align: center
+        
+To change the Phase for compound choose "Change of phase" in RMB menu and than optionally add LSO number and Notes:
+
+ .. image:: _static/phase_change.png
+        :align: center
+        

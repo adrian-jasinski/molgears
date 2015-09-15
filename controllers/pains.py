@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Sample controller with all its actions protected."""
 import tg
-from tg import expose, flash, redirect, request, url, lurl
-from tg.i18n import ugettext as _, lazy_ugettext as l_
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
 from molgears import model
 from molgears.model import DBSession, PCompound, PHistory, PStatus, Tags, SCompound, SFiles, LCompound, LPurity, LHistory
 from molgears.model import Compound, Names, History, User, Group, Projects, PAINS1, PAINS2, PAINS3

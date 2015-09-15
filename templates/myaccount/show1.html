@@ -95,7 +95,7 @@
             <input type="text" size="40" value="" name="smiles" class="filternotempty" /><input type="button" value="Draw Structure" onClick="startEditor();" />
         </p>
         <p>
-            <input type="radio" name="method" value="smililarity" /> Smililarity  <br />
+            <input type="radio" name="method" value="similarity" /> Similarity  <br />
             <input type="radio" name="method" value="substructure" checked="yes" /> Substructure <br />
             <input type="radio" name="method" value="identity" /> Exact Structure <br />
         </p>
@@ -166,7 +166,7 @@
                         <py:if test="row.pains3"> <a href="${tg.url('/pains/pains3/details')}/${row.pains3_id}" ><img src="${tg.url('/images/flag3.png')}" /></a></py:if>
                         </td>
                         <td class="col">
-                        <a class="thumbnail" href="${tg.url('/'+row.project[0].name+'/molecules?smiles=')}${str(row.structure).replace('+', '%2B')}&#38;method=smililarity&#38;text_GID=&#38;text_name=&#38;text_creator=&#38;text_notes=&#38;date_from=&#38;date_to=&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.name}</span></a>
+                        <a class="thumbnail" href="${tg.url('/'+row.project[0].name+'/molecules?smiles=')}${str(row.structure).replace('+', '%2B')}&#38;method=similarity&#38;text_GID=&#38;text_name=&#38;text_creator=&#38;text_notes=&#38;date_from=&#38;date_to=&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.name}</span></a>
                         </td>
                         <td class="col">${row.create_date}</td>
                         <td class="col">${row.creator.replace('.', ' ')}</td>

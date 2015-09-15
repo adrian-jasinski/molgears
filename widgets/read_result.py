@@ -1453,38 +1453,3 @@ def save_fix_data2(CX, CX_BG, Y_ABCD, Y_ABCD_BG, Ycontrol, filepath, scope, scop
     clf()
 
     return((round(res[0], 4), round(res[1], 4), round(Rsquared, 4)), (round(res_bg[0], 4), round(res_bg[1], 4), round(Rsquared_BG, 4)), fluorescence)
-
-def main():
-#    f_path = '/home/adrian/Downloads/962_dominika.ujazdowska_602_p3.xlsx'
-    f_path = '/home/adrian/Downloads/960_dominika.ujazdowska_601_p2.xlsx'
-#    f_path = '/home/adrian/Downloads/964_dominika.ujazdowska_604_p4.xlsx'
-    #concs = [400.0, 200.0, 100.0, 50.0, 25.0, 12.5, 6.25, 3.125, 1.5625, 0.78125]
-#    concs = [100.0, 33.333, 11.111, 3.704, 1.235, 0.412, 0.137, 0.046, 0.015, 0.005]
-    concs = [1.0, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625, 0.0078125, 0.00390625, 0.00195312]
-#    concs = [3.67, 1.835, 0.9175, 0.45875, 0.229375, 0.114688, 0.0573438, 0.0286719, 0.0143359, 0.00716797]
-
-    scope = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    scope_BG = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    
-    print "print f_path1", f_path
-    X, X_BG, Yabcd, Yabcd_BG, Ycontrol, measure_date, temp, fluorescence, top, bottom, f_list = read_topplate(f_path, concs)
-    print "print f_path2", f_path
-    print "fluorescence", fluorescence
-    print 'Y', Yabcd
-    print 'Y_BG', Yabcd_BG
-    print 'Ycontrol', Ycontrol
-    print 'fluorescence', fluorescence
-    print 'X', X
-    print 'X_BG', X_BG
-    print "f_list", f_list
-    
-    graphs_path = '/home/adrian/test.png'
-    
-    result_data, result_data_bg, fluorescence = save_fix_data2(X, X_BG, Yabcd, Yabcd_BG, Ycontrol, graphs_path, scope, scope_BG, f_list, raw=False, dpi=None)
-    print 'result_data', result_data
-    print 'result_data_bg', result_data_bg
-    print "fluorescence", fluorescence
-    
-    
-if __name__ == "__main__":
-    main()

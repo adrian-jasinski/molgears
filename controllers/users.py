@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Sample controller with all its actions protected."""
 import tg
-from tg import expose, flash, redirect, request, url, lurl
-from tg.i18n import ugettext as _, lazy_ugettext as l_
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
 from tg.predicates import has_permission
 from molgears import model
 from molgears.model import DBSession
@@ -100,7 +100,7 @@ class UsersController(BaseController):
                     if threshold >10 and threshold <50:
                         user.threshold = threshold
                     else:
-                        flash(l_(u'Smililarity value should be between 10 and 50'), 'error')
+                        flash(l_(u'Similarity value should be between 10 and 50'), 'error')
                         redirect(request.headers['Referer'])
                 if email and user.email_address != email:
                     import re

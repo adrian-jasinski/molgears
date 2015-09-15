@@ -2,7 +2,7 @@
 """Fallback controller."""
 
 from molgears.lib.base import BaseController
-from tg.i18n import ugettext as _, lazy_ugettext as l_
+from tg.i18n import lazy_ugettext as l_
 from tg import abort
 
 __all__ = ['TemplateController']

@@ -1,25 +1,20 @@
 # -*- coding: utf-8 -*-
 """Sample controller with all its actions protected."""
-import re
-import tg
-from tg import expose, flash, redirect, request, url, lurl
-from tg.i18n import ugettext as _, lazy_ugettext as l_
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
 from tg.predicates import has_permission
-from molgears import model
 from molgears.model import DBSession, Tags, SCompound, SStatus, SFiles, SHistory, SPurity, LCompound, LPurity, LHistory, PCompound,  PHistory,  PStatus
-from molgears.model import Compound, Names, History, Efforts, User, Group, Projects
+from molgears.model import Compound, Names, Efforts, User, Group, Projects
 from molgears.model.auth import UserLists
 from molgears.lib.base import BaseController
-import transaction, os
+import os
 from pkg_resources import resource_filename
-from sqlalchemy import desc, asc
-
+from sqlalchemy import desc
 from rdkit import Chem
 from molgears.widgets.structure import checksmi
 from molgears.widgets.format import raw_path_basename
 from datetime import datetime
 from webhelpers import paginate
-from tg.predicates import has_permission
 
 __all__ = ['SynthesisController']
 
@@ -101,7 +96,7 @@ class SynthesisController(BaseController):
                     if checksmi(smiles):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
+                        if method == 'similarity':
                             from razi.postgresql_rdkit import tanimoto_threshold
                             threshold = float(user.threshold)/100.0
                             DBSession.execute(tanimoto_threshold.set(threshold))
@@ -119,7 +114,7 @@ class SynthesisController(BaseController):
                             items = user.items_per_page
                             page_url = paginate.PageURL_WebOb(request)
                             currentPage = paginate.Page(scompound, page, url=page_url, items_per_page=items)
-                            return dict(currentPage=currentPage, user=user, status=status, tmpl=tmpl, kierownik = kierownik, page='synthesis', alltags=alltags, allstatus=allstatus, similarity=similarity, pname=pname, ulists=ulists)
+                            return dict(currentPage=currentPage, user=user, status=status, tmpl=tmpl, page='synthesis', alltags=alltags, allstatus=allstatus, similarity=similarity, pname=pname, ulists=ulists)
                             
                         elif method == 'substructure':
                             constraint = Compound.structure.contains(smiles)
@@ -186,9 +181,8 @@ class SynthesisController(BaseController):
                         if type(tagi) != type([]):
                             tagi = [int(tags)]
                     else:
-                        tagi = [int(id) for id in tags]
-        
-                    import sqlalchemy
+                        tagi = [int(tid) for tid in tags]
+
                     scompound = scompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
     
                 try:
@@ -197,7 +191,7 @@ class SynthesisController(BaseController):
                         statusy = [int(statusy)]
                         statusy.sort()
                     else:
-                        statusy = [int(id) for id in statusy]
+                        statusy = [int(sid) for sid in statusy]
                 except Exception:
                     statusy = None
                     pass
@@ -290,13 +284,13 @@ class SynthesisController(BaseController):
                     size = 100, 100
                 if kw['file_type'] == 'pdf':
                     filename = userid + '_selected.pdf'
-                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                    from xhtml2pdf.pisa import CreatePDF
                     from tg.render import render as render_template
                     import cStringIO
                     html = render_template({"length":len(scompounds), "scompound":scompounds, "options":options, "size":size}, "genshi", "molgears.templates.users.synthesis.print2", doctype=None)
                     dest = './molgears/files/pdf/' + filename
                     result = file(dest, "wb")
-                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                     result.close()
                     import paste.fileapp
                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -601,12 +595,11 @@ class SynthesisController(BaseController):
         items = user.items_per_page
         page_url = paginate.PageURL_WebOb(request)
         currentPage = paginate.Page(scompound, page, url=page_url, items_per_page=items)
-        return dict(currentPage=currentPage, user=user, status=status, tmpl=tmpl, kierownik = kierownik, page='synthesis', alltags=alltags, allstatus=allstatus, similarity=similarity, pname=pname, ulists=ulists)
+        return dict(currentPage=currentPage, user=user, status=status, tmpl=tmpl, page='synthesis', alltags=alltags, allstatus=allstatus, similarity=similarity, pname=pname, ulists=ulists)
         
     @expose('molgears.templates.users.synthesis.get_all')
     def get_all(self, page=1, *args, **kw):
         pname = request.environ['PATH_INFO'].split('/')[1]
-        from sqlalchemy import func
         userid = request.identity['repoze.who.userid']
         status = DBSession.query(SStatus).get(3)
         scompound = DBSession.query(SCompound).join(SCompound.mol).filter(Compound.project.any(Projects.name==pname))
@@ -701,7 +694,7 @@ class SynthesisController(BaseController):
                     if checksmi(smiles):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
+                        if method == 'similarity':
                             from razi.postgresql_rdkit import tanimoto_threshold
                             threshold = float(user.threshold)/100.0
                             DBSession.execute(tanimoto_threshold.set(threshold))
@@ -786,9 +779,8 @@ class SynthesisController(BaseController):
                         if type(tagi) != type([]):
                             tagi = [int(tags)]
                     else:
-                        tagi = [int(id) for id in tags]
+                        tagi = [int(tid) for tid in tags]
         
-                    import sqlalchemy
                     scompound = scompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
     
                 try:
@@ -796,7 +788,7 @@ class SynthesisController(BaseController):
                     if isinstance(statusy, basestring):
                         statusy = [int(statusy)]
                     else:
-                        statusy = [int(id) for id in statusy]
+                        statusy = [int(sid) for sid in statusy]
                         statusy.sort()
                 except Exception as msg:
                     statusy = None
@@ -886,13 +878,13 @@ class SynthesisController(BaseController):
                     size = 100, 100
                 if kw['file_type'] == 'pdf':
                     filename = userid + '_selected.pdf'
-                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                    from xhtml2pdf.pisa import CreatePDF
                     from tg.render import render as render_template
                     import cStringIO
                     html = render_template({"length":len(scompounds), "scompound":scompounds, "options":options, "size":size}, "genshi", "molgears.templates.users.synthesis.print2", doctype=None)
                     dest = './molgears/files/pdf/' + filename
                     result = file(dest, "wb")
-                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                     result.close()
                     import paste.fileapp
                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -1261,7 +1253,7 @@ class SynthesisController(BaseController):
                     if checksmi(smiles):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
+                        if method == 'similarity':
 #                            query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
 #                            constraint = Compound.morgan.dice_similar(query_bfp)
 #                            dice_sml = Compound.morgan.dice_similarity(query_bfp).label('dice')
@@ -1332,9 +1324,8 @@ class SynthesisController(BaseController):
                         if type(tagi) != type([]):
                             tagi = [int(tags)]
                     else:
-                        tagi = [int(id) for id in tags]
-        
-                    import sqlalchemy
+                        tagi = [int(tid) for tid in tags]
+
                     scompound = scompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
     
                 try:
@@ -1342,7 +1333,7 @@ class SynthesisController(BaseController):
                     if isinstance(statusy, basestring):
                         statusy = [int(statusy)]
                     else:
-                        statusy = [int(id) for id in statusy]
+                        statusy = [int(sid) for sid in statusy]
                 except Exception:
                     statusy = None
                     pass
@@ -1465,7 +1456,6 @@ class SynthesisController(BaseController):
             effort = DBSession.query( Efforts ).get(scompound.effort_default)
         shistory = SHistory()
         shistory.gid = scompound.mol.gid
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         shistory.project = pname
         shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         shistory.user = userid
@@ -1526,7 +1516,7 @@ class SynthesisController(BaseController):
         if scompound.owner == userid:
             try:
                 tags = [tag for tag in scompound.mol.tags]
-            except Exception as msg:
+            except Exception:
                 tags = [scompound.mol.tags]
                 pass
             try:
@@ -1561,7 +1551,6 @@ class SynthesisController(BaseController):
             
             shistory = SHistory()
             shistory.gid = scompound.mol.gid
-            project = DBSession.query(Projects).filter(Projects.name==pname).first()
             shistory.project = pname
             shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             shistory.user = userid
@@ -1576,7 +1565,7 @@ class SynthesisController(BaseController):
                 schanges += u' LSO: ' + kw['lso']
             if kw.has_key('form') and kw['form'] != scompound.form:
                 scompound.form = kw['form']
-                schanges += u'; Forma: ' + kw['form']
+                schanges += u'; Form: ' + kw['form']
             if kw.has_key('principal') and kw['principal'] != scompound.principal:
                 scompound.principal = kw['principal']
                 schanges += u'; Recipient: ' + kw['principal']
@@ -1592,11 +1581,11 @@ class SynthesisController(BaseController):
                 if (purity.type == 'zasadowa' or purity.type == 'basic') and retention_zasadowa:
                     if purity.retention_time != float(retention_zasadowa):
                         purity.retention_time = float(retention_zasadowa)
-                        schanges += u'; Czas retencji (zasadowy) ' + retention_zasadowa
+                        schanges += u'; Retention time (basic) ' + retention_zasadowa
                 if (purity.type == 'kwasowa' or purity.type == 'acid') and retention_kwasowa:
                     if purity.retention_time != float(retention_kwasowa):
                         purity.retention_time = float(retention_kwasowa)
-                        schanges += u'; Czas retencji (kwasowa) ' + retention_kwasowa
+                        schanges += u'; Retention time (acid) ' + retention_kwasowa
             if kw.has_key('state') and kw['state'] != u'':
                 try:
                     state = str(kw['state'])
@@ -1606,7 +1595,7 @@ class SynthesisController(BaseController):
                     redirect(request.headers['Referer'])
                 if scompound.state != float(state):
                     scompound.state = float(state)
-                    schanges += u'; Stan mag.[mg]: ' + kw['state']
+                    schanges += u'; State.[mg]: ' + kw['state']
             else:
                 scompound.state = 0
             if kw.has_key('notes') and kw['notes'] != scompound.notes:
@@ -1615,7 +1604,7 @@ class SynthesisController(BaseController):
             
             if kw.has_key('priority') and int(kw['priority']) != scompound.priority:
                 scompound.priority = int(kw['priority'])
-                schanges += u'; Priorytet:' + kw['priority']
+                schanges += u'; Priority:' + kw['priority']
                 pcompound = DBSession.query(PCompound).get(scompound.pid)
                 if pcompound:
                     pcompound.priority = int(kw['priority'])
@@ -1623,7 +1612,7 @@ class SynthesisController(BaseController):
                     phistory.project = pname
                     phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     phistory.user = userid
-                    phistory.status = 'Priorytet'
+                    phistory.status = 'Priority'
                     phistory.changes = u'Priority: ' + kw['priority']
                     pcompound.history += [phistory]
                     DBSession.add(phistory)
@@ -1634,7 +1623,7 @@ class SynthesisController(BaseController):
                 reason = None
                 pass
             if reason and reason != u'':
-                schanges += u'UWAGA! niestandardowa zmiana z powodu:' + reason
+                schanges += u'Warning! Non standard change for the reason:' + reason
                 new_etap = int(kw['etap']) 
                 new_etap_max = int(kw['etap_max'])
                 effort = DBSession.query( Efforts ).get(scompound.effort_default)
@@ -1643,8 +1632,8 @@ class SynthesisController(BaseController):
                     effort.etap_max = new_etap_max
                     scompound.status = DBSession.query( SStatus ).get(2)
                     scompound.stat2_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    schanges += u'; Bieżący etap: ' + str(new_etap)
-                    schanges += u'; Liczba etapow: ' + str(new_etap_max)
+                    schanges += u'; Current phase: ' + str(new_etap)
+                    schanges += u'; Number of Phases: ' + str(new_etap_max)
                 else:
                     flash(l_(u'Finished etap should be lower than amount of etaps'), 'error')
                     redirect(request.headers['Referer'])    
@@ -1758,7 +1747,7 @@ class SynthesisController(BaseController):
                 sfile.filename = newfilename
                 if kw['opis']:
                     sfile.description = kw['opis']
-                schanges += u' Plik: ' + filename + u' ( ' + newfilename + u' )'
+                schanges += u' File: ' + filename + u' ( ' + newfilename + u' )'
                 DBSession.add(sfile)  
                 shistory.changes = schanges
                 scompound.history += [shistory]
@@ -1796,14 +1785,13 @@ class SynthesisController(BaseController):
         if scompound.owner == userid:
             shistory = SHistory()
             shistory.gid = scompound.mol.gid
-            project = DBSession.query(Projects).filter(Projects.name==pname).first()
             shistory.project = pname
             shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             shistory.user = userid
-            shistory.status = u'Usuwanie pliku'
+            shistory.status = u'Delete File'
             
             file = DBSession.query(SFiles).get(file_id)
-            shistory.changes = u'Usunieto plik: %s (%s)' % (file.name, file.filename) 
+            shistory.changes = u'Deleted file: %s (%s)' % (file.name, file.filename) 
             scompound.history += [shistory]
             
             scompound.filename.remove(file)
@@ -1842,11 +1830,10 @@ class SynthesisController(BaseController):
         id = int(id)
         userid = request.identity['repoze.who.userid']
         shistory = SHistory()
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         shistory.project = pname
         shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         shistory.user = userid
-        shistory.status = 'Dodanie analityki'
+        shistory.status = 'Analytics'
         scompound = DBSession.query( SCompound).filter_by(id=id).join(SCompound.mol).filter(Compound.project.any(Projects.name==pname)).first()
         shistory.gid = scompound.mol.gid
         effort = DBSession.query( Efforts ).get(scompound.effort_default)
@@ -1870,16 +1857,16 @@ class SynthesisController(BaseController):
                 flash(l_(u'Purity error. Float required: %s' % msg), 'error')
                 redirect(request.headers['Referer'])
             if (kwas or zasada) >= 0:
-                schanges = u'Bieżący etap: ' + str(etap + 1) + u'; Status: ' + str(next_status.name)
+                schanges = u'Current phase: ' + str(etap + 1) + u'; Status: ' + str(next_status.name)
                 if kwas >= 0:
                     spurity1 = SPurity()
                     spurity1.value = kwas
-                    spurity1.type = 'kwasowa'
+                    spurity1.type = 'acid'
                     schanges += u'; Acid purity: ' + kw['kwas']
                     if kw.has_key('retention_kwas') and kw['retention_kwas'] != u'':
                         retention_kwas = str(kw['retention_kwas']).replace(',', '.') 
                         spurity1.retention_time = float(retention_kwas)
-                        schanges += u'; Czas retencji (kwasowy): ' + retention_kwas
+                        schanges += u'; Retention time (acid): ' + retention_kwas
                     scompound.purity += [spurity1]
                     try:
                         kwas_file = raw_path_basename(kw['kwas_file'].filename)
@@ -1902,7 +1889,7 @@ class SynthesisController(BaseController):
                         sfile1 = SFiles()
                         sfile1.name = kwas_file
                         sfile1.filename = new_kwas_file_name
-                        schanges += u'; Plik analityka kwasowa: ' + kwas_file + u' (' + new_kwas_file_name + u')'
+                        schanges += u'; Acid analytics: ' + kwas_file + u' (' + new_kwas_file_name + u')'
                         spurity1.filename = [sfile1]
                     else:
                         sfile1 = None
@@ -1912,12 +1899,12 @@ class SynthesisController(BaseController):
                 if zasada >= 0:
                     spurity2 = SPurity()
                     spurity2.value = zasada
-                    spurity2.type = 'zasadowa'
+                    spurity2.type = 'basic'
                     schanges += u'; Basic purity: ' + str(kw['zasada'])
                     if kw.has_key('retention_zasada') and kw['retention_zasada'] != u'':
                         retention_zasada = str(kw['retention_zasada']).replace(',', '.') 
                         spurity2.retention_time = float(retention_zasada)
-                        schanges += u'; Czas retencji (zasadowy): ' + retention_zasada
+                        schanges += u'; Retention time (basic): ' + retention_zasada
                     scompound.purity += [spurity2]
                     try:
                         zasada_file = raw_path_basename(kw['zasada_file'].filename)
@@ -1939,7 +1926,7 @@ class SynthesisController(BaseController):
                         sfile2 = SFiles()
                         sfile2.name = zasada_file
                         sfile2.filename = new_zasada_file_name
-                        schanges += u'; Plik analityka zasadowa: ' + zasada_file + ' (' + new_zasada_file_name +')'
+                        schanges += u'; Basic analtytics: ' + zasada_file + ' (' + new_zasada_file_name +')'
                         spurity2.filename = [sfile2]
                     else:
                         sfile2 = None
@@ -1960,7 +1947,7 @@ class SynthesisController(BaseController):
 
         if kw.has_key('form') and kw['form'] != scompound.form:
             scompound.form = kw['form']
-            schanges += u'; Forma: ' + kw['form']
+            schanges += u'; Form: ' + kw['form']
 
         if kw.has_key('state') and kw['state'] != u'':
             try:
@@ -1971,7 +1958,7 @@ class SynthesisController(BaseController):
                 redirect(request.headers['Referer'])
             if scompound.state != float(state):
                 scompound.state = float(state)
-                schanges += u'; Stan mag.[mg]: ' + kw['state']
+                schanges += u'; State [mg]: ' + kw['state']
         else:
             scompound.state = 0
             
@@ -2069,27 +2056,25 @@ class SynthesisController(BaseController):
 #        lcompound.avg_bg_ic50_mdm4 = 0.0
 #        lcompound.avg_bg_hillslope_mdm4 = 0.0
 #        lcompound.avg_bg_r2_mdm4 = 0.0
-        lcompound.source = u'LSO: ADAMED'
+        lcompound.source = u'INTERNAL'
         lcompound.create_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if scompound.lso:
             lcompound.lso = scompound.lso.split(';')[-1]
         lcompound.owner = scompound.owner
         shistory = SHistory()
         shistory.gid = scompound.mol.gid
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         shistory.project = pname
         shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         shistory.user = userid
-        shistory.status = u'Odbiór'
+        shistory.status = u'Recive'
         shistory.changes = u'Status: received'
         lhistory = LHistory()
         lhistory.gid = lcompound.mol.gid
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         lhistory.project = pname
         lhistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         lhistory.user = userid
-        lhistory.status = u'Odbiór syntezy'
-        lchanges = u'Odbiór związku nr %s' % id 
+        lhistory.status = u'Created'
+        lchanges = u'Recived from no %s' % id 
         if scompound.purity:
             for purity in scompound.purity:
                 lpurity = LPurity()
@@ -2101,7 +2086,7 @@ class SynthesisController(BaseController):
         
         if kw.has_key('form'):
             lcompound.form = kw['form']
-            lchanges += u'; Forma: ' + kw['form']
+            lchanges += u'; Form: ' + kw['form']
         if kw.has_key('state'):
             try:
                 state = str(kw['state'])
@@ -2117,16 +2102,16 @@ class SynthesisController(BaseController):
             lcompound.synthesisvalue = 0
         if kw.has_key('box'):
             lcompound.box = kw['box']
-            lchanges += u'; Pudełko: ' + kw['box']
+            lchanges += u'; Box: ' + kw['box']
         if kw.has_key('entry'):
             lcompound.entry = kw['entry']
-            lchanges += u'; Pozycja: ' + kw['entry']
+            lchanges += u'; Entry: ' + kw['entry']
         if kw.has_key('showme'):
             if kw['showme'] == "True":
                 lcompound.showme = True
             else:
                 lcompound.showme = False
-            lchanges += u'; Pokaż w testach: ' + kw['showme']
+            lchanges += u'; Show in activity: ' + kw['showme']
         if kw.has_key('notes'):
             lcompound.notes = kw['notes']
             lchanges += u';Notes: ' + kw['notes']
@@ -2178,13 +2163,12 @@ class SynthesisController(BaseController):
                             tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
                         else:
                             tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
-                    except Exception as msg:
+                    except Exception:
                         tagi = None
                     scompound = DBSession.query(SCompound).filter_by(id=int(arg)).join(SCompound.mol).filter(Compound.project.any(Projects.name==pname)).first()
 #                    scompound.priority = int(kw['priority'])
                     shistory = SHistory()
                     shistory.gid = scompound.mol.gid
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     shistory.project = pname
                     shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     shistory.user = userid
@@ -2192,7 +2176,7 @@ class SynthesisController(BaseController):
                     schanges = u''
                     if kw.has_key('priority') and int(kw['priority']) != scompound.priority:
                         scompound.priority = int(kw['priority'])
-                        schanges += u' Priorytet:' + kw['priority'] + u';'
+                        schanges += u' Priority:' + kw['priority'] + u';'
                         pcompound = DBSession.query(PCompound).get(scompound.pid)
                         if pcompound:
                             pcompound.priority = int(kw['priority'])
@@ -2200,7 +2184,7 @@ class SynthesisController(BaseController):
                             phistory.project = pname
                             phistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                             phistory.user = userid
-                            phistory.status = 'Priorytet'
+                            phistory.status = 'Priority'
                             phistory.changes = u'Priority: ' + kw['priority']
                             pcompound.history += [phistory]
                             DBSession.add(phistory)
@@ -2236,25 +2220,24 @@ class SynthesisController(BaseController):
                 effort = DBSession.query( Efforts ).get(scompound.effort_default)
                 shistory = SHistory()
                 shistory.gid = scompound.mol.gid
-                project = DBSession.query(Projects).filter(Projects.name==pname).first()
                 shistory.project = pname
                 shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 shistory.user = userid
-                shistory.status = 'Zmiana etapu'
+                shistory.status = 'Phase change'
                 schanges = ''
                 etap = effort.etap
                 etap_max = effort.etap_max
                 if etap < etap_max - 1:
                     if etap >= 0:
                         effort.etap = etap +1
-                        schanges = u'Bieżący etap: ' + str(etap+1)
+                        schanges = u'Current phase: ' + str(etap+1)
                     else:
                         effort.etap = etap +1
                         next_status = DBSession.query( SStatus ).get(2)
                         scompound.status = next_status
                         scompound.stat2_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 #                        scompound.status_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        schanges = u'Bieżący etap: ' + str(etap+1) + u'; Status: ' + str(next_status.name)
+                        schanges = u'Current phase: ' + str(etap+1) + u'; Status: ' + str(next_status.name)
                     if effort.id == scompound.effort_default:
                         scompound.etap_diff = effort.etap_max - effort.etap
                     shistory.changes = schanges
@@ -2289,10 +2272,9 @@ class SynthesisController(BaseController):
         if scompound.owner == userid:
             scompound.effort_default = effort_id
             schanges = u''
-            schanges += u'Zmiana domyślnego etapu na etap o ID: %s; ' % effort_id
+            schanges += u'Default etap change from ID: %s; ' % effort_id
             shistory = SHistory()
             shistory.gid = scompound.mol.gid
-            project = DBSession.query(Projects).filter(Projects.name==pname).first()
             shistory.project = pname
             shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             shistory.user = userid
@@ -2331,15 +2313,14 @@ class SynthesisController(BaseController):
             if kw:
                 shistory = SHistory()
                 shistory.gid = scompound.mol.gid
-                project = DBSession.query(Projects).filter(Projects.name==pname).first()
                 shistory.project = pname
                 shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 shistory.user = userid
-                shistory.status = u'Edycja podejścia'
+                shistory.status = u'Edit effort'
                 schanges = u''
                 if kw.has_key('effort_name') and kw['effort_name'] != u'':
                     effort.name = kw['effort_name']
-                    schanges += u'Nazwa podejścia: ' + kw['effort_name']
+                    schanges += u'Effort name: ' + kw['effort_name']
                 if kw.has_key('notes') and kw['notes'] != u'':
                     effort.notes = kw['notes']
                     schanges += u';Notes: ' + kw['notes']
@@ -2368,7 +2349,7 @@ class SynthesisController(BaseController):
                         reaction_sfile = SFiles()
                         reaction_sfile.name = reaction_file
                         reaction_sfile.filename = newfilename2
-                        schanges += u' Sciezka reakcji: ' + reaction_file + u' ( ' + newfilename2 + u' )'
+                        schanges += u' Reaction path: ' + reaction_file + u' ( ' + newfilename2 + u' )'
                         effort.reaction = [reaction_sfile]                    
                         DBSession.add(reaction_sfile)
                     else:
@@ -2400,7 +2381,7 @@ class SynthesisController(BaseController):
                 except Exception:
                     reason = None
                 if reason and reason != u'':
-                    schanges = u'UWAGA! Dodanie etapu z powodu:' + reason
+                    schanges = u'Warning! Adding etap for reason:' + reason
                     etap = int(kw['etap']) 
                     etap_max = int(kw['etap_max'])
                     if etap < etap_max:
@@ -2411,9 +2392,9 @@ class SynthesisController(BaseController):
                         scompound.stat2_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         if kw.has_key('effort_name') and kw['effort_name'] != u'':
                             effort.name = kw['effort_name']
-                            schanges += u'; Nazwa podejścia: ' + kw['effort_name']
-                        schanges += u'; Bieżący etap: ' + str(etap)
-                        schanges += u'; Liczba etapow: ' + str(etap_max)
+                            schanges += u'; Effort name: ' + kw['effort_name']
+                        schanges += u'; Current phase: ' + str(etap)
+                        schanges += u'; No of phases: ' + str(etap_max)
                         try:
                             reaction_file = raw_path_basename(kw['reaction'].filename)
                         except Exception as msg:
@@ -2434,18 +2415,17 @@ class SynthesisController(BaseController):
                             reaction_sfile = SFiles()
                             reaction_sfile.name = reaction_file
                             reaction_sfile.filename = newfilename2
-                            schanges += u' Sciezka reakcji: ' + reaction_file + u' ( ' + newfilename2 + u' )'
+                            schanges += u' Reaction path: ' + reaction_file + u' ( ' + newfilename2 + u' )'
                             effort.reaction += [reaction_sfile]
                             DBSession.add(reaction_sfile)
                         scompound.effort += [effort]
                         DBSession.add(effort)
                         shistory = SHistory()
                         shistory.gid = scompound.mol.gid
-                        project = DBSession.query(Projects).filter(Projects.name==pname).first()
                         shistory.project = pname
                         shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         shistory.user = userid
-                        shistory.status = 'Dodawanie podjescia'
+                        shistory.status = 'Add effort'
                         shistory.changes = schanges
                         scompound.history += [shistory]
                         DBSession.add(shistory)
@@ -2473,7 +2453,6 @@ class SynthesisController(BaseController):
         Chamge status of synthesis compound as discontinue.
         """
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         userid = request.identity['repoze.who.userid']
         try:
             come_from = request.headers['Referer']
@@ -2518,7 +2497,6 @@ class SynthesisController(BaseController):
         Chamge status of synthesis compound as pending if phase is -1 or synthesis if phase is >-1.
         """
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         userid = request.identity['repoze.who.userid']
         try:
             come_from = request.headers['Referer']
@@ -2571,7 +2549,6 @@ class SynthesisController(BaseController):
         Chamge status of synthesis compound as rejected and set request compound status as canceled.
         """
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         userid = request.identity['repoze.who.userid']
         try:
             come_from = request.headers['Referer']
@@ -2592,7 +2569,7 @@ class SynthesisController(BaseController):
                     shistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     shistory.user = userid
                     shistory.status = u'Reject'
-                    shistory.changes = u'Reject synthesis compound of GID %s (ID projektowe %s)' % (scompound.gid, arg)
+                    shistory.changes = u'Reject synthesis compound of GID %s (ID %s)' % (scompound.gid, arg)
                     phistory = PHistory()
                     phistory.gid = pcompound.gid
                     phistory.project = pname
@@ -2627,7 +2604,6 @@ class SynthesisController(BaseController):
         Chamge status of synthesis compound as discontinue and set request compound status as proposed.
         """
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         userid = request.identity['repoze.who.userid']
         try:
             come_from = request.headers['Referer']
@@ -2683,7 +2659,6 @@ class SynthesisController(BaseController):
         Chamge status of synthesis compound as discontinue and set request compound status as canceled.
         """
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         userid = request.identity['repoze.who.userid']
         try:
             come_from = request.headers['Referer']
@@ -2762,7 +2737,7 @@ class SynthesisController(BaseController):
             if ext == u'xls':
                 import xlwt
                 wbk = xlwt.Workbook()
-                sheet = wbk.add_sheet('arkusz1')
+                sheet = wbk.add_sheet('sheet1')
                 sheet.write(0,0,u'GID')
                 sheet.write(0,1,u'ID')
                 sheet.write(0,2,u'Name')
@@ -2872,10 +2847,8 @@ class SynthesisController(BaseController):
     @expose()
     def deletefromlist(self, ulist_id, *args):
         ulist = DBSession.query(UserLists).get(ulist_id)
-        pname = request.environ['PATH_INFO'].split('/')[1]
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter_by(user_name=userid).first()
-        ulists = [l for l in user.lists if l.table == 'LCompounds']
         if (ulist in user.lists) or (user in ulist.permitusers):
             if ulist.elements:
                 import pickle

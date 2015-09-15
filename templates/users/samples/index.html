@@ -15,7 +15,7 @@
     <script type="text/javascript" src="${tg.url('/javascript/my.js')}"></script>
     <script type="text/javascript">
 jQuery(document).ready(function($){
-	$('body.tundra').addcontextmenu('contextmenu1') //apply context menu to links with class="mylinks"
+	$('body.tundra').addcontextmenu('contextmenu1'); //apply context menu to links with class="mylinks"
 })
 </script>
   <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-darkness/jquery-ui.css" rel="stylesheet" type="text/css"/>
@@ -75,7 +75,7 @@ jQuery(document).ready(function($){
             <input type="text" size="40" value="" name="smiles" class="filternotempty" /><input type="button" value="Draw Structure" onClick="startEditor();" />
         </p>
         <p>
-            <input type="radio" name="method" value="smililarity" /> Smililarity  <br />
+            <input type="radio" name="method" value="similarity" /> Similarity  <br />
             <input type="radio" name="method" value="substructure" checked="yes" /> Substructure <br />
             <input type="radio" name="method" value="identity" /> Exact Structure <br />
         </p>
@@ -150,7 +150,7 @@ jQuery(document).ready(function($){
                       </py:for>
                         </td>
                         <td class="col">
-                        <a class="thumbnail" href="${tg.url('/'+pname+'/samples?smiles=')}${str(row.structure).replace('+', '%2B').replace('#','%23')}&#38;method=smililarity&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.name}</span></a>
+                        <a class="thumbnail" href="${tg.url('/'+pname+'/samples?smiles=')}${str(row.structure).replace('+', '%2B').replace('#','%23')}&#38;method=similarity&#38;search=Szukaj&#38;akcja=edit"><img src="${tg.url('/img')}/thumb${row.gid}.png" width="120px" height="120px" border="0" /><span><img src="${tg.url('/img')}/${row.gid}.png" /><br />[<b>${row.gid}</b>] ${row.name}</span></a>
                         </td>
                         <td class="col"><py:for each="pc in row.pcompounds"><a href="${tg.url('/'+pname+'/select/details/')}${pc.gid}/${pc.id}">${pc.status.name}</a><br /></py:for></td>
                         <td class="col"><py:for each="sc in row.scompounds"><a href="${tg.url('/'+pname+'/synthesis/details/')}${sc.gid}/${sc.id}">${sc.status.name}</a><br /></py:for></td>

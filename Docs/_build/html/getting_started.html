@@ -75,7 +75,10 @@
 <li><a class="reference internal" href="#id5">Details view</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#synthesis-table">Synthesis Table</a></li>
+<li><a class="reference internal" href="#synthesis-table">Synthesis Table</a><ul>
+<li><a class="reference internal" href="#phase-changing">Phase changing</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -402,13 +405,14 @@ For this Status the -1 Phase is set.</p>
 <p>Status set for the compounds in the process of synthesis. Phases for this status are numbered from 0 to max number declared during acceptance from requests. Rows in table for this status are colored in cyan.</p>
 </li>
 <li><p class="first">finished</p>
-<p>Status set for the compounds after process of synthesis is finished (current phase number is the same as max number). Analytical data should be added to molecule. Rows in table for this status are colored in cyan.</p>
+<p>Status set for the compounds after process of synthesis is finished (current phase number is the same as max number). Analytical data should be added to molecule. Rows in table for this status are colored in orange.</p>
 </li>
 <li><p class="first">received</p>
 <p>Status set for the compounds after being recived by Recipient. As a result compound is added to Library table. Rows in table for this status are colored in green.</p>
 </li>
 <li><p class="first">rejected</p>
-<p>Status set for the compounds if we decided to not continue synthesis any more. When the molecule is rejected this status is set also for request with it originates. Rows in table for this status are colored in magenta.</p>
+<p>Status set for the compounds if we decided to not continue synthesis any more. When the molecule is rejected this status is set also for request with it originates. Rows in table for this status are colored in magenta.
+This change is permanent.</p>
 </li>
 <li><p class="first">discontinued</p>
 <p>Status set for the compounds if we temporary decided to not continue synthesis. Previous status can be restored by choosing &#8220;continue&#8221; option from RMB menu. Rows in table for this status are colored in violet.</p>
@@ -417,6 +421,22 @@ For this Status the -1 Phase is set.</p>
 <blockquote>
 <div><img alt="_images/synthesis_table.png" src="_images/synthesis_table.png" />
 </div></blockquote>
+<p>Available actions for synthesis table in RMB menu:</p>
+<blockquote>
+<div><img alt="_images/RMB_synthesis.png" class="align-center" src="_images/RMB_synthesis.png" />
+</div></blockquote>
+<div class="section" id="phase-changing">
+<h4>Phase changing<a class="headerlink" href="#phase-changing" title="Permalink to this headline">¶</a></h4>
+<p>Each molecule can have many synthesis path. Each path is represented by efford record. The number of added efforts is represented in Effort column in Synthesis Table.
+Click this number to view all efforts list or add new:</p>
+<blockquote>
+<div><img alt="_images/efforts_list.png" class="align-center" src="_images/efforts_list.png" />
+</div></blockquote>
+<p>To change the Phase for compound choose &#8220;Change of phase&#8221; in RMB menu and than optionally add LSO number and Notes:</p>
+<blockquote>
+<div><img alt="_images/phase_change.png" class="align-center" src="_images/phase_change.png" />
+</div></blockquote>
+</div>
 </div>
 </div>
 </div>

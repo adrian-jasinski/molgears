@@ -130,7 +130,7 @@ edit_pcompoud_filler = EditPCompoundTableFiller(DBSession)
 #    __add_fields__ = {'image':None}
 #    __xml_fields__ = ['Obraz', 'Akcja']
 ##    __column_widths__ = {'structure':"50px"}
-#    __headers__ = {'name': 'Nazwa', 'structure':'Struktura', 'image':'Obraz', 
+#    __headers__ = {'name': 'Name', 'structure':'Struktura', 'image':'Obraz', 
 #                            'owner':'Wlasciciel', 'create_date':'Data utworzenia', 'status':'Status', 'tags':'Tagi', 'notes':'Uwagi' , '__actions__':'Akcja', 'mw':'MW', 'logp':'logP'}
 #
 #pcompound_detail_table = PCompoundDetailTable(DBSession)
@@ -219,7 +219,7 @@ class SCompoundTable(TableBase):
     __add_fields__ = {'image':None, 'pliki':None, 'czystosc':None}
     __xml_fields__ = ['Obraz', 'pliki', 'Akcja']
 #    __column_widths__ = {'structure':"50px"}
-    __headers__ = {'name': 'Nazwa', 'structure':'Struktura', 'image':'Obraz', 'purity':'Analityka', 'lso':'LSO', 'etap':'Ukonczony etap', 
+    __headers__ = {'name': 'Name', 'structure':'Struktura', 'image':'Obraz', 'purity':'Analityka', 'lso':'LSO', 'etap':'Ukonczony etap', 
                             'owner':'Wlasciciel', 'create_date':'Data utworzenia', 'status':'Status', 'tags':'Tagi', 'notes':'Uwagi' , 'etap_max':'Liczba etapow',
                             'filename':'Zalaczniki', '__actions__':'Akcja', 'mw':'MW', 'logp':'logP', 'principal':'odbiorca'}
 scompound_table = SCompoundTable(DBSession)
@@ -283,7 +283,7 @@ class SCompoundSearchTableFiller( TableFiller):
                 if checksmi(smiles):
                     from razi.functions import functions
                     from razi.expression import TxtMoleculeElement
-                    if method == 'smililarity':
+                    if method == 'similarity':
                         query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
                         constraint = SCompound.morgan.dice_similar(query_bfp)
                         dice_sml = SCompound.morgan.dice_similarity(query_bfp).label('dice')
@@ -358,7 +358,7 @@ class SCompoundSearchTable(TableBase):
     __add_fields__ = {'image':None, 'pliki':None}
     __xml_fields__ = ['Obraz', 'pliki', 'Akcja']
 #    __column_widths__ = {'structure':"50px"}
-    __headers__ = {'name': 'Nazwa', 'structure':'Struktura', 'image':'Obraz', 'purity':'Analityka', 'lso':'LSO', 'etap':'Ukonczony etap', 
+    __headers__ = {'name': 'Name', 'structure':'Struktura', 'image':'Obraz', 'purity':'Analityka', 'lso':'LSO', 'etap':'Ukonczony etap', 
                             'owner':'Wlasciciel', 'create_date':'Data utworzenia', 'status':'Status', 'tags':'Tagi', 'notes':'Uwagi' , 'etap_max':'Liczba etapow',
                             'filename':'Zalaczniki', '__actions__':'Akcja', 'mw':'MW', 'logp':'logP', 'principal':'odbiorca'}
 scompound_search_table = SCompoundSearchTable(DBSession)
@@ -453,5 +453,5 @@ class LCompoundTable(TableBase):
     __add_fields__ = {'image':None, 'czystosc':None}
     __xml_fields__ = ['Obraz', 'Akcja']
     __headers__ = {'image':'Obraz', 'notes':'Uwagi', '__actions__':'Akcja', 'create_date':'Data utworzenia', 'box':'Pudelko', 
-                            'state':'Stan [mg]', 'form':'Forma', 'entry':'Pozycja', 'source':'zrodlo', 'name':'Nazwa', 'tags':'Tagi'}
+                            'state':'Stan [mg]', 'form':'Forma', 'entry':'Pozycja', 'source':'zrodlo', 'name':'Name', 'tags':'Tagi'}
 lcompound_table = LCompoundTable(DBSession)

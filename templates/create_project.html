@@ -20,12 +20,10 @@ Creating Text Box for name field in the Form.
 */
 function textBoxCreate(){
 var y = document.createElement("INPUT");
-var br = document.createElement("br");
 y.setAttribute("type", "text");
 y.setAttribute("Placeholder", "Cell_Line_" + i);
 y.setAttribute("Name", "Cell_Line_" + i);
 document.getElementById("myForm").appendChild(y);
-document.getElementById("myForm").appendChild(br);
 i++;
 }
 </script>
@@ -47,17 +45,17 @@ i++;
                 <td class="right"><input type="text" name="name" style="width:200px;" /></td>
             </tr>
             <tr>
-                <td class="left">
-                    <div class="two"><input type="button" class="name" onclick="textBoxCreate()" value="Add next" /><b style="color:red;  font-size: 80%;">*</b></div>
+                <td class="left" style="vertical-align:text-top;">
+                    <label for="Cell_Line_1"><b style="color:red;  font-size: 80%;">*</b> Cell Lines: </label>
                 </td>
                 <td class="right">
-                    <input type="text" name="Tag_Name_1" placeholder="Cell_Line_1" />
-                    <p id="myForm"></p>
+                    <p id="myForm"><input type="text" name="Cell_Line_1" placeholder="Cell_Line_1" /></p>
+                    <div class="two"><input type="button" class="name" onclick="textBoxCreate()" value="Add next" /></div>
                 </td>
             </tr>
             <tr>
                 <td class="left"><label for="description">Description: </label></td>
-                <td class="right"><textarea name="description" size="5" style="width:200px;"></textarea></td>
+                <td class="right"><textarea name="description" size="5" style="width:500px;height:150px;"></textarea></td>
             </tr>
         <tr>
         <td class="left"></td>

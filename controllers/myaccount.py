@@ -1,221 +1,21 @@
 # -*- coding: utf-8 -*-\
-from tg import expose, flash, require, url, lurl, request, redirect
-from tg.predicates import has_permission
-from tg.i18n import ugettext as _, lazy_ugettext as l_
-from molgears import model
-from molgears.model import DBSession, Projects, User, Group, ProjectTests
-from molgears.model import DBSession, PCompound, PHistory, PStatus, Tags, SCompound, SFiles, LCompound, LPurity, LHistory
-from molgears.model import Compound, Names, History, User, Group, Projects, PAINS1, PAINS2, PAINS3, CompoundsFiles
+from tg import expose, flash, request, redirect
+#from tg.predicates import has_permission
+from tg.i18n import lazy_ugettext as l_
+from molgears.model import DBSession, Projects, User
 from molgears.model.auth import UserLists
 from molgears.lib.base import BaseController
-from molgears.controllers.error import ErrorController
-from webhelpers import paginate
-from molgears.widgets.structure import checksmi
-from sqlalchemy import desc
 
 __all__ = ['AccountController']
-TrybTechniczny = None
-
-class ShowController(BaseController):
-    @expose()
-    def _lookup(self, ulistid, *remainder):
-        pname = request.environ['PATH_INFO'].split('/')[1]
-        userid = request.identity['repoze.who.userid']
-        user = DBSession.query(User).filter(User.user_name == userid).first()
-        ulist = DBSession.query(UserLists).get(ulistid)
-        threshold = float(user.threshold)/100.0
-        items = user.items_per_page
-        if (ulist in user.lists) or (user in ulist.permitusers):
-            if ulist.elements:
-                import pickle
-                elements = pickle.loads(ulist.elements)
-                if ulist.table == 'Compounds':
-                    class MController(BaseController):
-                        @expose('molgears.templates.myaccount.show1')
-                        def index(self, page=1, *args, **kw):
-                            alltags =[tag for tag in DBSession.query(Tags).order_by('name').all()]
-                            compounds = ()
-                            compounds += tuple(DBSession.query(Compound).get(el) for el in elements)
-                            dsc = True
-                            tmpl = ''
-                            selection = None
-                            similarity = None
-                            ulists = [l for l in user.lists]
-                            if kw:
-                                try:
-                                    if isinstance(kw['select'], basestring):
-                                        selection = [kw['select']]
-                                    else:
-                                        selection = [id for id in kw['select']]
-                                except Exception:
-                                    selection = None
-                                if selection and kw.has_key('akcja'):
-                                    argv =''
-                                    for arg in selection:
-                                        argv += '/' + arg
-                                    if kw['akcja'] == u'delete':
-                                        redirect('/myaccount/remove_from_list/%s%s' % (ulistid, argv))
-                                    else:
-                                        flash(l_(u'Action error'), 'error')
-                                        redirect(request.headers['Referer'])
-                            page_url = paginate.PageURL_WebOb(request)
-                            currentPage = paginate.Page(compounds, page, items_per_page=50)
-                            return dict(length=len(currentPage.items), compound=currentPage.items, currentPage=currentPage, tmpl=tmpl, page='molecules', ulistid=ulistid, alltags=alltags, ulists=ulists, similarity=similarity)
-                    mylist = MController()
-                elif ulist.table == 'PCompounds':
-                    class PController(BaseController):
-                        @expose('molgears.templates.myaccount.show2')
-                        def index(self, page=1, *args, **kw):
-                            alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
-                            compounds = ()
-                            compounds += tuple(DBSession.query(PCompound).get(el) for el in elements)
-                            dsc = True
-                            tmpl = ''
-                            selection = None
-                            similarity = None
-                            ulists = [l for l in user.lists]
-                            try:
-                                if isinstance(kw['select'], basestring):
-                                    selection = [kw['select']]
-                                else:
-                                    selection = [id for id in kw['select']]
-                            except Exception:
-                                selection = None
-                            
-                            if selection and kw.has_key('akcja'):
-                                argv =''
-                                for arg in selection:
-                                    argv += '/' + arg
-                                if kw['akcja'] == u'delete':
-                                    redirect('/myaccount/remove_from_list/%s%s' % (ulistid, argv))
-                                else:
-                                    flash(l_(u'Action error'), 'error')
-                                    redirect(request.headers['Referer'])
-                            page_url = paginate.PageURL_WebOb(request)
-                            currentPage = paginate.Page(compounds, page, items_per_page=50)
-                            return dict(length=len(currentPage.items), compound=currentPage.items, currentPage=currentPage, tmpl=tmpl, page='molecules', ulistid=ulistid, alltags=alltags, ulists = ulists, similarity=similarity)
-                    mylist = PController()
-                elif ulist.table == 'SCompounds':
-                    class SController(BaseController):
-                        @expose('molgears.templates.myaccount.show3')
-                        def index(self, page=1, *args, **kw):
-                            alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
-                            compounds = ()
-                            compounds += tuple(DBSession.query(SCompound).get(el) for el in elements)
-                            dsc = True
-                            tmpl = ''
-                            selection = None
-                            similarity = None
-                            ulists = [l for l in user.lists]
-                            try:
-                                if isinstance(kw['select'], basestring):
-                                    selection = [kw['select']]
-                                else:
-                                    selection = [id for id in kw['select']]
-                            except Exception:
-                                selection = None
-                            
-                            if selection and kw.has_key('akcja'):
-                                argv =''
-                                for arg in selection:
-                                    argv += '/' + arg
-                                if kw['akcja'] == u'delete':
-                                    redirect('/myaccount/remove_from_list/%s%s' % (ulistid, argv))
-                                else:
-                                    flash(l_(u'Action error'), 'error')
-                                    redirect(request.headers['Referer'])
-                            page_url = paginate.PageURL_WebOb(request)
-                            currentPage = paginate.Page(compounds, page, items_per_page=50)
-                            return dict(length=len(currentPage.items), compound=currentPage.items, currentPage=currentPage, tmpl=tmpl, page='molecules', ulistid=ulistid, alltags=alltags, ulists = ulists, similarity=similarity)
-                    mylist = SController()
-#                elif ulist.table == 'SCompounds':
-#                    class SController(BaseController):
-#                        @expose('molgears.templates.myaccount.show3')
-#                        def index(self, page=1, *args, **kw):
-#                            alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
-#                            compounds = ()
-#                            compounds += tuple(DBSession.query(SCompound).get(el) for el in elements)
-#                            dsc = True
-#                            tmpl = ''
-#                            selection = None
-#                            similarity = None
-#                            ulists = [l for l in user.lists]
-#                            try:
-#                                if isinstance(kw['select'], basestring):
-#                                    selection = [kw['select']]
-#                                else:
-#                                    selection = [id for id in kw['select']]
-#                            except Exception:
-#                                selection = None
-#                            
-#                            if selection and kw.has_key('akcja'):
-#                                argv =''
-#                                for arg in selection:
-#                                    argv += '/' + arg
-#                                if kw['akcja'] == u'delete':
-#                                    redirect('/myaccount/remove_from_list/%s%s' % (ulistid, argv))
-#                                else:
-#                                    flash(l_(u'Action error'), 'error')
-#                                    redirect(request.headers['Referer'])
-#                            
-#                            currentPage = paginate.Page(compounds, page, items_per_page=50)
-#                            return dict(length=len(currentPage.items), compound=currentPage.items, currentPage=currentPage, tmpl=tmpl, page='molecules', ulistid=ulistid, alltags=alltags, ulists = ulists, similarity=similarity)
-#                    mylist = SController()
-                elif ulist.table == 'LCompounds':
-                    class LController(BaseController):
-                        @expose('molgears.templates.myaccount.show4')
-                        def index(self, page=1, *args, **kw):
-                            alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
-                            compounds = ()
-                            compounds += tuple(DBSession.query(LCompound).get(el) for el in elements)
-                            dsc = True
-                            tmpl = ''
-                            selection = None
-                            similarity = None
-                            ulists = [l for l in user.lists]
-                            try:
-                                if isinstance(kw['select'], basestring):
-                                    selection = [kw['select']]
-                                else:
-                                    selection = [id for id in kw['select']]
-                            except Exception:
-                                selection = None
-                            
-                            if selection and kw.has_key('akcja'):
-                                argv =''
-                                for arg in selection:
-                                    argv += '/' + arg
-                                if kw['akcja'] == u'delete':
-                                    redirect('/myaccount/remove_from_list/%s%s' % (ulistid, argv))
-                                else:
-                                    flash(l_(u'Action error'), 'error')
-                                    redirect(request.headers['Referer'])
-                            page_url = paginate.PageURL_WebOb(request)
-                            currentPage = paginate.Page(compounds, page, items_per_page=50)
-                            return dict(length=len(currentPage.items), compound=currentPage.items, currentPage=currentPage, tmpl=tmpl, page='molecules', ulistid=ulistid, alltags=alltags, ulists = ulists, similarity=similarity)
-                    mylist = LController()
-                else:
-                    mylist = ErrorController()
-            else:
-                flash(l_(u'List error'), 'error')
-                mylist = ErrorController()
-        else:
-            mylist = ErrorController()
-        return mylist, remainder
-
-#########################################
 
 
 class AccountController(BaseController):
     from tg.predicates import not_anonymous
     allow_only = not_anonymous()
-    showlist = ShowController()
     
     @expose('molgears.templates.myaccount.index')
     def index(self):
         """Let the user know that's visiting a protected controller."""
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter(User.user_name == userid).first()
         return dict(user=user, page='index', pname=None)
@@ -223,8 +23,6 @@ class AccountController(BaseController):
     @expose('molgears.templates.myaccount.edit')
     def edit(self):
         """Let the user know that's visiting a protected controller."""
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter(User.user_name == userid).first()
         return dict(user=user, page='index', pname=None)
@@ -232,15 +30,8 @@ class AccountController(BaseController):
     @expose()
     def save(self, *args, **kw):
         """Let the user know that's visiting a protected controller."""
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
         userid = request.identity['repoze.who.userid']
-#        if not(userid == kw['name']):
-#            flash(u'Zła nazwa użytkownika', 'error')
-#            redirect('/users/')
         user = DBSession.query(User).filter(User.user_name == userid).first()
-#        flash(kw)
-#        redirect('/myaccount')
         try:
             old = kw['old_password']
         except Exception:
@@ -284,7 +75,7 @@ class AccountController(BaseController):
                     if threshold >10 and threshold <50:
                         user.threshold = threshold
                     else:
-                        flash(l_(u'Smililarity value should be between 10 and 50'), 'error')
+                        flash(l_(u'Similarity value should be between 10 and 50'), 'error')
                         redirect('/myaccount')
                 if email and user.email_address != email:
                     import re
@@ -317,8 +108,6 @@ class AccountController(BaseController):
     @expose('molgears.templates.myaccount.mylists')
     def mylists(self, page=1, *args, **kw):
         """Let the user know that's visiting a protected controller."""
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter(User.user_name == userid).first()
         mylists = user.lists
@@ -380,8 +169,6 @@ class AccountController(BaseController):
     @expose('molgears.templates.myaccount.sharedlists')
     def sharedlists(self, page=1, *args, **kw):
         """Let the user know that's visiting a protected controller."""
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
         userid = request.identity['repoze.who.userid']
         SharedLists = DBSession.query(UserLists).filter(UserLists.permitusers.any(User.user_name == userid)).all()
         import pickle as pcl
@@ -440,8 +227,6 @@ class AccountController(BaseController):
 
     @expose('molgears.templates.myaccount.editlist')
     def editlist(self, *args, **kw):
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
         """Let the user know that's visiting a protected controller."""
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter(User.user_name == userid).first()
@@ -472,9 +257,7 @@ class AccountController(BaseController):
         return dict(mylist=mylist, user=user, users=users, page='index', pname=None)
         
     @expose('molgears.templates.myaccount.addlist')
-    def addlist(self, *args, **kw):
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
+    def addlist(self, *args, **kw):        
         """Let the user know that's visiting a protected controller."""
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter(User.user_name == userid).first()
@@ -524,8 +307,6 @@ class AccountController(BaseController):
 
     @expose()
     def removelist(self, *args, **kw):
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
         """Let the user know that's visiting a protected controller."""
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter(User.user_name == userid).first()
@@ -548,7 +329,7 @@ class AccountController(BaseController):
     def add_to_list(self, *args, **kw):
         if args:
             listid = args[0]
-            table = args[1]
+#            table = args[1]
             ulist = DBSession.query(UserLists).get(listid)
 
             values = []
@@ -570,8 +351,6 @@ class AccountController(BaseController):
             
     @expose()
     def remove_from_list(self, *args, **kw):
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
         ulistid = args[0]
         ulist = DBSession.query(UserLists).get(ulistid)
         userid = request.identity['repoze.who.userid']
@@ -595,34 +374,5 @@ class AccountController(BaseController):
         else:
             flash(l_(u'Permission denied'), 'error')
             redirect(request.headers['Referer'])
-            
-    @expose()
-    def intersections(self, *args, **kw):
-        if TrybTechniczny and not has_permission('manage'):
-            redirect('/post_logout')
-        if args:
-            ulists = []
-            for arg in args:
-                ulist = DBSession.query(UserLists).get(arg)
-                ulists.appent(ulist)
-            import pickle
-            if ulist and ulist.elements and ulist.elements != u"":
-                elements = pickle.loads(ulist.elements)
-            else:
-                elements = []
-            new_elements = set(elements + values)
-            ulist.elements = pickle.dumps(list(new_elements))
-            flash(l_(u'Task completed successfully'))
-            redirect(request.headers['Referer'])
-        else:
-            flash(l_(u'Args error'), 'error')
-            redirect("/")
 
-        
-    @expose()
-    def pname(self):
-        ulists = DBSession.query(UserLists).all()
-        for ulist in ulists:
-            ulist.pname = u'MDM'
-        flash('ok')
-        redirect('/myaccount')
+

@@ -64,6 +64,10 @@ border-radius: 6px;
     cursor: pointer;
 }
 
+.crud_tab{
+padding-bottom:250px;
+}
+
 /* admin add/edit view */
 .crud_edit label, .crud_add label{
     font-size: 12px;
@@ -71,4 +75,91 @@ border-radius: 6px;
 .crud_edit input, .crud_add input,
 .crud_edit select, .crud_add select{
     width: 15em;
+}
+
+
+/* Hover  menu interface*/
+@-webkit-keyframes hover {
+  50% {
+    -webkit-transform: translateY(-3px);
+    transform: translateY(-3px);
+  }
+
+  100% {
+    -webkit-transform: translateY(-6px);
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes hover {
+  50% {
+    -webkit-transform: translateY(-3px);
+    transform: translateY(-3px);
+  }
+
+  100% {
+    -webkit-transform: translateY(-6px);
+    transform: translateY(-6px);
+  }
+}
+
+.hover {
+  color: #000;
+  display: inline-block;
+  width:100%;
+  float:left;
+  width:28%;
+  position:relative;
+  float:left;
+  margin:2%;
+  padding-top:2%;
+  padding-bottom:2%;
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -moz-box-shadow:    3px 3px 5px 6px #ccc;
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+  box-shadow:         3px 3px 5px 6px #ccc;
+}
+.hover:hover, .hover:focus, .hover:active {
+  color: #000;
+  font-weight:bold;
+  -webkit-transform: translateY(-6px);
+  transform: translateY(-6px);
+  -webkit-animation-name: hover;
+  animation-name: hover;
+  -webkit-animation-duration: 1.5s;
+  animation-duration: 1.5s;
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-direction: alternate;
+  animation-direction: alternate;
+   -moz-box-shadow:    inset 0 0 10px #000000;
+   -webkit-box-shadow: inset 0 0 10px #000000;
+   box-shadow:         inset 0 0 10px #000000;
+}
+
+.hover_active{
+  color: #000;
+  display: inline-block;
+  width:100%;
+  float:left;
+  width:28%;
+  position:relative;
+  float:left;
+  margin:2%;
+  padding-top:2%;
+  padding-bottom:2%;
+  color: #000;
+  font-weight:bold;
+   -moz-box-shadow:    inset 0 0 10px #000000;
+   -webkit-box-shadow: inset 0 0 10px #000000;
+   box-shadow:         inset 0 0 10px #000000;    
 }

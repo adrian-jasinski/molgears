@@ -63,10 +63,6 @@
             <td><input id="accept" type="text" name="effort_name" value="${effort.name}"   /></td>
         </tr>
         <tr>
-            <td><b style="color:red;  font-size: 80%;">*</b> Reaction path: </td>
-            <td><span py:if="effort.reaction">${effort.reaction[0].name}</span><span py:if="effort.rxnfile">${effort.rxnfile.name}<br /></span><input type="file" name="reaction" /> </td>
-        </tr>
-        <tr>
             <td><label for="notes">Notes: </label></td>
             <td><textarea id="notes" type="text" name="notes" value="${effort.notes}">${effort.notes}</textarea></td>
         </tr>

@@ -8,6 +8,7 @@
 
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" py:if="False"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
   <title>Molecules Database</title>
 </head>
 
@@ -15,18 +16,19 @@
 <?python
     from tg.predicates import has_permission
 ?>
-<div class="accept">
-   <h3 style="margin-left:200px;"> <a py:if="has_permission('manage')" class="add_link" href="${tg.url('/create_project')}" >Create new project</a><br /> <a class="add_link" href="${tg.url('/create_tags')}" >Add tags</a></h3>
-  <div id="getting_started">
-    <h2>Select project:</h2>
+<div class="accept" style="margin:0 auto;">
+  <div id="getting_started" style="width:600px;margin:0 auto;">
+    <h2>Select a project:</h2>
     <ol id="getting_started_steps">
     
-    <py:choose test="projects!=None">
+    <py:choose test="projects and projects!=None">
       <py:when test="True">
         <py:for each="project in projects">
-            <li py:if="project.name in perms" class="getting_started">
-                <h3><a href="${tg.url('/'+project.name)}">${project.name}</a></h3>
-                <p>Description:<br /> <span style="margin-left:20px;">${project.description}</span></p>
+            <li class="getting_started">
+                <h3>
+                    <a href="${tg.url('/'+project.name)}">${project.name}</a>
+                </h3>
+                <p><span style="margin-left:20px;">${project.description}</span></p>
             </li>
         </py:for>
       </py:when>
@@ -36,9 +38,8 @@
     </ol>
   </div>
   <div class="clearingdiv" />
-  <div class="notice"> All available projects.
-  </div>
   </div>
    <div style="clear:both;" />
+<br /><div class="notice"> All available projects.</div>
 </body>
 </html>

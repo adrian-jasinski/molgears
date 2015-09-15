@@ -2,8 +2,6 @@
 """Setup the molgears application"""
 from __future__ import print_function
 
-import logging
-from tg import config
 from molgears import model
 import transaction
 

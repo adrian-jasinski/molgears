@@ -114,7 +114,7 @@ function toggle() {
             </div>
         </div>
         <div class="details2">
-            <a href="${tg.url('/'+pname+'/molecules/')}?smiles=${str(compound.structure).replace('+', '%2B').replace('#','%23')}&amp;search=Szukaj&amp;method=smililarity"><img src="${tg.url('/img')}/${compound.gid}.png" height="270" width="270" id="neutralny" /></a>
+            <a href="${tg.url('/'+pname+'/molecules/')}?smiles=${str(compound.structure).replace('+', '%2B').replace('#','%23')}&amp;search=Szukaj&amp;method=similarity"><img src="${tg.url('/img')}/${compound.gid}.png" height="270" width="270" id="neutralny" /></a>
         </div>
     </div>
 <div style="clear:both;"/>
@@ -144,11 +144,6 @@ function toggle() {
       <li><a href="#menu" class="${len(lcompounds)==0 and 'blocked' or ''}">Library (${len(lcompounds)})</a>
         <ul py:if="lcompounds">
 			<li py:for="lcomp in lcompounds"><a href="${tg.url('/'+pname+'/library/details')}/${lcomp.gid}/${lcomp.id}">${lcomp.gid}-${lcomp.seq}</a></li>
-		</ul>
-      </li>
-        <li><a href="#menu" class="${sum(len(lc.mdm2) for lc in lcompounds)==0 and 'blocked' or ''}">Binding (${sum(len(lc.mdm2) for lc in lcompounds)})</a>
-        <ul py:if="lcompounds">
-			<li py:for="lcomp in lcompounds"><a href="${tg.url('/'+pname+'/results/binding/details')}/${lcomp.gid}/${lcomp.id}">${lcomp.gid}-${lcomp.seq}</a></li>
 		</ul>
       </li>
         <li><a href="#menu" class="${sum(len(lc.ctoxicity) for lc in lcompounds)==0 and 'blocked' or ''}">Ctoxicity (${sum(len(lc.ctoxicity) for lc in lcompounds)})</a>

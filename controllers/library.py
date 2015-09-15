@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 """Sample controller with all its actions protected."""
-import tg
-from tg import expose, flash, redirect, request, url, lurl
-from tg.i18n import ugettext as _, lazy_ugettext as l_
-from molgears import model
-from molgears.model import DBSession, Tags, SFiles, SPurity, LCompound, LPurity, LHistory, Group, Names, SCompound
-from molgears.model import Compound, Names, History, User, Projects, PCompound, LContentFiles, LContent, MinusState
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
+from molgears.model import DBSession, Tags, SFiles, LCompound, LPurity, LHistory, Group, Names, SCompound
+from molgears.model import Compound, User, Projects, PCompound, LContentFiles, LContent, MinusState
 from molgears.model.auth import UserLists
 from molgears.lib.base import BaseController
-import transaction, os
+import os
 from pkg_resources import resource_filename
-from sqlalchemy import desc, asc
+from sqlalchemy import desc
 
 from rdkit import Chem
 from molgears.widgets.structure import checksmi
@@ -105,7 +103,7 @@ class LibraryController(BaseController):
                     if checksmi(smiles):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
+                        if method == 'similarity':
                             from razi.postgresql_rdkit import tanimoto_threshold
                             DBSession.execute(tanimoto_threshold.set(threshold))
                             query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
@@ -183,9 +181,8 @@ class LibraryController(BaseController):
                         if type(tagi) != type([]):
                             tagi = [int(tags)]
                     else:
-                        tagi = [int(id) for id in tags]
-        
-                    import sqlalchemy
+                        tagi = [int(tid) for tid in tags]
+
                     lcompound = lcompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
 
         if dsc:
@@ -246,13 +243,13 @@ class LibraryController(BaseController):
                     size = 100, 100
                 if kw['file_type'] == 'pdf':
                     filename = userid + '_selected.pdf'
-                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                    from xhtml2pdf.pisa import CreatePDF
                     from tg.render import render as render_template
                     import cStringIO
                     html = render_template({"length":len(lcompounds), "lcompound":lcompounds, "options":options, "size":size}, "genshi", "molgears.templates.users.library.print2", doctype=None)
                     dest = './molgears/files/pdf/' + filename
                     result = file(dest, "wb")
-                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                     result.close()
                     import paste.fileapp
                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -591,7 +588,7 @@ class LibraryController(BaseController):
         users.sort()
         try:
             tags = [tag for tag in lcompound.mol.tags]
-        except Exception as msg:
+        except Exception:
             tags = [lcompound.mol.tags]
             pass
         return dict(lcompound=lcompound, alltags=alltags, tags=tags, come_from=come_from, users=users, page='library', pname=pname)
@@ -606,7 +603,7 @@ class LibraryController(BaseController):
             if isinstance(kw['text_tags'], basestring):
                 tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
             else:
-                tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
+                tagi = [DBSession.query( Tags ).get(int(tid)) for tid in kw['text_tags']]
         except Exception as msg:
             flash(l_(u'Tags error: %s' %msg))
             redirect(request.headers['Referer'])
@@ -618,7 +615,7 @@ class LibraryController(BaseController):
             changes += tag.name + ', '
         lhistory = LHistory()
         lhistory.gid = lcompound.mol.gid
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         lhistory.project = pname
         lhistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         lhistory.user = userid
@@ -952,12 +949,12 @@ class LibraryController(BaseController):
                             tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
                         else:
                             tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
-                    except Exception as msg:
+                    except Exception:
                         tagi = None
                     lcompound = DBSession.query(LCompound).filter_by(id=int(arg)).join(LCompound.mol).filter(Compound.project.any(Projects.name==pname)).first()
                     lhistory = LHistory()
                     lhistory.gid = lcompound.mol.gid
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     lhistory.project = pname
                     lhistory.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     lhistory.user = userid
@@ -1002,7 +999,7 @@ class LibraryController(BaseController):
             filename = args[-1]
             ext = args[-2]
             filepath = os.path.join('./molgears/files/download/', str(filename + '.' + ext))
-            userid = request.identity['repoze.who.userid']
+#            userid = request.identity['repoze.who.userid']
         if has_permission('user'):
             if len(args)>=3:
                 lcompound = ()
@@ -1148,7 +1145,7 @@ class LibraryController(BaseController):
                     history.user = userid
                     history.status = u'nowy związek'
                     history.date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
+#                    project = DBSession.query(Projects).filter(Projects.name==pname).first()
                     history.project = pname
                     history.changes = u'Usuwanie związku o numerze GID: %s' % lid
                     lcompound.history += [history]
@@ -1169,10 +1166,9 @@ class LibraryController(BaseController):
             Delete compound from User List.
         """
         ulist = DBSession.query(UserLists).get(ulist_id)
-        pname = request.environ['PATH_INFO'].split('/')[1]
+#        pname = request.environ['PATH_INFO'].split('/')[1]
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter_by(user_name=userid).first()
-        ulists = [l for l in user.lists if l.table == 'LCompounds']
         if (ulist in user.lists) or (user in ulist.permitusers):
             if ulist.elements:
                 import pickle

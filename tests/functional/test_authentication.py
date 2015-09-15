@@ -2,7 +2,7 @@
 """
 Integration tests for the :mod:`repoze.who`-powered authentication sub-system.
 
-As molgears grows and the authentication method changes, only these tests
+As example grows and the authentication method changes, only these tests
 should be updated.
 
 """
@@ -32,7 +32,7 @@ class TestAuthentication(TestController):
 
         """
         # Requesting a protected area
-        resp = self.app.get('/secc/', status=302)
+        resp = self.app.get('/admin/', status=302)
         ok_( resp.location.startswith('http://localhost/login'))
         # Getting the login form:
         resp = resp.follow(status=200)
@@ -46,7 +46,7 @@ class TestAuthentication(TestController):
         initial_page = post_login.follow(status=302)
         ok_('authtkt' in initial_page.request.cookies,
             "Session cookie wasn't defined: %s" % initial_page.request.cookies)
-        ok_(initial_page.location.startswith('http://localhost/secc/'),
+        ok_(initial_page.location.startswith('http://localhost/admin/'),
             initial_page.location)
 
     def test_voluntary_login(self):
@@ -63,7 +63,7 @@ class TestAuthentication(TestController):
         home_page = post_login.follow(status=302)
         ok_('authtkt' in home_page.request.cookies,
             'Session cookie was not defined: %s' % home_page.request.cookies)
-        eq_(home_page.location, 'http://localhost/')
+        eq_(home_page.location, 'http://localhost/start')
 
     def test_logout(self):
         """Logouts must work correctly"""

@@ -1,26 +1,20 @@
 # -*- coding: utf-8 -*-
 """Sample controller with all its actions protected."""
-import tg
-from tg import expose, flash, redirect, request, url, lurl
-from tg.i18n import ugettext as _, lazy_ugettext as l_
-from molgears import model
-from molgears.model import DBSession, Tags, SFiles, SPurity, LCompound, LPurity, LHistory, Group, Names
-from molgears.model import Compound, Names, History, User, Projects, SCompound, PCompound, ProjectTests
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
+from molgears.model import DBSession, Tags, LCompound, LPurity, Names
+from molgears.model import Compound, User, Projects
 from molgears.model.auth import UserLists
 from molgears.lib.base import BaseController
-from molgears.controllers.error import ErrorController
-import transaction, os
-from pkg_resources import resource_filename
-from sqlalchemy import desc, asc
+import os
+from sqlalchemy import desc
 
 from rdkit import Chem
 from molgears.widgets.structure import checksmi
-from molgears.widgets.format import raw_path_basename
 from datetime import datetime
 
 #from tg.decorators import paginate
 from webhelpers import paginate
-from tg.predicates import has_permission
 from molgears.widgets.rgbTuple import htmlRgb, htmlRgb100, Num2Rgb
 
 from molgears.controllers.ctoxicity import CytotoxicityController
@@ -36,10 +30,6 @@ class ResultsController(BaseController):
         project = DBSession.query(Projects).filter_by(name=pname).first()
         page_url = paginate.PageURL_WebOb(request)
         import pickle
-        try:
-            htrfproteins = pickle.loads([test.cell_line for test in project.tests if test.name == 'HTRF'][0])
-        except:
-            htrfproteins = None
         try:
             cells = pickle.loads([test.cell_line for test in project.tests if test.name == 'CT'][0])
         except:
@@ -132,8 +122,8 @@ class ResultsController(BaseController):
                     if checksmi(smiles):
                         from razi.functions import functions
                         from razi.expression import TxtMoleculeElement
-                        if method == 'smililarity':
-                            from razi.postgresql_rdkit import tanimoto_threshold
+                        if method == 'similarity':
+#                            from razi.postgresql_rdkit import tanimoto_threshold
                             query_bfp = functions.morgan_b(TxtMoleculeElement(smiles), 2)
                             constraint = Compound.morgan.tanimoto_similar(query_bfp)
                             tanimoto_sml = Compound.morgan.tanimoto_similarity(query_bfp).label('tanimoto')
@@ -327,11 +317,8 @@ class ResultsController(BaseController):
                         if type(tagi) != type([]):
                             tagi = [int(tags)]
                     else:
-                        tagi = [int(id) for id in tags]
+                        tagi = [int(tid) for tid in tags]
                     lcompound = lcompound.filter(Compound.tags.any(Tags.id.in_(tagi)))
-                if kw.has_key('text_test') and kw['text_test'] != u'':
-                    test = [int(kw['text_test'])]
-                    lcompound = lcompound.filter(LCompound.mdm2.any(ResultsFP.assey_id.in_(test)))
                     
         if dsc:
             lcompound = lcompound.order_by(desc(order).nullslast())
@@ -391,13 +378,13 @@ class ResultsController(BaseController):
                     size = 100, 100
                 if kw['file_type'] == 'pdf':
                     filename = userid + '_selected.pdf'
-                    from xhtml2pdf.pisa import CreatePDF, startViewer
+                    from xhtml2pdf.pisa import CreatePDF
                     from tg.render import render as render_template
                     import cStringIO
                     html = render_template({"length":len(lcompounds), "lcompound":lcompounds, "cells":cells, "options":options, "size":size}, "genshi", "molgears.templates.users.results.print2", doctype=None)
                     dest = './molgears/files/pdf/' + filename
                     result = file(dest, "wb")
-                    pdf = CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
+                    CreatePDF(cStringIO.StringIO(html.encode("UTF-8")), result, encoding="utf-8")
                     result.close()
                     import paste.fileapp
                     f = paste.fileapp.FileApp('./molgears/files/pdf/'+ filename)
@@ -787,10 +774,10 @@ class ResultsController(BaseController):
             Delete compound from User List.
         """
         ulist = DBSession.query(UserLists).get(ulist_id)
-        pname = request.environ['PATH_INFO'].split('/')[1]
+#        pname = request.environ['PATH_INFO'].split('/')[1]
         userid = request.identity['repoze.who.userid']
         user = DBSession.query(User).filter_by(user_name=userid).first()
-        ulists = [l for l in user.lists if l.table == 'Results']
+#        ulists = [l for l in user.lists if l.table == 'Results']
         if (ulist in user.lists) or (user in ulist.permitusers):
             if ulist.elements:
                 import pickle

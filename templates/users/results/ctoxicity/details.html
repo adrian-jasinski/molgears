@@ -112,7 +112,7 @@ function toggle() {
                 </div>
             </div>
             <div class="details2">
-                <a href="${tg.url('/'+pname+'/results/ctoxicity')}/?smiles=${str(lcompound.mol.structure).replace('+', '%2B').replace('#','%23')}&amp;search=Szukaj&amp;method=smililarity"><img src="${tg.url('/img')}/${lcompound.gid}.png" height="270" width="270" id="neutralny" /></a>
+                <a href="${tg.url('/'+pname+'/results/ctoxicity')}/?smiles=${str(lcompound.mol.structure).replace('+', '%2B').replace('#','%23')}&amp;search=Szukaj&amp;method=similarity"><img src="${tg.url('/img')}/${lcompound.gid}.png" height="270" width="270" id="neutralny" /></a>
             </div>
         </div>
         <div style="clear:both;"/>
@@ -143,11 +143,6 @@ function toggle() {
               <li><a href="${lcompound and ('/molgears/'+pname+'/library/details/'+str(lcompound.gid)+'/'+str(lcompound.id)) or '#menu'}" class="${len(lcompounds)==0 and 'blocked' or ''}">Library (${len(lcompounds)})</a>
                 <ul py:if="lcompounds">
                     <li py:for="lcomp in lcompounds"><a href="${tg.url('/'+pname+'/library/details')}/${lcomp.gid}/${lcomp.id}" style="background-color:${lcompound and lcompound.id == lcomp.id and '#e0e0e0' or ''}">${lcomp.gid}-${lcomp.seq}</a></li>
-                </ul>
-              </li>
-              <li><a href="${lcompound and ('/molgears/'+pname+'/results/binding/details/'+str(lcompound.gid)+'/'+str(lcompound.id)) or '#menu'}" class="${sum(len(lc.mdm2) for lc in lcompounds)==0 and 'blocked' or ''}">Binding (${sum(len(lc.mdm2) for lc in lcompounds)})</a>
-                <ul py:if="lcompounds">
-                    <li py:for="lcomp in lcompounds"><a href="${tg.url('/'+pname+'/results/binding/details')}/${lcomp.gid}/${lcomp.id}" style="background-color:${lcompound and lcompound.id == lcomp.id and '#e0e0e0' or ''}">${lcomp.gid}-${lcomp.seq}</a></li>
                 </ul>
               </li>
               <li><a href="#menu" class="selected">Ctoxicity (${sum(len(lc.ctoxicity) for lc in lcompounds)})</a></li>

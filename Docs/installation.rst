@@ -11,7 +11,7 @@ but general steps should work for other systems
 
 .. _installing-ubuntu:
 
-Installing on Ubuntu
+Installing on Debian / Ubuntu
 =============================
 
 Installation steps one by one.

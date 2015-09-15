@@ -24,7 +24,7 @@
             <li><a href="${tg.url('/'+pname+'/synthesis')}">Show my</a></li>
         </ul>
     </div>
-    <div style="clear:both;"/>    
+    <div style="clear:both;"/>
      <hr style="border: 2px ridge #000;" />
      <div>
         <ul>
@@ -78,7 +78,7 @@
             </td>
         </tr>
         <tr>
-            <td><label class="etap_max" for="etap"><b style="color:red;font-size: 80%;">*</b> Finished phase: </label></td>
+            <td><label class="etap_max" for="etap"><b style="color:red;font-size: 80%;">*</b> Current phase: </label></td>
             <td>
                 <select name="etap">
                 <py:for each="i in range(15)">
@@ -102,7 +102,7 @@
             <td><label for="reason"><b style="color:red;font-size: 80%;">*</b> Reason for phase changing:  </label></td>
             <td><textarea id="notes" name="reason" rows="2"></textarea></td>
         </tr>
-            <tr><td></td><td><input id="submit" type="submit" name="submit" value="phase change" /></td></tr>
+            <tr><td></td><td><input id="submit" type="submit" name="submit" value="Submit" /></td></tr>
         <tr>
         <td></td>
         <td>
@@ -112,5 +112,6 @@
     </table>
   </form>
 </div>
+<div style="clear:both;"/>
 </body>
 </html>

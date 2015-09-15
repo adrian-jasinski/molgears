@@ -328,7 +328,7 @@ def main():
         if o in ("-h", "--help"):
             print __doc__
             sys.exit(0)
-    imgpath = '/home/adrian/test2.png'
+    imgpath = '~/test2.png'
     filepath = sys.argv[1]
     X, M = read_many(filepath)
     print 'X', X
@@ -382,7 +382,7 @@ def main_one():
             sys.exit(0)
     filepath = sys.argv[1]
     X, M = read_one(filepath)
-    imgpath = '/home/adrian/test2.png'
+    imgpath = '~/test2.png'
     print 'X', X, len(X)
     print 'M', M, len(M[0])
     top=[]

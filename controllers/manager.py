@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
 """Sample controller with all its actions protected."""
-import tg
-from tg import expose, flash, tmpl_context, redirect, request, url, lurl
-from tg.i18n import ugettext as _, lazy_ugettext as l_
+from tg import expose, flash, redirect, request
+from tg.i18n import lazy_ugettext as l_
 from tg.predicates import has_permission
-from molgears import model
-from molgears.model import DBSession, metadata, PCompound, PHistory, PStatus, Tags, SCompound, SStatus, SFiles, SHistory, SPurity, LCompound, LPurity, LHistory, Group, RHistory, Reagents
-from molgears.model import Compound, Names, History, User, Projects
-import transaction, os
+from molgears.model import DBSession, PCompound, PHistory, Tags, SCompound, SStatus, SFiles, SHistory, LCompound, LHistory, Group, RHistory, Reagents
+from molgears.model import Compound, History, User, Projects
+import os
 from pkg_resources import resource_filename
-from sqlalchemy import desc, asc
+from sqlalchemy import desc
 from molgears.lib.base import BaseController
-from rdkit import Chem
-from molgears.widgets.structure import create_image, addsmi, checksmi
 from datetime import datetime
-
-from tg.decorators import paginate, with_trailing_slash
 from webhelpers import paginate
 
 __all__ = ['ManagerController']
@@ -43,11 +37,7 @@ class ManagerController(BaseController):
         
         hist = history +phistory + shistory + lhistory
         hist = sorted(hist, key=lambda hist: hist.date, reverse=True)[0:30]
-        userid = request.identity['repoze.who.userid']
-        user = DBSession.query(User).filter_by(user_name=userid).first()
-        items = user.items_per_page
         tmpl = ''
-        dsc = True
         return dict(history=hist, tmpl=tmpl, one_day=one_day, now=now, page='kierownik', pname=pname)
         
     @expose('molgears.templates.users.kierownik.index')
@@ -64,11 +54,7 @@ class ManagerController(BaseController):
         
         hist = history +phistory + shistory + lhistory + rhistory
         hist = sorted(hist, key=lambda hist: hist.date, reverse=True)[0:30]
-        userid = request.identity['repoze.who.userid']
-        user = DBSession.query(User).filter_by(user_name=userid).first()
-        items = user.items_per_page
         tmpl = ''
-        dsc = True
         return dict(history=hist, tmpl=tmpl, one_day=one_day, now=now, page='kierownik', pname=pname)
 
 
@@ -92,7 +78,6 @@ class ManagerController(BaseController):
     @expose('molgears.templates.users.kierownik.edit')
     def edit(self, id):
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         id = int(id)
         scompound = DBSession.query( SCompound ).get(id)
         alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
@@ -103,7 +88,7 @@ class ManagerController(BaseController):
         come_from = request.headers['Referer']
         try:
             tags = [tag for tag in scompound.mol.tags]
-        except Exception as msg:
+        except Exception:
             tags = [scompound.mol.tags]
             pass
         try:
@@ -116,20 +101,9 @@ class ManagerController(BaseController):
     @expose()
     def put(self, *args, **kw):
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         sid = int(args[0])
         userid = request.identity['repoze.who.userid']
         scompound = DBSession.query(SCompound).get(sid)
-
-        try:
-            if isinstance(kw['text_tags'], basestring):
-                tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
-            else:
-                tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
-        except Exception as msg:
-            flash(l_(u'Tags error: %s' %msg))
-            redirect(request.headers['Referer'])
-        
         shistory = SHistory()
         shistory.gid = scompound.mol.gid
         shistory.user = userid
@@ -638,7 +612,7 @@ class ManagerController(BaseController):
                         tagi = [DBSession.query( Tags ).get(int(kw['deltags']))]
                     else:
                         tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['deltags']]
-                except Exception as msg:
+                except Exception:
                     tagi = None
                 if tagi:
                     for tag in tagi:
@@ -669,7 +643,7 @@ class ManagerController(BaseController):
                     flash(l_(u'Task completed successfully'))
                     DBSession.add(tag)
                     DBSession.flush()
-                    alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
+                    alltags =[tg for tg in DBSession.query(Tags).order_by('name').all() ]
                 else:
                     flash(l_(u'Name required'), 'warning')
         return dict(alltags=alltags, page='kierownik', pname=pname)
@@ -677,7 +651,6 @@ class ManagerController(BaseController):
     @expose('molgears.templates.users.kierownik.multiedit')
     def multiedit(self, *args, **kw):
         pname = request.environ['PATH_INFO'].split('/')[1]
-        project = DBSession.query(Projects).filter(Projects.name==pname).first()
         alltags =[tag for tag in DBSession.query(Tags).order_by('name').all() ]
         principals = DBSession.query (Group).get(3)
         owners = DBSession.query (Group).get(2)
@@ -709,7 +682,7 @@ class ManagerController(BaseController):
                             tagi = [DBSession.query( Tags ).get(int(kw['text_tags']))]
                         else:
                             tagi = [DBSession.query( Tags ).get(int(id)) for id in kw['text_tags']]
-                    except Exception as msg:
+                    except Exception:
                         tagi = None
                     scompound = DBSession.query(SCompound).get(int(arg))
                     shistory = SHistory()

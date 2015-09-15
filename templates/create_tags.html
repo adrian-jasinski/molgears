@@ -33,21 +33,22 @@ i++;
 </head>
 <body>
 <div id="left_content" style="display:block;float:left;">
-    <h4 style="text-align:center;">Add project</h4>
+    <h4 style="text-align:center;">Add tags</h4>
     <div style="clear:both;"/>
      <hr style="border: 2px ridge #000;" />
 </div>
 <div class="accept" style="float:None;width:None;border:1px solid white">
-    <h2 style="text-align:center;">Create new project</h2>
+    <h2 style="text-align:center;">Create new tags</h2>
     <form action="${tg.url('/create_tags')}" enctype="multipart/form-data" method="post" name="form">
         <table  style="margin:0 auto;">
             <tr>
                 <td class="left">
-                    <div class="two"><input type="button" class="name" onclick="textBoxCreate()" value="Add next" /></div>
+                    <div class="two"><label for="Tag_Name_1"><b style="color:red;  font-size: 80%;">*</b> Tags Names: </label></div>
                 </td>
                 <td class="right">
                     <input type="text" name="Tag_Name_1" placeholder="Tag_Name_1" />
                     <p id="myForm"></p>
+                    <input type="button" class="name" onclick="textBoxCreate()" value="Add next" />
                 </td>
             </tr>
         <tr>
