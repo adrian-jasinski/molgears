@@ -1,7 +1,3 @@
-# molgears
-molgears
-
-
 MolGears
 ==================
 
