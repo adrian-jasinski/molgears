@@ -62,6 +62,10 @@ or use git::
     (tg2env)$ cd ~/tg2env/molgears/
     (tg2env)$ git clone https://github.com/admed/molgears
 
+install it::
+    (tg2env)$ python setup.py install
+
+
 
 ----------------------------------------------------    
 2. Build rdkit from source code with INCHI support
