@@ -371,9 +371,14 @@ Phase changing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Each molecule can have many synthesis path. Each path is represented by efford record. The number of added efforts is represented in Effort column in Synthesis Table.
-Click this number to view all efforts list or add new:
+Click this number to view all efforts list:
 
  .. image:: _static/efforts_list.png
+        :align: center
+
+ or add new:
+
+  .. image:: _static/add_effort.png
         :align: center
         
 To change the Phase for compound choose "Change of phase" in RMB menu and than optionally add LSO number and Notes:
@@ -381,3 +386,8 @@ To change the Phase for compound choose "Change of phase" in RMB menu and than o
  .. image:: _static/phase_change.png
         :align: center
         
+
+Last phase require adding analytics data:
+
+ .. image:: _static/add_analytics.png
+        :align: center
