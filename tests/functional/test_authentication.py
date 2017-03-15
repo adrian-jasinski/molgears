@@ -2,7 +2,7 @@
 """
 Integration tests for the :mod:`repoze.who`-powered authentication sub-system.
 
-As example grows and the authentication method changes, only these tests
+As molgears grows and the authentication method changes, only these tests
 should be updated.
 
 """
@@ -22,7 +22,6 @@ class TestAuthentication(TestController):
     """
 
     application_under_test = 'main'
-
     def test_forced_login(self):
         """Anonymous users are forced to login
 
@@ -33,7 +32,7 @@ class TestAuthentication(TestController):
         """
         # Requesting a protected area
         resp = self.app.get('/admin/', status=302)
-        ok_( resp.location.startswith('http://localhost/login'))
+        ok_(resp.location.startswith('http://localhost/login'))
         # Getting the login form:
         resp = resp.follow(status=200)
         form = resp.form
@@ -63,7 +62,7 @@ class TestAuthentication(TestController):
         home_page = post_login.follow(status=302)
         ok_('authtkt' in home_page.request.cookies,
             'Session cookie was not defined: %s' % home_page.request.cookies)
-        eq_(home_page.location, 'http://localhost/start')
+        eq_(home_page.location, 'http://localhost/')
 
     def test_logout(self):
         """Logouts must work correctly"""
@@ -82,3 +81,11 @@ class TestAuthentication(TestController):
         ok_(not authtkt or authtkt == 'INVALID',
             'Session cookie was not deleted: %s' % home_page.request.cookies)
         eq_(home_page.location, 'http://localhost/')
+
+    def test_failed_login_keeps_username(self):
+        """Wrong password keeps user_name in login form"""
+        resp = self.app.get('/login_handler?login=manager&password=badpassword',
+                            status=302)
+        resp = resp.follow(status=200)
+        ok_('Invalid Password' in resp, resp)
+        eq_(resp.form['login'].value, 'manager')

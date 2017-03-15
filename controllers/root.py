@@ -71,7 +71,7 @@ It contains subcontrolers:
 #        flash(l_(u'Alpha version. Please send error reporting to: adrian.jasisnki@adamed.com.pl. \t\t :)'), 'warning')
         return dict(page='start', projects=user_projects, pname=None)
 
-    @expose('chemdb.templates.login')
+    @expose('molgears.templates.login')
     def login(self, came_from=lurl('/start')):
         """Start the user login."""
         login_counter = request.environ.get('repoze.who.logins', 0)

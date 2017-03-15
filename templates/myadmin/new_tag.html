@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/admin.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+<script>
+
+var i = 2; // Global Variable for Name
+/*
+=================
+Creating Text Box for name field in the Form.
+=================
+*/
+function textBoxCreate(){
+var y = document.createElement("INPUT");
+var br = document.createElement("br");
+y.setAttribute("type", "text");
+y.setAttribute("Placeholder", "Tag_Name_" + i);
+y.setAttribute("Name", "Tag_Name_" + i);
+document.getElementById("myForm").appendChild(y);
+document.getElementById("myForm").appendChild(br);
+i++;
+}
+</script>
+  <title>Admin Tags</title>
+</head>
+
+<body>
+<div class="accept" style="width:100%;text-align: center;">
+    <div style="width: 30%;margin: 0 auto;text-align:center;">
+        <a class="hover" href="${tg.url('/admin/users')}">
+            <div class="box_link"><img src="${tg.url('/images/users.png')}" border="0" style="width:64px;" /><br />Users</div>
+        </a>
+        <a class="hover" href="${tg.url('/admin/projects')}">
+            <div class="box_link"><img src="${tg.url('/images/project.png')}" border="0" style="width:64px;" /><br />Projects</div>
+        </a>
+        <a class="hover_active" href="${tg.url('/admin/tags')}">
+            <div class="box_link"><img src="${tg.url('/images/tags.png')}" border="0" style="width:64px;" /><br />Tags</div>
+        </a>
+    </div>
+    
+    <div class="crud_table" style="width:100%;margin:0 auto;margin-top:20px;">
+        <div class="crud_tab">
+            <h2 style="text-align:center;">Create new tags</h2>
+            <form action="${tg.url('/admin/new_tag')}" enctype="multipart/form-data" method="post" name="form">
+            <table class="grid" style="width:400px;">
+                <tr>
+                    <td  style="text-align:center;margin:0 auto;">
+                        <p id="myForm"><input type="text" name="Tag_Name_1" placeholder="Tag_Name_1" /></p>
+                        <input type="button" class="name" onclick="textBoxCreate()" value="Add next" />
+                    </td>
+                </tr>
+                <tr>
+                    <td  style="text-align:center;margin:0 auto;"><input type="submit" name="submit" value="Save" style="width:100px;" /><input type="reset" value="Reset" style="width:100px;" /></td></tr>
+                <tr>
+                    <td  style="text-align:center;margin:0 auto;">
+                        <br /><b style="color:red;  font-size: 80%;">*</b>  - Required fields.
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" name="come_from" value="${come_from}" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="clear:both;"/>
+</body>
+</html>

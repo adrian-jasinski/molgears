@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/admin.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+<script>
+/*
+=================
+Creating Text Box for name field in the Form.
+=================
+*/
+var i =2;
+function CreateCTLine(){
+var y = document.createElement("INPUT");
+y.setAttribute("type", "text");
+y.setAttribute("Placeholder", "Cell_Line_" + i);
+y.setAttribute("Name", "Cell_Line_" + i);
+document.getElementById("CT_LINE").appendChild(y);
+i++;
+}
+var j =2;
+function CreateFPLine(){
+var y = document.createElement("INPUT");
+y.setAttribute("type", "text");
+y.setAttribute("Placeholder", "FP_Line_" + j);
+y.setAttribute("Name", "FP_Line_" + j);
+document.getElementById("FP_LINE").appendChild(y);
+j++;
+}
+var k =2;
+function CreateHTRFLine(){
+var y = document.createElement("INPUT");
+y.setAttribute("type", "text");
+y.setAttribute("Placeholder", "HTRF_Line_" + k);
+y.setAttribute("Name", "HTRF_Line_" + k);
+document.getElementById("HTRF_LINE").appendChild(y);
+k++;
+}
+</script>
+  <title>Admin Projects</title>
+</head>
+
+<body>
+<?python
+from pickle import loads
+?>
+<div class="accept" style="width:100%;text-align: center;">
+    <div style="width: 30%;margin: 0 auto;text-align:center;">
+        <a class="hover" href="${tg.url('/admin/users')}">
+            <div class="box_link"><img src="${tg.url('/images/users.png')}" border="0" style="width:64px;" /><br />Users</div>
+        </a>
+        <a class="hover_active" href="${tg.url('/admin/projects')}">
+            <div class="box_link"><img src="${tg.url('/images/project.png')}" border="0" style="width:64px;" /><br />Projects</div>
+        </a>
+        <a class="hover" href="${tg.url('/admin/tags')}">
+            <div class="box_link"><img src="${tg.url('/images/tags.png')}" border="0" style="width:64px;" /><br />Tags</div>
+        </a>
+    </div>
+    
+    <div class="crud_table" style="width:100%;margin:0 auto;margin-top:20px;">
+        <div class="crud_tab">
+            <h2 style="text-align:center;">Create project</h2>
+            <form action="${tg.url('/admin/new_project')}" enctype="multipart/form-data" method="post" name="form">
+            <table class="grid" style="width:700px;text-align:left;">
+                <tr>
+                    <td class="left"><label for="name"><b style="color:red;font-size:80%;">*</b> Name: </label></td>
+                    <td class="right"><input type="text" name="name" style="width:200px;" /></td>
+                </tr>
+                <tr>
+                    <td class="left" style="vertical-align:text-top;width:100px;">
+                        <label for="FP_Line_1"><b style="color:red;  font-size: 80%;">*</b> FP Lines: </label>
+                    </td>
+                    <td class="right">
+                        <p id="FP_LINE"><input type="text" name="FP_Line_1" placeholder="FP_Line_1" /></p>
+                        <div class="two"><input type="button" class="name" onclick="CreateFPLine()" value="Add next" /></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left" style="vertical-align:text-top;width:100px;">
+                        <label for="Cell_Line_1"><b style="color:red;  font-size: 80%;">*</b> Cell Lines: </label>
+                    </td>
+                    <td class="right">
+                        <p id="CT_LINE"><input type="text" name="Cell_Line_1" placeholder="Cell_Line_1" /></p>
+                        <div class="two"><input type="button" class="name" onclick="CreateCTLine()" value="Add next" /></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left" style="vertical-align:text-top;width:100px;">
+                        <label for="HTRF_Line_1"><b style="color:red;  font-size: 80%;">*</b> HTRF Lines: </label>
+                    </td>
+                    <td class="right">
+                        <p id="HTRF_LINE"><input type="text" name="HTRF_Line_1" placeholder="HTRF_Line_1" /></p>
+                        <div class="two"><input type="button" class="name" onclick="CreateHTRFLine()" value="Add next" /></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left"><label for="description">Description: </label></td>
+                    <td class="right"><textarea name="description" size="5" style="width:500px;height:150px;"></textarea></td>
+                </tr>
+                <tr>
+                <td class="left"></td>
+                <td class="right"><input type="submit" name="submit" value="Save" style="width:100px;" /><input type="reset" value="Reset" style="width:100px;" /></td></tr>
+                <tr>
+                    <td class="left"></td>
+                    <td class="right">
+                        <br /><b style="color:red;  font-size: 80%;">*</b>  - Required fields.
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" name="come_from" value="${come_from}" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="clear:both;"/>
+</body>
+</html>

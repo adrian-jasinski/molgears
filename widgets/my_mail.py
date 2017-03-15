@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Sample controller with all its actions protected."""
-def sendmail(toaddrs, msg, subject='chemdb synthesis'):
+def sendmail(toaddrs, msg, subject='molgears synthesis'):
     import smtplib
     import string
     fromaddr = 'molgears@mydomain.com'  

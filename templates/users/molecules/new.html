@@ -86,7 +86,7 @@ function setname(){
     
                 <ul style="width:600px;list-style: none; line-height: normal;margin: 0;padding: 0; ">
                     <fieldset class="tags"><legend>Select Tag</legend>
-                        <py:if test="not alltags"><a class="add_link" href="${tg.url('/create_tags')}" >Add tags</a></py:if>
+                        <py:if test="not alltags"><a class="add_link" href="${tg.url('/admin/tags/new')}" >Add tags</a></py:if>
                         <li py:for="tag in alltags"  style="float: left; width: 150px; border: 0px;">
                             <input type="checkbox" name="text_tags" value="${tag.id}" id="tags" title="&nbsp;" />${tag.name}</li>
                         

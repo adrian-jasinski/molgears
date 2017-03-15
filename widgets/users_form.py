@@ -10,11 +10,11 @@ from sprox.fillerbase import EditFormFiller
 from tg import expose, flash, tmpl_context, redirect, request, url
 from tg.decorators import paginate, with_trailing_slash
 from tw2.forms import TextField, TextArea, FileField
-from chemdb.model import DBSession, metadata, PCompound, PHistory, PStatus, Tags, SCompound, SStatus, SFiles, SHistory, SPurity, LCompound, LPurity
+from molgears.model import DBSession, metadata, PCompound, PHistory, PStatus, Tags, SCompound, SStatus, SFiles, SHistory, SPurity, LCompound, LPurity
 from tgext.crud.utils import get_table_headers, SortableTableBase
 import transaction, genshi, os
 from sqlalchemy import desc, asc
-from chemdb.widgets.structure import create_image, addsmi, checksmi
+from molgears.widgets.structure import create_image, addsmi, checksmi
 
 # %%%%%%%%%%%%%% projektowanie %%%%%%%%%%%%%%%%%%%%%%
 

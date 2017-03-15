@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Unit and functional test suite for example."""
+"""Unit and functional test suite for molgears."""
 
 from os import getcwd
-
 from paste.deploy import loadapp
 from webtest import TestApp
-
 from gearbox.commands.setup_app import SetupAppCommand
 from tg import config
 from tg.util import Bunch
@@ -27,6 +25,7 @@ def setup_app():
     cmd = SetupAppCommand(Bunch(options=Bunch(verbose_level=1)), Bunch())
     cmd.run(Bunch(config_file='config:test.ini', section_name=None))
 
+
 def setup_db():
     """Create the database schema (not needed when you run setup_app)."""
     engine = config['tg.app_globals'].sa_engine
@@ -43,19 +42,18 @@ def teardown_db():
 class TestController(object):
     """Base functional test case for the controllers.
 
-    The example application instance (``self.app``) set up in this test
+    The molgears application instance (``self.app``) set up in this test
     case (and descendants) has authentication disabled, so that developers can
     test the protected areas independently of the :mod:`repoze.who` plugins
     used initially. This way, authentication can be tested once and separately.
 
-    Check example.tests.functional.test_authentication for the repoze.who
+    Check molgears.tests.functional.test_authentication for the repoze.who
     integration tests.
 
     This is the officially supported way to test protected areas with
     repoze.who-testutil (http://code.gustavonarea.net/repoze.who-testutil/).
 
     """
-
     application_under_test = application_name
 
     def setUp(self):

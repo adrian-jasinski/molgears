@@ -144,6 +144,7 @@ copy rdkit directory to::
 --------------------------------
 
 Razi provides extensions to `SQLAlchemy <http://www.sqlalchemy.org/>`_ to work with chemical databases.
+SQLAlchemy version <= 0.9.9 is required. 
 
 Download razi from `GitHub <https://github.com/rvianello/razi>`_ or from `my fork <https://github.com/admed/razi>`_
 
@@ -151,8 +152,13 @@ or by git::
     
     (tg2env)$ cd ~/RDKit
     (tg2env)$ git clone https://github.com/rvianello/razi
+
+install razi::
+    (tg2env)$ cd ~/RDKit/razi
+    (tg2env)$ python setup.py install
+    (tg2env)$ cd ../
     
-copy razi/razi to: ~/tg2env/lib/python2.X/site-packages/::
+or copy razi/razi to: ~/tg2env/lib/python2.X/site-packages/::
 
     (tg2env)$ cp ~/RDKit/razi/razi ~/tg2env/lib/python2.X/site-packages/
     
@@ -269,6 +275,7 @@ where libraries are::
     - tw2.forms
     - tw.forms
     - Genshi
+    - SQLAlchemy==0.9.9
     - zope.sqlalchemy
     - webhelpers
     - repoe.who
@@ -284,6 +291,7 @@ where libraries are::
     - scipy
     - matplotlib
     - sqlalchemy_migrate
+
 
 ----------------------------------------------------------------
 8. RUN your aplication

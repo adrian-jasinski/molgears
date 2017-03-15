@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/admin.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/form.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/jquery.multiselect.css')}" />
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/jquery.multiselect.filter.css')}" />
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/redmond/jquery-ui.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="${tg.url('/javascript/jquery.multiselect.js')}"></script>
+  <script type="text/javascript" src="${tg.url('/javascript/jquery.multiselect.filter.js')}"></script>
+<script type="text/javascript">
+$(function(){
+        $("select").multiselect().multiselectfilter();;
+});
+</script>
+
+  <title>Admin Users</title>
+</head>
+
+<body>
+
+<div class="accept" style="width:100%;text-align: center;">
+    <div style="width: 30%;margin: 0 auto;text-align:center;">
+        <a class="hover_active" href="${tg.url('/admin/users')}">
+            <div class="box_link"><img src="${tg.url('/images/users.png')}" border="0" style="width:64px;" /><br />Users</div>
+        </a>
+        <a class="hover" href="${tg.url('/admin/projects')}">
+            <div class="box_link"><img src="${tg.url('/images/project.png')}" border="0" style="width:64px;" /><br />Projects</div>
+        </a>
+        <a class="hover" href="${tg.url('/admin/tags')}">
+            <div class="box_link"><img src="${tg.url('/images/tags.png')}" border="0" style="width:64px;" /><br />Tags</div>
+        </a>
+    </div>
+    
+    <div class="crud_table" style="width:100%;margin:0 auto;margin-top:20px;">
+        <div class="crud_tab">
+            <h2 style="text-align:center;">Edit User</h2>
+            <form action="${tg.url('/admin/edit_user')}/${user.user_id}" enctype="multipart/form-data" method="post" name="form">
+                <table class="grid" style="width:700px;text-align:left;">
+                    <tr>
+                        <td><label for="user_name" class="admin"><b style="color:red;  font-size: 80%;">*</b> User Name: </label></td>
+                        <td><input type="text" size="40" name="user_name" value="${user.user_name}" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="email" class="admin"><b style="color:red;  font-size: 80%;">*</b> Email Address: </label></td>
+                        <td><input type="text" size="40" name="email" value="${user.email_address}" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="display_name" class="admin">Display Name: </label></td>
+                        <td><input type="text" size="40" name="display_name" value="${user.display_name}" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="items_per_page" class="admin"><b style="color:red;  font-size: 80%;">*</b> Compounds per page: </label></td>
+                        <td><input type="text" size="3" name="items_per_page" placeholder="10-150" value="${user.items_per_page}" title="from 10 to 150" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password" class="admin"><b style="color:red;  font-size: 80%;">*</b> Password: </label> </td>
+                        <td><input id="accept" type="password" name="password" value="" placeholder="6 to 16 characters" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="verification" class="admin"><b style="color:red;  font-size: 80%;">*</b> Confirm password: </label> </td>
+                        <td><input id="accept" type="password" name="verification" value="" placeholder="Retype Password" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="groups" class="admin"><b style="color:red;  font-size: 80%;">*</b> Groups: </label></td>
+                        <td>
+                            <select name="groups" multiple="multiple" style="width:360px;text-align:left;float:left" size="6">
+                            <optgroup label="Basic">
+                            <py:choose test="groups[0] in user.groups">
+                                <py:when test="True"><option value="${groups[0].group_id}" selected="selected">${groups[0].group_name}</option></py:when>
+                                <py:otherwise><option value="${groups[0].group_id}">${groups[0].group_name}</option></py:otherwise>
+                            </py:choose>
+                            <py:choose test="groups[1] in user.groups">
+                                <py:when test="True"><option value="${groups[1].group_id}" selected="selected">${groups[1].group_name}</option></py:when>
+                                <py:otherwise><option value="${groups[1].group_id}">${groups[1].group_name}</option></py:otherwise>
+                            </py:choose>
+                            <py:choose test="groups[2] in user.groups">
+                                <py:when test="True"><option value="${groups[2].group_id}" selected="selected">${groups[2].group_name}</option></py:when>
+                                <py:otherwise><option value="${groups[2].group_id}">${groups[2].group_name}</option></py:otherwise>
+                            </py:choose>
+                            </optgroup>
+                            <optgroup label="Projects Permissions">
+                                <py:for each="group in groups[3:]">
+                                    <py:choose test="group in user.groups">
+                                        <py:when test="True"><option value="${group.group_id}" selected="selected">${group.group_name}</option></py:when>
+                                        <py:otherwise><option value="${group.group_id}">${group.group_name}</option></py:otherwise>
+                                    </py:choose>
+                                </py:for>
+                            </optgroup>
+                            </select>
+                        </td>
+                    </tr>
+                        <tr><td></td><td><input id="submit" type="submit" name="submit" value="Save" /><input id="submit" type="reset" value="Reset" /></td></tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <br /><b style="color:red;  font-size: 80%;">*</b>  - Required fields.
+                        </td>
+                    </tr>
+                </table>
+            <input type="hidden" name="come_from" value="${come_from}" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="clear:both;"/>
+</body>
+</html>

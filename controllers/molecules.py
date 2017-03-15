@@ -577,7 +577,7 @@ class MoleculesController(BaseController):
                     try:
                         check = DBSession.query(Compound).filter(Compound.structure.equals(smiles)).first()
                     except Exception as msg:
-                        flash(l_(u'SMILES error'), 'error')
+                        flash(l_(u'SMILES error %s' % msg), 'error')
                         redirect(come_from)
                     isomer = False
                 if check:
@@ -608,10 +608,10 @@ class MoleculesController(BaseController):
                     flash(l_(u'Name error'), 'warning')
                     redirect(come_from)
                 from rdkit import Chem
-                from rdkit.Chem.inchi import MolToInchi
+                # from rdkit.Chem.inchi import MolToInchi
 #                from silicos_it.descriptors import qed
                 mol = Chem.MolFromSmiles(smiles)
-                compound.inchi = MolToInchi(mol)                
+                # compound.inchi = MolToInchi(mol)                
 #                compound.qed = round(qed.default(mol), 2)
                 history = History()
                 history.user = userid

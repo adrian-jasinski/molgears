@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/style.css')}" />
+  <title>Admin</title>
+</head>
+
+<body>
+
+<div class="accept" style="width:100%;text-align: center;">
+    <div style="width: 30%;margin: 0 auto;text-align:center;">
+        <a class="hover" href="${tg.url('/admin/users')}">
+            <div class="box_link"><img src="${tg.url('/images/users.png')}" border="0" style="width:64px;" /><br />Users</div>
+        </a>
+        <a class="hover" href="${tg.url('/admin/projects')}">
+            <div class="box_link"><img src="${tg.url('/images/project.png')}" border="0" style="width:64px;" /><br />Projects</div>
+        </a>
+        <a class="hover" href="${tg.url('/admin/tags')}">
+            <div class="box_link"><img src="${tg.url('/images/tags.png')}" border="0" style="width:64px;" /><br />Tags</div>
+        </a>
+    </div>
+
+</div>
+
+<div style="clear:both;"/>
+</body>
+</html>

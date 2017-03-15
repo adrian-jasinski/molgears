@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<xi:include href="master.html" />
+
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+  <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/admin.css')}" />
+  <title>Admin Users</title>
+</head>
+
+<body>
+
+<div class="accept" style="width:100%;text-align: center;">
+    <div style="width: 30%;margin: 0 auto;text-align:center;">
+        <a class="hover_active" href="${tg.url('/admin/users')}">
+            <div class="box_link"><img src="${tg.url('/images/users.png')}" border="0" style="width:64px;" /><br />Users</div>
+        </a>
+        <a class="hover" href="${tg.url('/admin/projects')}">
+            <div class="box_link"><img src="${tg.url('/images/project.png')}" border="0" style="width:64px;" /><br />Projects</div>
+        </a>
+        <a class="hover" href="${tg.url('/admin/tags')}">
+            <div class="box_link"><img src="${tg.url('/images/tags.png')}" border="0" style="width:64px;" /><br />Tags</div>
+        </a>
+    </div>
+    
+    <div class="crud_table" style="width:100%;margin:0 auto;margin-top:20px;">
+        <div class="crud_tab">
+        <p class="pagelist" style="font-size:12px;text-align:center;">
+        <a href="${tg.url('/admin/new_user')}" class="add_link" >New User</a>
+            <a class="prevPage" href="${tg.url('/admin/users/?page')}=${currentPage.previous_page}&amp;${tmpl}">&lt;</a>
+                ${currentPage.pager(format='~3~', page_param='page', show_if_single_page=True)}
+            <a class="nextPage" href="${tg.url('/admin/users/?page')}=${currentPage.next_page}&amp;${tmpl}">&gt;</a>
+        </p>
+        <br />
+        <table class="grid" style="width:90%">
+            <thead >
+                <tr>
+                    <th class="col">actions</th>
+                    <th class="col">User Name<br /><a class="sort_up" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=user_name')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=user_name')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Email<br /><a class="sort_up" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=email_address')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=email_address')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Display Name<br /><a class="sort_up" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=display_name')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=display_name')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Created<br /><a class="sort_up" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=created')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=created')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">Items per page<br /><a class="sort_up" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=items_per_page')}&amp;desc=0">&nbsp; </a>
+                        <a class="sort_down" href="${tg.url('/admin/users?'+tmpl.replace('order_by', 'remove').replace('desc', 'remove')+'order_by=items_per_page')}&amp;desc=1">&nbsp; </a></th>
+                    <th class="col">User Lists<br /></th>
+                    <th class="col">Groups<br /></th>
+                    <th class="col">Shared Lists<br /></th>
+                        
+                </tr>
+            </thead>
+            <tbody>
+                <tr py:for="row in currentPage.items" class="${currentPage.items.index(row)%2 and 'odd' or 'even'}" id="${row.user_id}">
+                    <td class="col"><a href="${tg.url('/admin/edit_user')}/${row.user_id}" class="edit_link" title="edit"></a><a href="${tg.url('/admin/delete_user')}/${row.user_id}" class="delete_link" onClick="return confirm('Delete entry?');" title="delete"></a></td>
+                    <td class="col">${row.user_name}</td>
+                    <td class="col">${row.email_address}</td>
+                    <td class="col">${row.display_name}</td>
+                    <td class="col">${row.created.strftime('%Y-%m-%d %H:%M:%S')}</td>
+                    <td class="col">${row.items_per_page}</td>
+                    <td class="col">${", ".join([ulist.name for ulist in row.lists])}</td>
+                    <td class="col" style="width:150px;">${", ".join(group.group_name for group in row.groups)}</td>
+                    <td class="col">${", ".join(shlist.name for shlist in row.tg_user_lists)}</td>
+                    
+                    
+                    
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+<div style="clear:both;"/>
+</body>
+</html>
